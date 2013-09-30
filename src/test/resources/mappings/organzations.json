@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "GET",
+    "url": "/v1/organizations?access_token=demo_token"
+  },
+  "response": {
+    "status": 200,
+    "body": "[{\"id\":\"51114b307fc1eaa866444648\",\"name\":\"Demo Organization\",\"path\":[\"51114b307fc1eaa866444648\"]}]",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}
