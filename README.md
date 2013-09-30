@@ -36,3 +36,8 @@ List quizzes for an organization:
       System.out.println(quiz.getCourse());             // "Challenge Course"
     }
 
+Retrieve a quiz by id:
+
+    Quiz quiz = client.getQuiz("000000000000000000000002");
+    System.out.println(quiz.getTitle());                // "Sample Quiz"
+    System.out.println(quiz.getCourse());               // "Challenge Course"
