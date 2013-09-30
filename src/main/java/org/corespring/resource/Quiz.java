@@ -34,8 +34,12 @@ public class Quiz {
     this.participants = participants;
   }
 
-  public static String getResourceRoute(CorespringRestClient client) {
+  public static String getResourcesRoute(CorespringRestClient client) {
     return client.baseUrl().append(RESOURCE_ROUTE).toString();
+  }
+
+  public static String getResourceRoute(CorespringRestClient client, String id) {
+    return client.baseUrl().append(RESOURCE_ROUTE).append("/").append(id).toString();
   }
 
   public static Quiz fromObjectMap(Map<String, Object> objectMap) {

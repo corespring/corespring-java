@@ -71,9 +71,7 @@ public class CorespringRestClient {
     List<NameValuePair> params = new ArrayList<NameValuePair>();
     params.add(organizationId);
 
-    System.err.println(Quiz.getResourceRoute(this));
-
-    CorespringRestResponse response = get(Quiz.getResourceRoute(this), "GET", params);
+    CorespringRestResponse response = get(Quiz.getResourcesRoute(this), "GET", params);
     Collection<Map<String, Object>> results = response.toCollection();
 
     Collection<Quiz> quizzes = new ArrayList<Quiz>();
@@ -81,6 +79,12 @@ public class CorespringRestClient {
       quizzes.add(Quiz.fromObjectMap(map));
     }
     return quizzes;
+  }
+
+  public Quiz getQuizById(String id) {
+    CorespringRestResponse response = get(Quiz.getResourceRoute(this, id), "GET");
+    Map<String, Object> result = response.toMap();
+    return Quiz.fromObjectMap(result);
   }
 
   public StringBuilder baseUrl() {
@@ -102,8 +106,6 @@ public class CorespringRestClient {
   private CorespringRestResponse get(String path, String method, List<NameValuePair> paramList) {
     paramList.add(new BasicNameValuePair("access_token", this.accessToken));
     HttpUriRequest request = setupRequest(path, method, paramList);
-
-    System.err.println(request.getURI().toString());
 
     HttpResponse response;
     try {

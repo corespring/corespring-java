@@ -14,6 +14,8 @@ import static org.junit.Assert.*;
 
 public class CorespringRestClientTest {
 
+  private final Organization organization = new Organization("51114b307fc1eaa866444648", "Demo Organization");
+
   @Rule
   public WireMockRule wireMockRule = new WireMockRule(8089);
 
@@ -60,26 +62,39 @@ public class CorespringRestClientTest {
 
   @Test
   public void testGetQuizzes() {
-    Organization organization = new Organization("51114b307fc1eaa866444648", "Demo Organization");
+
     CorespringRestClient client = new CorespringRestClient("demo_token");
     client.setEndpoint("http://localhost:8089/api");
 
     Collection<Quiz> quizzes = client.getQuizzes(organization);
     for (Quiz quiz : quizzes) {
-      if (!quiz.getQuestions().isEmpty()) {
-        Collection<Question> questions = quiz.getQuestions();
-        for (Question question : questions) {
-          assertNotNull(question.getTitle());
-          assertNotNull(question.getItemId());
-          assertNotNull(question.getSettings());
-          assertNotNull(question.getStandards());
-        }
+      checkQuiz(quiz);
+    }
+  }
 
-        Collection<Participant> participants = quiz.getParticipants();
-        for (Participant participant : participants) {
-          assertNotNull(participant.getAnswers());
-          assertNotNull(participant.getExternalUid());
-        }
+  @Test
+  public void testGetQuizById() {
+    CorespringRestClient client = new CorespringRestClient("demo_token");
+    client.setEndpoint("http://localhost:8089/api");
+
+    Quiz quiz = client.getQuizById("000000000000000000000002");
+    checkQuiz(quiz);
+  }
+
+  private void checkQuiz(Quiz quiz) {
+    if (!quiz.getQuestions().isEmpty()) {
+      Collection<Question> questions = quiz.getQuestions();
+      for (Question question : questions) {
+        assertNotNull(question.getTitle());
+        assertNotNull(question.getItemId());
+        assertNotNull(question.getSettings());
+        assertNotNull(question.getStandards());
+      }
+
+      Collection<Participant> participants = quiz.getParticipants();
+      for (Participant participant : participants) {
+        assertNotNull(participant.getAnswers());
+        assertNotNull(participant.getExternalUid());
       }
     }
   }
