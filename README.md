@@ -25,3 +25,14 @@ Instantiate the CorespringRestClient by passing in your access token.
       System.out.println(organization.getName);         // "Demo Organization"
       System.out.println(organization.getId);           // "51114b307fc1eaa866444648"
     }
+
+#### Quizzes
+
+List quizzes for an organization:
+
+    Collection<Quiz> quizzes = client.getQuizzes(organization);
+    for (Quiz quiz : quizzes) {
+      System.out.println(quiz.getTitle());              // "Sample Quiz"
+      System.out.println(quiz.getCourse());             // "Challenge Course"
+    }
+

@@ -20,8 +20,7 @@ public class Organization {
   }
 
   public static String getResourceRoute(CorespringRestClient client) {
-    return new StringBuilder(client.getEndpoint()).append("/").append(CorespringRestClient.API_VESRION).append("/")
-        .append(RESOURCE_ROUTE).toString();
+    return client.baseUrl().append(RESOURCE_ROUTE).toString();
   }
 
   public static Organization fromObjectMap(Map<String, Object> objectMap) {

@@ -1,13 +1,16 @@
 package org.corespring;
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.corespring.resource.Organization;
+import org.corespring.resource.Question;
+import org.corespring.resource.Quiz;
+import org.corespring.resource.question.Participant;
 import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.Collection;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CorespringRestClientTest {
 
@@ -44,7 +47,7 @@ public class CorespringRestClientTest {
   @Test
   public void testGetOrganizations() {
     CorespringRestClient client = new CorespringRestClient("demo_token");
-    client.setEndpoint("http://localhost:8089/");
+    client.setEndpoint("http://localhost:8089/api");
 
     Collection<Organization> organizations = client.getOrganizations();
 
@@ -53,6 +56,32 @@ public class CorespringRestClientTest {
 
     assertEquals("Demo Organization", organization.getName());
     assertEquals("51114b307fc1eaa866444648", organization.getId());
+  }
+
+  @Test
+  public void testGetQuizzes() {
+    Organization organization = new Organization("51114b307fc1eaa866444648", "Demo Organization");
+    CorespringRestClient client = new CorespringRestClient("demo_token");
+    client.setEndpoint("http://localhost:8089/api");
+
+    Collection<Quiz> quizzes = client.getQuizzes(organization);
+    for (Quiz quiz : quizzes) {
+      if (!quiz.getQuestions().isEmpty()) {
+        Collection<Question> questions = quiz.getQuestions();
+        for (Question question : questions) {
+          assertNotNull(question.getTitle());
+          assertNotNull(question.getItemId());
+          assertNotNull(question.getSettings());
+          assertNotNull(question.getStandards());
+        }
+
+        Collection<Participant> participants = quiz.getParticipants();
+        for (Participant participant : participants) {
+          assertNotNull(participant.getAnswers());
+          assertNotNull(participant.getExternalUid());
+        }
+      }
+    }
   }
 
 }

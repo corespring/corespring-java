@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "GET",
-    "url": "/v1/organizations?access_token=demo_token"
+    "url": "/api/v1/organizations?access_token=demo_token"
   },
   "response": {
     "status": 200,

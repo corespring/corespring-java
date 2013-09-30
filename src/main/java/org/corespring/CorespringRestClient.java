@@ -13,6 +13,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.bson.types.ObjectId;
 import org.corespring.resource.Organization;
+import org.corespring.resource.Quiz;
 
 import java.io.IOException;
 import java.net.URI;
@@ -65,6 +66,27 @@ public class CorespringRestClient {
     return organizations;
   }
 
+  public Collection<Quiz> getQuizzes(Organization organization) {
+    NameValuePair organizationId = new BasicNameValuePair("organization_id", organization.getId());
+    List<NameValuePair> params = new ArrayList<NameValuePair>();
+    params.add(organizationId);
+
+    System.err.println(Quiz.getResourceRoute(this));
+
+    CorespringRestResponse response = get(Quiz.getResourceRoute(this), "GET", params);
+    Collection<Map<String, Object>> results = response.toCollection();
+
+    Collection<Quiz> quizzes = new ArrayList<Quiz>();
+    for (Map<String, Object> map : results) {
+      quizzes.add(Quiz.fromObjectMap(map));
+    }
+    return quizzes;
+  }
+
+  public StringBuilder baseUrl() {
+    return new StringBuilder(this.getEndpoint()).append("/").append(CorespringRestClient.API_VESRION).append("/");
+  }
+
   private void validateAccessToken(String accessToken) {
     if (!accessToken.equals("demo_token") && !ObjectId.isValid(accessToken)) {
       throw new IllegalArgumentException(
@@ -74,13 +96,14 @@ public class CorespringRestClient {
 
   public CorespringRestResponse get(String path, String method) {
     List<NameValuePair> paramList = new ArrayList<NameValuePair>();
-    paramList.add(new BasicNameValuePair("access_token", this.accessToken));
     return get(path, method, paramList);
   }
 
   private CorespringRestResponse get(String path, String method, List<NameValuePair> paramList) {
-
+    paramList.add(new BasicNameValuePair("access_token", this.accessToken));
     HttpUriRequest request = setupRequest(path, method, paramList);
+
+    System.err.println(request.getURI().toString());
 
     HttpResponse response;
     try {
@@ -149,10 +172,6 @@ public class CorespringRestClient {
     }
 
     return uri;
-  }
-
-  public void setHttpClient(HttpClient httpClient) {
-    this.httpClient = httpClient;
   }
 
   public String getEndpoint() {
