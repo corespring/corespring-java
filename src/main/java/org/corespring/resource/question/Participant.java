@@ -1,8 +1,9 @@
 package org.corespring.resource.question;
 
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class Participant {
@@ -15,6 +16,35 @@ public class Participant {
                      @JsonProperty("externalUid") String externalUid) {
     this.answers = answers;
     this.externalUid = externalUid;
+  }
+
+  private Participant(Builder builder) {
+    this.answers = builder.answers;
+    this.externalUid = builder.externalUid;
+  }
+
+  public static class Builder {
+
+    private Collection<Answer> answers = new ArrayList<Answer>();
+    private String externalUid;
+
+    public Builder() {
+    }
+
+    public Builder answer(Answer answer) {
+      this.answers.add(answer);
+      return this;
+    }
+
+    public Builder externalUid(String externalUid) {
+      this.externalUid = externalUid;
+      return this;
+    }
+
+    public Participant build() {
+      return new Participant(this);
+    }
+
   }
 
   public Collection<Answer> getAnswers() {

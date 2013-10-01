@@ -1,9 +1,13 @@
 package org.corespring;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -16,6 +20,7 @@ import org.corespring.resource.Organization;
 import org.corespring.resource.Quiz;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -79,7 +84,13 @@ public class CorespringRestClient {
   }
 
   public void create(Quiz quiz) {
-
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    try {
+      System.err.println(objectMapper.writeValueAsString(quiz));
+    } catch (IOException e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
   }
 
   public StringBuilder baseUrl() {
@@ -142,14 +153,42 @@ public class CorespringRestClient {
   private HttpUriRequest buildMethod(String method, String path, List<NameValuePair> parameters) {
     if (method.equalsIgnoreCase("GET")) {
       return generateGetRequest(path, parameters);
+    } else if (method.equalsIgnoreCase("POST")) {
+      return generatePostRequest(path, parameters);
     } else {
       throw new IllegalArgumentException("Unknown Method: " + method);
     }
   }
 
+  private HttpPost generatePostRequest(String path, List<NameValuePair> params) {
+    URI uri = buildUri(path);
+
+    UrlEncodedFormEntity entity = buildEntityBody(params);
+
+    HttpPost post = new HttpPost(uri);
+    post.setEntity(entity);
+
+    return post;
+  }
+
+  private UrlEncodedFormEntity buildEntityBody(List<NameValuePair> params) {
+    UrlEncodedFormEntity entity = null;
+    try {
+      entity = new UrlEncodedFormEntity(params, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
+
+    return entity;
+  }
+
   private HttpGet generateGetRequest(String path, List<NameValuePair> parameters) {
     URI uri = buildUri(path, parameters);
     return new HttpGet(uri);
+  }
+
+  private URI buildUri(String path) {
+    return buildUri(path, null);
   }
 
   private URI buildUri(String path, List<NameValuePair> parameters) {

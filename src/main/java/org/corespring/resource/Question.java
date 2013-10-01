@@ -1,7 +1,7 @@
 package org.corespring.resource;
 
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.corespring.resource.question.Settings;
 
 import java.util.ArrayList;
@@ -27,6 +27,49 @@ public class Question {
     this.title = title;
     this.settings = settings;
     this.standards = standards;
+  }
+
+  private Question(Builder builder) {
+    this.itemId = builder.itemId;
+    this.title = builder.title;
+    this.settings = builder.settings;
+    this.standards = builder.standards;
+  }
+
+  public static class Builder {
+
+    private String itemId;
+    private String title;
+    private Settings settings;
+    private Collection<String> standards = new ArrayList<String>();
+
+    public Builder() {
+    }
+
+    public Builder itemId(String itemId) {
+      this.itemId = itemId;
+      return this;
+    }
+
+    public Builder title(String title) {
+      this.title = title;
+      return this;
+    }
+
+    public Builder settings(Settings settings) {
+      this.settings = settings;
+      return this;
+    }
+
+    public Builder standard(String standard) {
+      this.standards.add(standard);
+      return this;
+    }
+
+    public Question build() {
+      return new Question(this);
+    }
+
   }
 
   public String getItemId() {

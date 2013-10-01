@@ -1,7 +1,7 @@
 package org.corespring.resource;
 
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Metadata {
 
@@ -16,6 +16,42 @@ public class Metadata {
     this.title = title;
     this.course = course;
     this.note = note;
+  }
+
+  private Metadata(Builder builder) {
+    this.title = builder.title;
+    this.course = builder.course;
+    this.note = builder.note;
+  }
+
+  public static class Builder {
+
+    private String title = null;
+    private String course = null;
+    private String note = null;
+
+    public Builder() {
+    }
+
+    public Builder title(String title) {
+      this.title = title;
+      return this;
+    }
+
+    public Builder course(String course) {
+      this.course = course;
+      return this;
+    }
+
+    public Builder note(String note) {
+      this.note = note;
+      return this;
+    }
+
+    public Metadata build() {
+      return new Metadata(this);
+    }
+
   }
 
   public String getTitle() {

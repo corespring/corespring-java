@@ -1,6 +1,6 @@
 package org.corespring.resource;
 
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.corespring.resource.question.Answer;
 import org.corespring.resource.question.Participant;
 import org.corespring.resource.question.Settings;

@@ -1,11 +1,10 @@
 package org.corespring.resource.question;
 
-import org.codehaus.jackson.annotate.JsonAutoDetect;
-import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonAutoDetect(fieldVisibility= Visibility.ANY)
+@JsonAutoDetect(fieldVisibility= JsonAutoDetect.Visibility.ANY)
 public class Settings {
 
   static final String DEFAULT_COMPLETE_MESSAGE = "Ok! Your response was submitted.";
@@ -39,6 +38,77 @@ public class Settings {
     this.submitCompleteMessage = submitCompleteMessage;
     this.submitIncompleteMessage = submitIncompleteMessage;
     this.submitIncorrectMessage = submitIncorrectMessage;
+  }
+
+  private Settings(Builder builder) {
+    this.maxNumberOfAttempts = builder.maxNumberOfAttempts;
+    this.highlightUserResponse = builder.highlightUserResponse;
+    this.highlightCorrectResponse = builder.highlightCorrectResponse;
+    this.showFeedback = builder.showFeedback;
+    this.allowEmptyResponses = builder.allowEmptyResponses;
+    this.submitCompleteMessage = builder.submitCompleteMessage;
+    this.submitIncompleteMessage = builder.submitIncompleteMessage;
+    this.submitIncorrectMessage = builder.submitIncorrectMessage;
+  }
+
+  public static class Builder {
+
+    private Integer maxNumberOfAttempts;
+    private Boolean highlightUserResponse;
+    private Boolean highlightCorrectResponse;
+    private Boolean showFeedback;
+    private Boolean allowEmptyResponses;
+    private String submitCompleteMessage;
+    private String submitIncompleteMessage;
+    private String submitIncorrectMessage;
+
+    public Builder() {
+    }
+
+    public Builder maxNumberOfAttempts(Integer maxNumberOfAttempts) {
+      this.maxNumberOfAttempts = maxNumberOfAttempts;
+      return this;
+    }
+
+    public Builder highlightUserResponse(Boolean highlightUserResponse) {
+      this.highlightUserResponse = highlightUserResponse;
+      return this;
+    }
+
+    public Builder highlightCorrectResponse(Boolean highlightCorrectResponse) {
+      this.highlightCorrectResponse = highlightCorrectResponse;
+      return this;
+    }
+
+    public Builder showFeedback(Boolean showFeedback) {
+      this.showFeedback = showFeedback;
+      return this;
+    }
+
+    public Builder allowEmptyResponses(Boolean allowEmptyResponses) {
+      this.allowEmptyResponses = allowEmptyResponses;
+      return this;
+    }
+
+    public Builder submitCompleteMessage(String submitCompleteMessage) {
+      this.submitCompleteMessage = submitCompleteMessage;
+      return this;
+    }
+
+    public Builder submitIncompleteMessage(String submitIncompleteMessage) {
+      this.submitIncompleteMessage = submitIncompleteMessage;
+      return this;
+    }
+
+    public Builder submitIncorrectMessage(String submitIncorrectMessage) {
+      this.submitIncorrectMessage = submitIncorrectMessage;
+      return this;
+    }
+
+    public Settings build() {
+      return new Settings(this);
+    }
+
   }
 
   public static Settings standard() {
