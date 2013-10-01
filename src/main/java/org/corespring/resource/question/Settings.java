@@ -1,43 +1,81 @@
 package org.corespring.resource.question;
 
-import java.util.Map;
+import org.codehaus.jackson.annotate.JsonAutoDetect;
+import org.codehaus.jackson.annotate.JsonAutoDetect.Visibility;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
 
+@JsonAutoDetect(fieldVisibility= Visibility.ANY)
 public class Settings {
 
-  private static final String MAX_NUMBER_OF_ATTEMPTS_KEY = "maxNoOfAttempts";
-  private static final String HIGHLIGHT_USER_RESPONSE_KEY = "highlightUserResponse";
-  private static final String SHOW_FEEDBACK_KEY = "showFeedback";
-  private static final String ALLOW_EMPTY_RESPONSES_KEY = "allowEmptyResponses";
-  private static final String SUBMIT_COMPLETE_MESSAGE_KEY = "submitCompleteMessage";
-  private static final String SUBMIT_INCOMPLETE_MESSAGE_KEY = "submitIncompleteMessage";
+  static final String DEFAULT_COMPLETE_MESSAGE = "Ok! Your response was submitted.";
+  static final String DEFAULT_INCOMPLETE_MESSAGE =
+      "You may revise your work before you submit your final response.";
+  static final String DEFAULT_INCORRECT_MESSAGE = "You may revise your work before you submit your final response.";
 
   private final Integer maxNumberOfAttempts;
   private final Boolean highlightUserResponse;
+  private final Boolean highlightCorrectResponse;
   private final Boolean showFeedback;
   private final Boolean allowEmptyResponses;
   private final String submitCompleteMessage;
   private final String submitIncompleteMessage;
+  private final String submitIncorrectMessage;
 
-  public Settings(Integer maxNumberOfAttempts, Boolean highlightUserResponse, Boolean showFeedback,
-                  Boolean allowEmptyResponses, String submitCompleteMessage, String submitIncompleteMessage) {
+  @JsonCreator
+  public Settings(@JsonProperty("maxNoOfAttempts") Integer maxNumberOfAttempts,
+                  @JsonProperty("highlightUserResponse") Boolean highlightUserResponse,
+                  @JsonProperty("highlightCorrectResponse") Boolean highlightCorrectResponse,
+                  @JsonProperty("showFeedback") Boolean showFeedback,
+                  @JsonProperty("allowEmptyResponses") Boolean allowEmptyResponses,
+                  @JsonProperty("submitCompleteMessage") String submitCompleteMessage,
+                  @JsonProperty("submitIncompleteMessage") String submitIncompleteMessage,
+                  @JsonProperty("submitIncorrectMessage") String submitIncorrectMessage) {
     this.maxNumberOfAttempts = maxNumberOfAttempts;
     this.highlightUserResponse = highlightUserResponse;
+    this.highlightCorrectResponse = highlightCorrectResponse;
     this.showFeedback = showFeedback;
     this.allowEmptyResponses = allowEmptyResponses;
     this.submitCompleteMessage = submitCompleteMessage;
     this.submitIncompleteMessage = submitIncompleteMessage;
+    this.submitIncorrectMessage = submitIncorrectMessage;
   }
 
-  public static Settings fromObjectMap(Map<String, Object> objectMap) {
-    Integer maxNoOfAttempts = (Integer) objectMap.get(MAX_NUMBER_OF_ATTEMPTS_KEY);
-    Boolean highlightUserResponse = (Boolean) objectMap.get(HIGHLIGHT_USER_RESPONSE_KEY);
-    Boolean showFeedback = (Boolean) objectMap.get(SHOW_FEEDBACK_KEY);
-    Boolean allowEmptyResponses = (Boolean) objectMap.get(ALLOW_EMPTY_RESPONSES_KEY);
-    String submitCompleteMessage = (String) objectMap.get(SUBMIT_COMPLETE_MESSAGE_KEY);
-    String submitIncompletedMessage = (String) objectMap.get(SUBMIT_INCOMPLETE_MESSAGE_KEY);
-
-    return new Settings(maxNoOfAttempts, highlightUserResponse, showFeedback, allowEmptyResponses,
-        submitCompleteMessage, submitIncompletedMessage);
+  public static Settings standard() {
+    return
+        new Settings(1, true, true, true, false, DEFAULT_COMPLETE_MESSAGE, DEFAULT_INCOMPLETE_MESSAGE,
+            DEFAULT_INCORRECT_MESSAGE);
   }
 
+  public Integer getMaxNumberOfAttempts() {
+    return maxNumberOfAttempts;
+  }
+
+  public Boolean getHighlightUserResponse() {
+    return highlightUserResponse;
+  }
+
+  public Boolean getHighlightCorrectResponse() {
+    return highlightCorrectResponse;
+  }
+
+  public Boolean getShowFeedback() {
+    return showFeedback;
+  }
+
+  public Boolean getAllowEmptyResponses() {
+    return allowEmptyResponses;
+  }
+
+  public String getSubmitCompleteMessage() {
+    return submitCompleteMessage;
+  }
+
+  public String getSubmitIncompleteMessage() {
+    return submitIncompleteMessage;
+  }
+
+  public String getSubmitIncorrectMessage() {
+    return submitIncorrectMessage;
+  }
 }

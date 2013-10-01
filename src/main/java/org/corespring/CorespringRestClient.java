@@ -21,7 +21,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class CorespringRestClient {
 
@@ -57,13 +56,7 @@ public class CorespringRestClient {
 
   public Collection<Organization> getOrganizations() {
     CorespringRestResponse response = get(Organization.getResourceRoute(this), "GET");
-    Collection<Map<String, Object>> results = response.toCollection();
-
-    Collection<Organization> organizations = new ArrayList<Organization>();
-    for (Map<String, Object> map : results) {
-      organizations.add(Organization.fromObjectMap(map));
-    }
-    return organizations;
+    return response.getAll(Organization.class);
   }
 
   public Collection<Quiz> getQuizzes(Organization organization) {
@@ -72,19 +65,21 @@ public class CorespringRestClient {
     params.add(organizationId);
 
     CorespringRestResponse response = get(Quiz.getResourcesRoute(this), "GET", params);
-    Collection<Map<String, Object>> results = response.toCollection();
-
-    Collection<Quiz> quizzes = new ArrayList<Quiz>();
-    for (Map<String, Object> map : results) {
-      quizzes.add(Quiz.fromObjectMap(map));
-    }
-    return quizzes;
+    return response.getAll(Quiz.class);
   }
 
   public Quiz getQuizById(String id) {
     CorespringRestResponse response = get(Quiz.getResourceRoute(this, id), "GET");
-    Map<String, Object> result = response.toMap();
-    return Quiz.fromObjectMap(result);
+    try {
+      return response.get(Quiz.class);
+    } catch(IOException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public void create(Quiz quiz) {
+
   }
 
   public StringBuilder baseUrl() {

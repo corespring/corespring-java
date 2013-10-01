@@ -41,3 +41,16 @@ Retrieve a quiz by id:
     Quiz quiz = client.getQuiz("000000000000000000000002");
     System.out.println(quiz.getTitle());                // "Sample Quiz"
     System.out.println(quiz.getCourse());               // "Challenge Course"
+
+
+Create a quiz:
+
+    Question question = new Question("503c2e91e4b00f3f0a9a7a6a", "My Question");
+
+    Collection<Question> questions = new ArrayList<Question>();
+    questions.add(question);
+
+    Quiz quiz = new Quiz("My Quiz", questions);
+
+    client.create(quiz);
+

@@ -1,9 +1,12 @@
 package org.corespring;
 
-import org.corespring.parser.JsonResponseParser;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.type.TypeFactory;
 
+import java.io.IOException;
 import java.util.Collection;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +29,22 @@ public class CorespringRestResponse {
     this.error = (status >= 400);
   }
 
+  public <T> T get(Class<T> clazz) throws IOException {
+    ObjectMapper objectMapper = new ObjectMapper();
+    return objectMapper.readValue(responseText, clazz);
+  }
+
+  public <T> Collection<T> getAll(Class<T> clazz) {
+    ObjectMapper objectMapper = new ObjectMapper();
+    TypeFactory typeFactory = TypeFactory.defaultInstance();
+    try {
+      return objectMapper.readValue(responseText, typeFactory.constructCollectionType(List.class, clazz));
+    } catch (IOException e) {
+      e.printStackTrace();
+      return Collections.emptyList();
+    }
+  }
+
   public String getResponseText() {
     return responseText;
   }
@@ -44,14 +63,6 @@ public class CorespringRestResponse {
 
   public boolean isError() {
     return error;
-  }
-
-  public Map<String, Object> toMap() {
-    return JsonResponseParser.parse(this);
-  }
-
-  public Collection<Map<String, Object>> toCollection() {
-    return JsonResponseParser.parseCollection(this);
   }
 
 }

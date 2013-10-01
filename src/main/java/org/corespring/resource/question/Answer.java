@@ -1,34 +1,49 @@
 package org.corespring.resource.question;
 
-import java.util.Map;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+
+import java.util.Date;
 
 public class Answer {
 
-  private static final String ITEM_ID_KEY = "itemId";
-  private static final String SESSION_ID_KEY = "sessionId";
-
   private final String itemId;
   private final String sessionId;
+  private final Integer score;
+  private final Date lastResponse;
+  private final Boolean complete;
 
-  public Answer(String itemId, String sessionId) {
+  @JsonCreator
+  public Answer(@JsonProperty("itemId") String itemId,
+                @JsonProperty("sessionId") String sessionId,
+                @JsonProperty("score") Integer score,
+                @JsonProperty("lastResponse") Date lastResponse,
+                @JsonProperty("isComplete") Boolean complete) {
     this.itemId = itemId;
     this.sessionId = sessionId;
-  }
-
-  public static Answer fromObjectMap(Map<String, Object> objectMap) {
-    String itemId = (String) objectMap.get(ITEM_ID_KEY);
-    String sessionId = (String) objectMap.get(SESSION_ID_KEY);
-
-    return new Answer(itemId, sessionId);
+    this.score = score;
+    this.lastResponse = lastResponse;
+    this.complete = complete;
   }
 
   public String getItemId() {
-    return this.itemId;
+    return itemId;
   }
 
   public String getSessionId() {
-    return this.sessionId;
+    return sessionId;
   }
 
+  public Integer getScore() {
+    return score;
+  }
+
+  public Date getLastResponse() {
+    return lastResponse;
+  }
+
+  public Boolean isComplete() {
+    return complete;
+  }
 
 }

@@ -8,13 +8,15 @@ import org.corespring.resource.question.Participant;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.junit.Assert.*;
 
 public class CorespringRestClientTest {
 
-  private final Organization organization = new Organization("51114b307fc1eaa866444648", "Demo Organization");
+  private final Organization organization =
+      new Organization("51114b307fc1eaa866444648", "Demo Organization", new ArrayList<String>());
 
   @Rule
   public WireMockRule wireMockRule = new WireMockRule(8089);
