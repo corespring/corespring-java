@@ -33,6 +33,12 @@ public class Metadata {
     public Builder() {
     }
 
+    public Builder(Metadata metadata) {
+      this.title = metadata.title;
+      this.course = metadata.course;
+      this.note = metadata.note;
+    }
+
     public Builder title(String title) {
       this.title = title;
       return this;

@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
@@ -18,6 +18,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.bson.types.ObjectId;
+import org.corespring.resource.CorespringResource;
 import org.corespring.resource.Organization;
 import org.corespring.resource.Quiz;
 
@@ -85,6 +86,11 @@ public class CorespringRestClient {
     return response.get(Quiz.class);
   }
 
+  public Quiz update(Quiz quiz) {
+    CorespringRestResponse response = put(Quiz.getResourceRoute(this, quiz.getId()), quiz);
+    return response.get(Quiz.class);
+  }
+
   public StringBuilder baseUrl() {
     return new StringBuilder(this.getEndpoint()).append("/").append(CorespringRestClient.API_VESRION).append("/");
   }
@@ -96,20 +102,24 @@ public class CorespringRestClient {
     }
   }
 
-  public CorespringRestResponse post(String path, Object entity) {
-    return post(path, new ArrayList<NameValuePair>(), entity);
+  public CorespringRestResponse put(String path, CorespringResource entity) {
+    return postOrPut(path, "PUT", new ArrayList<NameValuePair>(), entity);
   }
 
-  public CorespringRestResponse post(String path, List<NameValuePair> paramList, Object entity) {
+  public CorespringRestResponse post(String path, CorespringResource entity) {
+    return postOrPut(path, "POST", new ArrayList<NameValuePair>(), entity);
+  }
+
+  public CorespringRestResponse postOrPut(String path, String method, List<NameValuePair> paramList,
+                                          CorespringResource entity) {
     paramList.add(new BasicNameValuePair("access_token", this.accessToken));
-    HttpUriRequest request = setupRequest(path, "POST", paramList, entity);
+    HttpUriRequest request = setupRequest(path, method, paramList, entity);
     HttpResponse response;
 
     try {
       response = httpClient.execute(request);
       HttpEntity responseEntity = response.getEntity();
 
-      Header[] contentTypeHeaders = response.getHeaders("Content-Type");
       String responseBody = "";
 
       if (entity != null) {
@@ -131,11 +141,6 @@ public class CorespringRestClient {
     }
   }
 
-  static String convertStreamToString(java.io.InputStream is) {
-    java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-    return s.hasNext() ? s.next() : "";
-  }
-
   public CorespringRestResponse get(String path) {
     return get(path, new ArrayList<NameValuePair>());
   }
@@ -149,7 +154,6 @@ public class CorespringRestClient {
       response = httpClient.execute(request);
       HttpEntity entity = response.getEntity();
 
-      Header[] contentTypeHeaders = response.getHeaders("Content-Type");
       String responseBody = "";
 
       if (entity != null) {
@@ -171,7 +175,7 @@ public class CorespringRestClient {
     }
   }
 
-  private HttpUriRequest setupRequest(String path, String method, List<NameValuePair> parameters, Object entity) {
+  private HttpUriRequest setupRequest(String path, String method, List<NameValuePair> parameters, CorespringResource entity) {
     HttpUriRequest request = (entity == null) ?
         buildMethod(method, path, parameters) :
         buildMethod(method, path, parameters, entity);
@@ -192,15 +196,17 @@ public class CorespringRestClient {
     }
   }
 
-  private HttpUriRequest buildMethod(String method, String path, List<NameValuePair> parameters, Object entity) {
+  private HttpUriRequest buildMethod(String method, String path, List<NameValuePair> parameters, CorespringResource entity) {
     if (method.equalsIgnoreCase("POST")) {
       return generatePostRequest(path, parameters, entity);
+    } else if (method.equalsIgnoreCase("PUT")) {
+      return generatePutRequest(path, parameters, entity);
     } else {
       throw new IllegalArgumentException("Unknown Method " + method);
     }
   }
 
-  private HttpPost generatePostRequest(String path, List<NameValuePair> parameters, Object entity) {
+  private HttpPost generatePostRequest(String path, List<NameValuePair> parameters, CorespringResource entity) {
     URI uri = buildUri(path, parameters);
     try {
       StringEntity jsonEntity = buildJsonEntity(entity);
@@ -208,8 +214,19 @@ public class CorespringRestClient {
       post.setEntity(jsonEntity);
       return post;
     } catch (Exception e) {
-      e.printStackTrace();
-      return null;
+      throw new RuntimeException(e);
+    }
+  }
+
+  private HttpPut generatePutRequest(String path, List<NameValuePair> parameters, CorespringResource entity) {
+    URI uri = buildUri(path, parameters);
+    try {
+      StringEntity jsonEntity = buildJsonEntity(entity);
+      HttpPut put = new HttpPut(uri);
+      put.setEntity(jsonEntity);
+      return put;
+    } catch (Exception e) {
+      throw new RuntimeException(e);
     }
   }
 
@@ -217,28 +234,12 @@ public class CorespringRestClient {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     String json = objectMapper.writeValueAsString(entity);
-    System.err.println(json);
     return new StringEntity(json);
-  }
-
-  private UrlEncodedFormEntity buildEntityBody(List<NameValuePair> params) {
-    UrlEncodedFormEntity entity = null;
-    try {
-      entity = new UrlEncodedFormEntity(params, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      throw new RuntimeException(e);
-    }
-
-    return entity;
   }
 
   private HttpGet generateGetRequest(String path, List<NameValuePair> parameters) {
     URI uri = buildUri(path, parameters);
     return new HttpGet(uri);
-  }
-
-  private URI buildUri(String path) {
-    return buildUri(path, null);
   }
 
   private URI buildUri(String path, List<NameValuePair> parameters) {

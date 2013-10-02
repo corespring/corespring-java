@@ -7,7 +7,7 @@ import org.corespring.CorespringRestClient;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class Organization {
+public class Organization implements CorespringResource {
 
   private static final String RESOURCE_ROUTE = "organizations";
 

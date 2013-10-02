@@ -113,4 +113,16 @@ public class CorespringRestClientTest {
     assertNotNull(updatedQuiz.getOrgId());
   }
 
+  @Test
+  public void testUpdateQuiz() {
+    Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
+    CorespringRestClient client = new CorespringRestClient("demo_token");
+    client.setEndpoint("http://localhost:8089/api");
+
+    quiz = client.create(quiz);
+    quiz = client.update(new Quiz.Builder(quiz).course("English 101").build());
+
+    assertEquals("English 101", quiz.getCourse());
+  }
+
 }

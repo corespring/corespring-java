@@ -1,6 +1,7 @@
 package org.corespring.resource;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.corespring.CorespringRestClient;
 import org.corespring.resource.question.Participant;
@@ -8,7 +9,7 @@ import org.corespring.resource.question.Participant;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class Quiz {
+public class Quiz implements CorespringResource {
 
   private static final String RESOURCE_ROUTE = "quizzes";
 
@@ -48,6 +49,14 @@ public class Quiz {
     private Collection<Participant> participants = new ArrayList<Participant>();
 
     public Builder() {
+    }
+
+    public Builder(Quiz quiz) {
+      this.id = quiz.id;
+      this.orgId = quiz.orgId;
+      this.metadataBuilder = new Metadata.Builder(quiz.metadata);
+      this.questions = quiz.questions;
+      this.participants = quiz.participants;
     }
 
     public Builder id(String id) {
@@ -109,6 +118,21 @@ public class Quiz {
 
   public Metadata getMetadata() {
     return metadata;
+  }
+
+  @JsonIgnore
+  public String getTitle() {
+    return metadata.getTitle();
+  }
+
+  @JsonIgnore
+  public String getCourse() {
+    return metadata.getCourse();
+  }
+
+  @JsonIgnore
+  public String getNote() {
+    return metadata.getNote();
   }
 
   public Collection<Question> getQuestions() {
