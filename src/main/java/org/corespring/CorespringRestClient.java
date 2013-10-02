@@ -14,7 +14,7 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.bson.types.ObjectId;
+import org.corespring.authentication.AccessTokenProvider;
 import org.corespring.resource.CorespringResource;
 import org.corespring.resource.Organization;
 import org.corespring.resource.Quiz;
@@ -29,17 +29,19 @@ import java.util.List;
 
 /**
  * {@link CorespringRestClient} serves as the main interface between the API and the CoreSpring platform. You should
- * instantiate CorespringRestClient with an access token (which you will be issued when you sign up as a developer for the
- * CoreSpring platfrom):
+ * instantiate CorespringRestClient with your client ID and client secret (which you will be issued when you sign up as
+ * a developer for the CoreSpring platform):
  *
- *     CorespringRestClient client = new CorespringRestClient("52498773a9c98a782be5b739");
+ *     String clientId = "524c5cb5300401522ab21db1";
+ *     String clientSecret = "325hm11xiz7ykeen2ibt";
+ *     CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
  *
  * You can then use the client object to interface with the various methods made available.
  */
 public class CorespringRestClient {
 
   /** Version of the API to target */
-  public static final String API_VESRION = "v1";
+  public static final String API_VERSION = "api/v1";
 
   /** Version of corespring-java client */
   public static final String VERSION = "1.0-SNAPSHOT";
@@ -48,15 +50,18 @@ public class CorespringRestClient {
   private static final int CONNECTION_TIMEOUT = 10000;
 
   /** The endpoint. */
-  private String endpoint = "http://localhost:9000/api";
+  private String endpoint = "http://localhost:9000/";
 
-  private final String accessToken;
+  private final String clientId;
+  private final String clientSecret;
+
+  private String accessToken;
 
   private HttpClient httpClient;
 
-  public CorespringRestClient(String accessToken) {
-    validateAccessToken(accessToken);
-    this.accessToken = accessToken;
+  public CorespringRestClient(String clientId, String clientSecret) {
+    this.clientId = clientId;
+    this.clientSecret = clientSecret;
 
     ThreadSafeClientConnManager clientConnectionManager = new ThreadSafeClientConnManager();
     clientConnectionManager.setDefaultMaxPerRoute(10);
@@ -108,15 +113,16 @@ public class CorespringRestClient {
     }
   }
 
-  public StringBuilder baseUrl() {
-    return new StringBuilder(this.getEndpoint()).append("/").append(CorespringRestClient.API_VESRION).append("/");
+  private String getAccessToken() {
+    if (this.accessToken == null) {
+      this.accessToken = AccessTokenProvider.getAccessToken(clientId, clientSecret, getEndpoint());
+    }
+    return accessToken;
   }
 
-  private void validateAccessToken(String accessToken) {
-    if (!accessToken.equals("demo_token") && !ObjectId.isValid(accessToken)) {
-      throw new IllegalArgumentException(
-          new StringBuilder("Access token ").append(accessToken).append(" is not valid").toString());
-    }
+
+  public StringBuilder baseUrl() {
+    return new StringBuilder(getEndpoint()).append("/").append(CorespringRestClient.API_VERSION).append("/");
   }
 
   private CorespringRestResponse put(String path, CorespringResource entity) {
@@ -133,7 +139,10 @@ public class CorespringRestClient {
 
   public CorespringRestResponse doRequest(String path, String method, List<NameValuePair> paramList,
                                           CorespringResource entity) {
-    paramList.add(new BasicNameValuePair("access_token", this.accessToken));
+    if (getAccessToken() != null) {
+      paramList.add(new BasicNameValuePair("access_token", getAccessToken()));
+    }
+
     HttpUriRequest request = setupRequest(path, method, paramList, entity);
     HttpResponse response;
 
@@ -167,7 +176,7 @@ public class CorespringRestClient {
   }
 
   private CorespringRestResponse get(String path, List<NameValuePair> paramList) {
-    paramList.add(new BasicNameValuePair("access_token", this.accessToken));
+    paramList.add(new BasicNameValuePair("access_token", getAccessToken()));
     HttpUriRequest request = setupRequest(path, "GET", paramList, null);
 
     HttpResponse response;

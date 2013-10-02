@@ -12,7 +12,7 @@ getOrganizations method after you initialize it with your access token.
 
 #### List organizations
 
-    CorespringRestClient client = new CorespringRestClient("demo_token");
+    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
 
     Collection<Organization> organizations = client.getOrganizations();
     for (Organization organization : organizations) {
