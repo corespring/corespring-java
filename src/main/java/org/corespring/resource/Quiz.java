@@ -9,6 +9,52 @@ import org.corespring.resource.question.Participant;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * A {@link Quiz} represents a set of {@link Question}s, {@link Participant}s, and associated {@link Metadata}. A JSON
+ * representation of a {@link Quiz} is shown below:
+ *
+ * <pre>
+ *
+ *   {
+ *     "id" : "000000000000000000000002",
+ *     "orgId" : "51114b307fc1eaa866444648",
+ *     "metadata" : {
+ *       "title" : "Sample Quiz",
+ *       "course" : "Example Course",
+ *       "note" : "This is an exmaple of a quiz"
+ *     },
+ *     "questions" : [
+ *       {
+ *         "itemId" : "503c2e91e4b00f3f0a9a7a6a",
+ *         "settings" : {
+ *           "maxNoOfAttempts" : 1,
+ *           "highlightUserResponse" : true,
+ *           "highlightCorrectResponse" : true,
+ *           "showFeedback" : false,
+ *           "allowEmptyResponses" : false,
+ *           "submitCompleteMessage" : "Ok! Your response was submitted.",
+ *           "submitIncorrectMessage" : "You may revise your work before you submit your final response."
+ *         },
+ *         "title" : "How many pancakes were eaten when Rodrigo made breakfast for his family and friends?",
+ *         "standards" : [
+ *           "2.0A.A.1"
+ *         ]
+ *       }
+ *     ],
+ *     "participants" : [
+ *       {
+ *         "answers" : [
+ *           "sessionId" : "515425f33004e34080967bbb",
+ *           "itemId" : "503c2e91e4b00f3f0a9a7a6a"
+ *         ],
+ *         "externalUid" : "my-platform-student-53234"
+ *       }
+ *     ]
+ *   }
+ *
+ * </pre>
+ *
+ */
 public class Quiz implements CorespringResource {
 
   private static final String RESOURCE_ROUTE = "quizzes";

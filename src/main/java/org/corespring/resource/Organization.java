@@ -7,6 +7,21 @@ import org.corespring.CorespringRestClient;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * A CoreSpring {@link Organization} represents a development partner utilizing the CoreSpring platform. NOTE:
+ * Organizations do not map to groups within educational institutions (districts, schools, etc.). The following JSON
+ * structure describes a typical Organization:
+ *
+ * <pre>
+ *
+ *   {
+ *     "id" : "51114b307fc1eaa866444648",
+ *     "name" : "Demo Organization"
+ *   }
+ *
+ * </pre>
+ *
+ */
 public class Organization implements CorespringResource {
 
   private static final String RESOURCE_ROUTE = "organizations";
