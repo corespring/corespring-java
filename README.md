@@ -1,3 +1,4 @@
+![corespring](doc/images/logo.png)
 ## corespring-java
 [![Build Status](http://23.92.16.92:8080/buildStatus/icon?job=corespring-java)](http://23.92.16.92:8080/job/corespring-java/)
 
