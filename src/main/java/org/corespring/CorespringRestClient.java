@@ -92,7 +92,7 @@ public class CorespringRestClient {
     System.err.println(Quiz.getResourceRoute(this, quiz.getId()));
     CorespringRestResponse response = delete(Quiz.getResourceRoute(this, quiz.getId()), quiz);
     if (response.getHttpStatus() != 200) {
-      // throw custom exception
+      // add custom exception
       return quiz;
     } else {
       return null;

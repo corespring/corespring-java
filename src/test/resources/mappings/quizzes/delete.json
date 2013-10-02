@@ -1,0 +1,9 @@
+{
+    "request": {
+        "method": "DELETE",
+        "url": "/api/v1/quizzes/524c0aa9300401522ab21da3?access_token=demo_token"
+    },
+    "response": {
+        "status": 200
+    }
+}

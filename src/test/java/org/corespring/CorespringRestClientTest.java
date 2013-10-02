@@ -129,9 +129,12 @@ public class CorespringRestClientTest {
   public void testDeleteQuiz() {
     Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
     CorespringRestClient client = new CorespringRestClient("demo_token");
+    client.setEndpoint("http://localhost:8089/api");
+
     quiz = client.create(quiz);
     assertNotNull(quiz);
     quiz = client.delete(quiz);
+
     assertNull(quiz);
   }
 
