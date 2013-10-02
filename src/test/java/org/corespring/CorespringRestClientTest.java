@@ -125,4 +125,14 @@ public class CorespringRestClientTest {
     assertEquals("English 101", quiz.getCourse());
   }
 
+  @Test
+  public void testDeleteQuiz() {
+    Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
+    CorespringRestClient client = new CorespringRestClient("demo_token");
+    quiz = client.create(quiz);
+    assertNotNull(quiz);
+    quiz = client.delete(quiz);
+    assertNull(quiz);
+  }
+
 }

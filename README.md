@@ -74,3 +74,11 @@ build the quiz. This result can then be sent to the client's update method:
     System.out.println(quiz.getTitle());                // "Sample Quiz"
     quiz = client.update(new Quiz.Builder().title("My new title").build());
     System.out.println(quiz.getTitle());                // "My new title"
+
+
+##### Delete a quiz
+
+    Quiz quiz = client.getQuiz("000000000000000000000002");
+    System.out.println(quiz.getTitle());                // "Sample Quiz"
+    quiz = client.delete(quiz);
+    System.out.println(quiz);                           // null

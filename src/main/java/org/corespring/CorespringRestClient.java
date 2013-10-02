@@ -6,10 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -91,6 +88,17 @@ public class CorespringRestClient {
     return response.get(Quiz.class);
   }
 
+  public Quiz delete(Quiz quiz) {
+    System.err.println(Quiz.getResourceRoute(this, quiz.getId()));
+    CorespringRestResponse response = delete(Quiz.getResourceRoute(this, quiz.getId()), quiz);
+    if (response.getHttpStatus() != 200) {
+      // throw custom exception
+      return quiz;
+    } else {
+      return null;
+    }
+  }
+
   public StringBuilder baseUrl() {
     return new StringBuilder(this.getEndpoint()).append("/").append(CorespringRestClient.API_VESRION).append("/");
   }
@@ -102,15 +110,19 @@ public class CorespringRestClient {
     }
   }
 
-  public CorespringRestResponse put(String path, CorespringResource entity) {
-    return postOrPut(path, "PUT", new ArrayList<NameValuePair>(), entity);
+  private CorespringRestResponse put(String path, CorespringResource entity) {
+    return doRequest(path, "PUT", new ArrayList<NameValuePair>(), entity);
   }
 
-  public CorespringRestResponse post(String path, CorespringResource entity) {
-    return postOrPut(path, "POST", new ArrayList<NameValuePair>(), entity);
+  private CorespringRestResponse post(String path, CorespringResource entity) {
+    return doRequest(path, "POST", new ArrayList<NameValuePair>(), entity);
   }
 
-  public CorespringRestResponse postOrPut(String path, String method, List<NameValuePair> paramList,
+  private CorespringRestResponse delete(String path, CorespringResource entity) {
+    return doRequest(path, "DELETE", new ArrayList<NameValuePair>(), entity);
+  }
+
+  public CorespringRestResponse doRequest(String path, String method, List<NameValuePair> paramList,
                                           CorespringResource entity) {
     paramList.add(new BasicNameValuePair("access_token", this.accessToken));
     HttpUriRequest request = setupRequest(path, method, paramList, entity);
@@ -183,7 +195,10 @@ public class CorespringRestClient {
     request.addHeader(new BasicHeader("User-Agent", "corespring-java/" + VERSION));
     request.addHeader(new BasicHeader("Accept", "application/json"));
     request.addHeader(new BasicHeader("Accept-Charset", "utf-8"));
-    request.addHeader(new BasicHeader("Content-Type", "application/json"));
+
+    if (method.equals("PUT") || method.equals("POST")) {
+      request.addHeader(new BasicHeader("Content-Type", "application/json"));
+    }
 
     return request;
   }
@@ -201,6 +216,8 @@ public class CorespringRestClient {
       return generatePostRequest(path, parameters, entity);
     } else if (method.equalsIgnoreCase("PUT")) {
       return generatePutRequest(path, parameters, entity);
+    } else if (method.equalsIgnoreCase("DELETE")) {
+      return generateDeleteRequest(path, parameters, entity);
     } else {
       throw new IllegalArgumentException("Unknown Method " + method);
     }
@@ -228,6 +245,11 @@ public class CorespringRestClient {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+  private HttpDelete generateDeleteRequest(String path, List<NameValuePair> parameters, CorespringResource entity) {
+    URI uri = buildUri(path, parameters);
+    return new HttpDelete(uri);
   }
 
   private StringEntity buildJsonEntity(Object entity) throws JsonProcessingException, UnsupportedEncodingException {
