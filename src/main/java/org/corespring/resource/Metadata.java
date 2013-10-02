@@ -3,6 +3,21 @@ package org.corespring.resource;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Describes a set of metadata that is associated with a {@link Quiz}. Metadata consists of String fields for title,
+ * course, and note. A {@link Metadata} object might be represented as the following JSON:
+ *
+ * <pre>
+ *
+ *   {
+ *     "title" : "CoreSpring sample quiz",
+ *     "course" : "Intro to CoreSpring",
+ *     "note" : "This quiz consists of questions to help users get up to speed using the CoreSpring platform"
+ *   }
+ *
+ * </pre>
+ *
+ */
 public class Metadata {
 
   private final String title;
