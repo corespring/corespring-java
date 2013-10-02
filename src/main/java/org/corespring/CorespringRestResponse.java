@@ -30,9 +30,13 @@ public class CorespringRestResponse {
     this.error = (status >= 400);
   }
 
-  public <T> T get(Class<T> clazz) throws IOException {
+  public <T> T get(Class<T> clazz) {
     ObjectMapper objectMapper = new ObjectMapper();
-    return objectMapper.readValue(responseText, clazz);
+    try {
+      return objectMapper.readValue(responseText, clazz);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public <T> Collection<T> getAll(Class<T> clazz) {

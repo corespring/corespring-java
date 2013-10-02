@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "POST",
+        "url": "/api/v1/quizzes?access_token=demo_token"
+    },
+    "response": {
+        "status": 200,
+        "body": "{\"id\":\"524c0aa9300401522ab21da3\",\"orgId\":\"51114b307fc1eaa866444648\",\"metadata\":{\"title\":\"My new quiz!\"},\"participants\":[],\"questions\":[]}",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

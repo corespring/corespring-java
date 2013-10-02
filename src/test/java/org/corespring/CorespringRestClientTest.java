@@ -1,7 +1,6 @@
 package org.corespring;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.corespring.resource.Metadata;
 import org.corespring.resource.Organization;
 import org.corespring.resource.Question;
 import org.corespring.resource.Quiz;
@@ -11,7 +10,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -105,11 +103,14 @@ public class CorespringRestClientTest {
 
   @Test
   public void testCreateQuiz() {
-    Metadata metadata = new Metadata("Title", "Course", "Note!");
-    Quiz quiz = new Quiz(null, null, metadata, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+    Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
     CorespringRestClient client = new CorespringRestClient("demo_token");
     client.setEndpoint("http://localhost:8089/api");
-    client.create(quiz);
+    Quiz updatedQuiz = client.create(quiz);
+
+    // Created quiz has id and orgId
+    assertNotNull(updatedQuiz.getId());
+    assertNotNull(updatedQuiz.getOrgId());
   }
 
 }

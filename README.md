@@ -20,6 +20,8 @@ Instantiate the CorespringRestClient by passing in your access token.
 
 #### Organizations
 
+##### List organizations
+
     Collection<Organization> organizations = client.getOrganizations();
     for (Organization organization : organizations) {
       System.out.println(organization.getName);         // "Demo Organization"
@@ -28,7 +30,7 @@ Instantiate the CorespringRestClient by passing in your access token.
 
 #### Quizzes
 
-List quizzes for an organization:
+##### List quizzes for an organization
 
     Collection<Quiz> quizzes = client.getQuizzes(organization);
     for (Quiz quiz : quizzes) {
@@ -36,21 +38,20 @@ List quizzes for an organization:
       System.out.println(quiz.getCourse());             // "Challenge Course"
     }
 
-Retrieve a quiz by id:
+##### Retrieve a quiz by id
 
     Quiz quiz = client.getQuiz("000000000000000000000002");
     System.out.println(quiz.getTitle());                // "Sample Quiz"
     System.out.println(quiz.getCourse());               // "Challenge Course"
 
 
-Create a quiz:
+##### Create a quiz
 
-    Question question = new Question("503c2e91e4b00f3f0a9a7a6a", "My Question");
+Create a quiz by using the Quiz.Builder class, and persist to CoreSpring using the cilent's create method. Note that the
+result from the create method will return a new Quiz object with data from the server's response.
 
-    Collection<Question> questions = new ArrayList<Question>();
-    questions.add(question);
+    Quiz quiz = new Quiz.Bulider().title("My Quiz");
 
-    Quiz quiz = new Quiz("My Quiz", questions);
-
-    client.create(quiz);
-
+    quiz = client.create(quiz);
+    System.out.println(quiz.getId());                   // "524c0aa9300401522ab21da3"
+    System.out.println(quiz.getOrgId());                // "51114b307fc1eaa866444648"

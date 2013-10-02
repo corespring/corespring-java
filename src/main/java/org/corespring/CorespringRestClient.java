@@ -1,6 +1,7 @@
 package org.corespring;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
@@ -10,6 +11,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicHeader;
@@ -60,7 +62,7 @@ public class CorespringRestClient {
   }
 
   public Collection<Organization> getOrganizations() {
-    CorespringRestResponse response = get(Organization.getResourceRoute(this), "GET");
+    CorespringRestResponse response = get(Organization.getResourceRoute(this));
     return response.getAll(Organization.class);
   }
 
@@ -69,28 +71,18 @@ public class CorespringRestClient {
     List<NameValuePair> params = new ArrayList<NameValuePair>();
     params.add(organizationId);
 
-    CorespringRestResponse response = get(Quiz.getResourcesRoute(this), "GET", params);
+    CorespringRestResponse response = get(Quiz.getResourcesRoute(this), params);
     return response.getAll(Quiz.class);
   }
 
   public Quiz getQuizById(String id) {
-    CorespringRestResponse response = get(Quiz.getResourceRoute(this, id), "GET");
-    try {
-      return response.get(Quiz.class);
-    } catch(IOException e) {
-      e.printStackTrace();
-      return null;
-    }
+    CorespringRestResponse response = get(Quiz.getResourceRoute(this, id));
+    return response.get(Quiz.class);
   }
 
-  public void create(Quiz quiz) {
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    try {
-      System.err.println(objectMapper.writeValueAsString(quiz));
-    } catch (IOException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-    }
+  public Quiz create(Quiz quiz) {
+    CorespringRestResponse response = post(Quiz.getResourcesRoute(this), quiz);
+    return response.get(Quiz.class);
   }
 
   public StringBuilder baseUrl() {
@@ -104,14 +96,53 @@ public class CorespringRestClient {
     }
   }
 
-  public CorespringRestResponse get(String path, String method) {
-    List<NameValuePair> paramList = new ArrayList<NameValuePair>();
-    return get(path, method, paramList);
+  public CorespringRestResponse post(String path, Object entity) {
+    return post(path, new ArrayList<NameValuePair>(), entity);
   }
 
-  private CorespringRestResponse get(String path, String method, List<NameValuePair> paramList) {
+  public CorespringRestResponse post(String path, List<NameValuePair> paramList, Object entity) {
     paramList.add(new BasicNameValuePair("access_token", this.accessToken));
-    HttpUriRequest request = setupRequest(path, method, paramList);
+    HttpUriRequest request = setupRequest(path, "POST", paramList, entity);
+    HttpResponse response;
+
+    try {
+      response = httpClient.execute(request);
+      HttpEntity responseEntity = response.getEntity();
+
+      Header[] contentTypeHeaders = response.getHeaders("Content-Type");
+      String responseBody = "";
+
+      if (entity != null) {
+        responseBody = EntityUtils.toString(responseEntity);
+      }
+
+      StatusLine status = response.getStatusLine();
+      int statusCode = status.getStatusCode();
+
+      CorespringRestResponse restResponse =
+          new CorespringRestResponse(request.getURI().toString(), responseBody, statusCode);
+
+      return restResponse;
+
+    } catch (ClientProtocolException e1) {
+      throw new RuntimeException(e1);
+    } catch (IOException e1) {
+      throw new RuntimeException(e1);
+    }
+  }
+
+  static String convertStreamToString(java.io.InputStream is) {
+    java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+    return s.hasNext() ? s.next() : "";
+  }
+
+  public CorespringRestResponse get(String path) {
+    return get(path, new ArrayList<NameValuePair>());
+  }
+
+  private CorespringRestResponse get(String path, List<NameValuePair> paramList) {
+    paramList.add(new BasicNameValuePair("access_token", this.accessToken));
+    HttpUriRequest request = setupRequest(path, "GET", paramList, null);
 
     HttpResponse response;
     try {
@@ -140,12 +171,15 @@ public class CorespringRestClient {
     }
   }
 
-  private HttpUriRequest setupRequest(String path, String method, List<NameValuePair> parameters) {
-    HttpUriRequest request = buildMethod(method, path, parameters);
+  private HttpUriRequest setupRequest(String path, String method, List<NameValuePair> parameters, Object entity) {
+    HttpUriRequest request = (entity == null) ?
+        buildMethod(method, path, parameters) :
+        buildMethod(method, path, parameters, entity);
 
     request.addHeader(new BasicHeader("User-Agent", "corespring-java/" + VERSION));
     request.addHeader(new BasicHeader("Accept", "application/json"));
     request.addHeader(new BasicHeader("Accept-Charset", "utf-8"));
+    request.addHeader(new BasicHeader("Content-Type", "application/json"));
 
     return request;
   }
@@ -153,22 +187,38 @@ public class CorespringRestClient {
   private HttpUriRequest buildMethod(String method, String path, List<NameValuePair> parameters) {
     if (method.equalsIgnoreCase("GET")) {
       return generateGetRequest(path, parameters);
-    } else if (method.equalsIgnoreCase("POST")) {
-      return generatePostRequest(path, parameters);
     } else {
       throw new IllegalArgumentException("Unknown Method: " + method);
     }
   }
 
-  private HttpPost generatePostRequest(String path, List<NameValuePair> params) {
-    URI uri = buildUri(path);
+  private HttpUriRequest buildMethod(String method, String path, List<NameValuePair> parameters, Object entity) {
+    if (method.equalsIgnoreCase("POST")) {
+      return generatePostRequest(path, parameters, entity);
+    } else {
+      throw new IllegalArgumentException("Unknown Method " + method);
+    }
+  }
 
-    UrlEncodedFormEntity entity = buildEntityBody(params);
+  private HttpPost generatePostRequest(String path, List<NameValuePair> parameters, Object entity) {
+    URI uri = buildUri(path, parameters);
+    try {
+      StringEntity jsonEntity = buildJsonEntity(entity);
+      HttpPost post = new HttpPost(uri);
+      post.setEntity(jsonEntity);
+      return post;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
 
-    HttpPost post = new HttpPost(uri);
-    post.setEntity(entity);
-
-    return post;
+  private StringEntity buildJsonEntity(Object entity) throws JsonProcessingException, UnsupportedEncodingException {
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    String json = objectMapper.writeValueAsString(entity);
+    System.err.println(json);
+    return new StringEntity(json);
   }
 
   private UrlEncodedFormEntity buildEntityBody(List<NameValuePair> params) {

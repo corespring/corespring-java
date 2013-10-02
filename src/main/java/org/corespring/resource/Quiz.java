@@ -34,7 +34,7 @@ public class Quiz {
   private Quiz(Builder builder) {
     this.id = builder.id;
     this.orgId = builder.orgId;
-    this.metadata = builder.metadata;
+    this.metadata = builder.metadataBuilder.build();
     this.questions = builder.questions;
     this.participants = builder.participants;
   }
@@ -43,7 +43,7 @@ public class Quiz {
 
     private String id;
     private String orgId;
-    private Metadata metadata;
+    private Metadata.Builder metadataBuilder = new Metadata.Builder();
     private Collection<Question> questions = new ArrayList<Question>();
     private Collection<Participant> participants = new ArrayList<Participant>();
 
@@ -60,8 +60,18 @@ public class Quiz {
       return this;
     }
 
-    public Builder metadata(Metadata metadata) {
-      this.metadata = metadata;
+    public Builder title(String title) {
+      this.metadataBuilder.title(title);
+      return this;
+    }
+
+    public Builder course(String course) {
+      this.metadataBuilder.course(course);
+      return this;
+    }
+
+    public Builder note(String note) {
+      this.metadataBuilder.note(note);
       return this;
     }
 
