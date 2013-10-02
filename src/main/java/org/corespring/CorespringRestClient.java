@@ -29,10 +29,12 @@ import java.util.List;
 
 /**
  * {@link CorespringRestClient} serves as the main interface between the API and the CoreSpring platform. You should
- * instantiate CorespringRestClient with an access token (which you will be issued when you sign up as a developer for the
- * CoreSpring platfrom):
+ * instantiate CorespringRestClient with your client ID and client secret (which you will be issued when you sign up as
+ * a developer for the CoreSpring platform):
  *
- *     CorespringRestClient client = new CorespringRestClient("52498773a9c98a782be5b739");
+ *     String clientId = "524c5cb5300401522ab21db1";
+ *     String clientSecret = "325hm11xiz7ykeen2ibt";
+ *     CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
  *
  * You can then use the client object to interface with the various methods made available.
  */
