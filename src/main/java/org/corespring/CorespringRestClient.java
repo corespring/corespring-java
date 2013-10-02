@@ -27,6 +27,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * {@link CorespringRestClient} serves as the main interface between the API and the CoreSpring platform. You should
+ * instantiate CorespringRestClient with an access token (which you will be issued when you sign up as a developer for the
+ * CoreSpring platfrom):
+ *
+ *     CorespringRestClient client = new CorespringRestClient("52498773a9c98a782be5b739");
+ *
+ * You can then use the client object to interface with the various methods made available.
+ */
 public class CorespringRestClient {
 
   /** Version of the API to target */

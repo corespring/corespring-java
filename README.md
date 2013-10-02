@@ -7,7 +7,24 @@
 
 ### Installing
 
-Use the following dependency in your project:
+You can find the latest corespring-java jar [here](http://repository.corespring.org/) and include it on your classpath.
+Alternatively, CoreSpring provides a public repository with access to different versions of the library.
+
+#### Maven Setup
+
+First, add the CoreSpring repository to your project in the <repositories> section of your pom.xml file:
+
+    <repositories>
+      ...
+      <repository>
+        <id>corespring</id>
+        <name>CoreSpring Repository</name>
+        <url>http://repository.corespring.org</url>
+      </repository>
+      ...
+    </repositories>
+
+You will also need to add the following dependency to your project:
 
     <dependency>
       <groupId>org.corespring</groupId>
@@ -16,69 +33,35 @@ Use the following dependency in your project:
       <scope>compile</scope>
     </dependency>
 
+Afterwards, the mvn compile task should pull down the corespring-java library and make it available within your project.
+Additional information can be found on the [Apache Maven website](http://maven.apache.org/).
 
-### Examples
 
-Instantiate the CorespringRestClient by passing in your access token.
+### Quick Start
+
+Instantiate the CorespringRestClient by passing in your access token, and use its methods to interact with the platform:
 
     CorespringRestClient client = new CorespringRestClient("52498773a9c98a782be5b739");
 
-
-#### Organizations
-
-##### List organizations
-
     Collection<Organization> organizations = client.getOrganizations();
-    for (Organization organization : organizations) {
-      System.out.println(organization.getName);         // "Demo Organization"
-      System.out.println(organization.getId);           // "51114b307fc1eaa866444648"
+
+    for (Organization organization : organization) {
+      System.out.println(organization.getName());           // "Demo Organization"
+
+      Collection<Quiz> quizzes = client.getQuizzes(organization);
+      for (Quiz quiz : quizzes) {
+        System.out.println(quiz.getTitle());                // "Sample Quiz"
+      }
     }
 
 
-#### Quizzes
+### Resources
 
-##### List quizzes for an organization
+Below you will find additional documentation related to the individual resources in the domain model of the CoreSpring
+platform:
 
-    Collection<Quiz> quizzes = client.getQuizzes(organization);
-    for (Quiz quiz : quizzes) {
-      System.out.println(quiz.getTitle());              // "Sample Quiz"
-      System.out.println(quiz.getCourse());             // "Challenge Course"
-    }
-
-
-##### Retrieve a quiz by id
-
-    Quiz quiz = client.getQuiz("000000000000000000000002");
-    System.out.println(quiz.getTitle());                // "Sample Quiz"
-    System.out.println(quiz.getCourse());               // "Challenge Course"
-
-
-##### Create a quiz
-
-Create a quiz by using the Quiz.Builder class, and persist to CoreSpring using the cilent's create method. Note that the
-result from the create method will return a new Quiz object with data from the server's response.
-
-    Quiz quiz = new Quiz.Bulider().title("My Quiz");
-
-    quiz = client.create(quiz);
-    System.out.println(quiz.getId());                   // "524c0aa9300401522ab21da3"
-    System.out.println(quiz.getOrgId());                // "51114b307fc1eaa866444648"
-
-
-##### Update a quiz
-
-Because Quiz objects are immutable, you should instantiate a new Quiz.Builder with a Quiz, modify the builder, and then
-build the quiz. This result can then be sent to the client's update method:
-
-    Quiz quiz = client.getQuiz("000000000000000000000002");
-    System.out.println(quiz.getTitle());                // "Sample Quiz"
-    quiz = client.update(new Quiz.Builder().title("My new title").build());
-    System.out.println(quiz.getTitle());                // "My new title"
-
-
-##### Delete a quiz
-
-    Quiz quiz = client.getQuiz("000000000000000000000002");
-    System.out.println(quiz.getTitle());                // "Sample Quiz"
-    quiz = client.delete(quiz);
-    System.out.println(quiz);                           // null
+* Items
+* ItemSessions
+* [Organizations](/doc/resources/organizations.md)
+* [Quizzes](/doc/resources/quizzes.md)
+  * [Settings](/doc/resources/settings.md)

@@ -4,6 +4,23 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * {@link Settings} contains basic information about how an item should be rendered and handled by the CoreSpring
+ * platform. The following is a typical JSON representation:
+ *
+ * <pre>
+ *   "settings" : {
+ *     "maxNoOfAttempts" : 0,
+ *     "highlightUserResponse" : true,
+ *     "highlightCorrectResponse" : true,
+ *     "showFeedback" : false,
+ *     "allowEmptyResponses" : false,
+ *     "submitCompleteMessage" : "Ok! Your response was submitted.",
+ *     "submitIncorrectMessage" : "You may revise your work before you submit your final response."
+ *   }
+ * </pre>
+ *
+ */
 @JsonAutoDetect(fieldVisibility= JsonAutoDetect.Visibility.ANY)
 public class Settings {
 
