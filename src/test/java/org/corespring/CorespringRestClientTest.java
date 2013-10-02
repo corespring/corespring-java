@@ -15,6 +15,9 @@ import static org.junit.Assert.*;
 
 public class CorespringRestClientTest {
 
+  private String clientId = "524c5cb5300401522ab21db1";
+  private String clientSecret = "325hm11xiz7ykeen2ibt";
+
   private final Organization organization =
       new Organization("51114b307fc1eaa866444648", "Demo Organization", new ArrayList<String>());
 
@@ -22,36 +25,9 @@ public class CorespringRestClientTest {
   public WireMockRule wireMockRule = new WireMockRule(8089);
 
   @Test
-  public void testValidAccessTokenDoesNotThrowException() {
-
-    // Success with valid ObjectId
-    try {
-      new CorespringRestClient("52498773a9c98a782be5b739");
-      assertTrue(true);
-    } catch (IllegalArgumentException e) {
-      assertTrue(false);
-    }
-
-  }
-
-  @Test
-  public void testInvalidAccessTokenThrowsException() {
-
-    // Fails with invalid ObjectId
-    try {
-      new CorespringRestClient("abc");
-      assertTrue(false);
-    } catch (IllegalArgumentException e) {
-      assertTrue(true);
-    }
-
-  }
-
-
-  @Test
   public void testGetOrganizations() {
-    CorespringRestClient client = new CorespringRestClient("demo_token");
-    client.setEndpoint("http://localhost:8089/api");
+    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    client.setEndpoint("http://localhost:8089");
 
     Collection<Organization> organizations = client.getOrganizations();
 
@@ -65,8 +41,8 @@ public class CorespringRestClientTest {
   @Test
   public void testGetQuizzes() {
 
-    CorespringRestClient client = new CorespringRestClient("demo_token");
-    client.setEndpoint("http://localhost:8089/api");
+    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    client.setEndpoint("http://localhost:8089");
 
     Collection<Quiz> quizzes = client.getQuizzes(organization);
     for (Quiz quiz : quizzes) {
@@ -76,8 +52,8 @@ public class CorespringRestClientTest {
 
   @Test
   public void testGetQuizById() {
-    CorespringRestClient client = new CorespringRestClient("demo_token");
-    client.setEndpoint("http://localhost:8089/api");
+    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    client.setEndpoint("http://localhost:8089");
 
     Quiz quiz = client.getQuizById("000000000000000000000002");
     checkQuiz(quiz);
@@ -104,8 +80,8 @@ public class CorespringRestClientTest {
   @Test
   public void testCreateQuiz() {
     Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
-    CorespringRestClient client = new CorespringRestClient("demo_token");
-    client.setEndpoint("http://localhost:8089/api");
+    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    client.setEndpoint("http://localhost:8089");
     Quiz updatedQuiz = client.create(quiz);
 
     // Created quiz has id and orgId
@@ -116,8 +92,8 @@ public class CorespringRestClientTest {
   @Test
   public void testUpdateQuiz() {
     Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
-    CorespringRestClient client = new CorespringRestClient("demo_token");
-    client.setEndpoint("http://localhost:8089/api");
+    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    client.setEndpoint("http://localhost:8089");
 
     quiz = client.create(quiz);
     quiz = client.update(new Quiz.Builder(quiz).course("English 101").build());
@@ -128,8 +104,8 @@ public class CorespringRestClientTest {
   @Test
   public void testDeleteQuiz() {
     Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
-    CorespringRestClient client = new CorespringRestClient("demo_token");
-    client.setEndpoint("http://localhost:8089/api");
+    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    client.setEndpoint("http://localhost:8089");
 
     quiz = client.create(quiz);
     assertNotNull(quiz);
