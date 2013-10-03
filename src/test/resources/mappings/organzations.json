@@ -5,7 +5,7 @@
   },
   "response": {
     "status": 200,
-    "body": "[{\"id\":\"51114b307fc1eaa866444648\",\"name\":\"Demo Organization\",\"path\":[\"51114b307fc1eaa866444648\"]}]",
+    "body": "[{\"id\":\"51114b307fc1eaa866444648\",\"name\":\"Demo Organization\",\"path\":[\"51114b307fc1eaa866444648\"],\"isRoot\":false}]",
     "headers": {
       "Content-Type": "application/json"
     }

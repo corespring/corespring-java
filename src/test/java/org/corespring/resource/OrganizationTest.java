@@ -13,15 +13,15 @@ public class OrganizationTest {
 
   @Test
   public void testSerialization() throws IOException {
-    Organization organization = new Organization("id", "name", new ArrayList<String>());
+    Organization organization = new Organization("id", "name", new ArrayList<String>(), false);
     ObjectMapper objectMapper = new ObjectMapper();
 
-    assertEquals("{\"id\":\"id\",\"name\":\"name\",\"path\":[]}", objectMapper.writeValueAsString(organization));
+    assertEquals("{\"id\":\"id\",\"name\":\"name\",\"path\":[],\"isRoot\":false}", objectMapper.writeValueAsString(organization));
   }
 
   @Test
   public void testDeserialization() throws IOException {
-    String json = "{\"id\":\"id\",\"name\":\"name\",\"path\":[]}";
+    String json = "{\"id\":\"id\",\"name\":\"name\",\"path\":[],\"isRoot\":false}";
     ObjectMapper objectMapper = new ObjectMapper();
     Organization deserialized = objectMapper.readValue(json, Organization.class);
 

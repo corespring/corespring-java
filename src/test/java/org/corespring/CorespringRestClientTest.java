@@ -19,7 +19,7 @@ public class CorespringRestClientTest {
   private String clientSecret = "325hm11xiz7ykeen2ibt";
 
   private final Organization organization =
-      new Organization("51114b307fc1eaa866444648", "Demo Organization", new ArrayList<String>());
+      new Organization("51114b307fc1eaa866444648", "Demo Organization", new ArrayList<String>(), false);
 
   @Rule
   public WireMockRule wireMockRule = new WireMockRule(8089);

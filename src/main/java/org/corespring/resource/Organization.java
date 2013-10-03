@@ -29,20 +29,24 @@ public class Organization implements CorespringResource {
   private final String name;
   private final String id;
   private final Collection<String> path;
+  private final Boolean root;
 
   @JsonCreator
   public Organization(@JsonProperty("id") String id,
                       @JsonProperty("name") String name,
-                      @JsonProperty("path") Collection<String> path) {
+                      @JsonProperty("path") Collection<String> path,
+                      @JsonProperty("isRoot") Boolean root) {
     this.name = name;
     this.id = id;
     this.path = path;
+    this.root = root;
   }
 
   private Organization(Builder builder) {
     this.name = builder.name;
     this.id = builder.id;
     this.path = builder.path;
+    this.root = builder.root;
   }
 
   public static class Builder {
@@ -50,6 +54,7 @@ public class Organization implements CorespringResource {
     private String name;
     private String id;
     private Collection<String> path = new ArrayList<String>();
+    private Boolean root;
 
     public Builder() {
     }
@@ -66,6 +71,11 @@ public class Organization implements CorespringResource {
 
     public Builder path(String path) {
       this.path.add(path);
+      return this;
+    }
+
+    public Builder root(Boolean root) {
+      this.root = root;
       return this;
     }
 
@@ -89,6 +99,11 @@ public class Organization implements CorespringResource {
 
   public Collection<String> getPath() {
     return path;
+  }
+
+  @JsonProperty("isRoot")
+  public Boolean isRoot() {
+    return root;
   }
 
 
