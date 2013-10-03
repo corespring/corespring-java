@@ -1,9 +1,10 @@
-package org.corespring;
+package org.corespring.rest;
 
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import org.corespring.resource.Error;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -22,7 +23,20 @@ public class CorespringRestResponse {
 
   private final ObjectMapper objectMapper;
 
-  public CorespringRestResponse(String url, String text, int status) {
+  public CorespringRestResponse(String url, String text, int status) throws CorespringRestException {
+    this.objectMapper = new ObjectMapper();
+    this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+    if (status == 403) {
+      try {
+        Error error = objectMapper.readValue(text, Error.class);
+        throw new CorespringRestException(error);
+      }
+      catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+
     Pattern p = Pattern.compile("([^?]+)\\??(.*)");
     Matcher m = p.matcher(url);
     m.matches();
@@ -31,8 +45,6 @@ public class CorespringRestResponse {
     this.responseText = text;
     this.httpStatus = status;
     this.error = (status >= 400);
-    this.objectMapper = new ObjectMapper();
-    this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
   public <T> T get(Class<T> clazz) {

@@ -1,4 +1,4 @@
-package org.corespring;
+package org.corespring.rest;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.corespring.resource.Organization;

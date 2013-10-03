@@ -12,7 +12,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import org.corespring.CorespringRestClient;
+import org.corespring.rest.CorespringRestClient;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

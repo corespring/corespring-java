@@ -2,7 +2,7 @@ package org.corespring.resource;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.corespring.CorespringRestClient;
+import org.corespring.rest.CorespringRestClient;
 
 import java.util.ArrayList;
 import java.util.Collection;

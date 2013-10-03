@@ -1,4 +1,4 @@
-package org.corespring;
+package org.corespring.rest;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -106,7 +106,6 @@ public class CorespringRestClient {
     System.err.println(Quiz.getResourceRoute(this, quiz.getId()));
     CorespringRestResponse response = delete(Quiz.getResourceRoute(this, quiz.getId()), quiz);
     if (response.getHttpStatus() != 200) {
-      // add custom exception
       return quiz;
     } else {
       return null;
@@ -159,16 +158,30 @@ public class CorespringRestClient {
       StatusLine status = response.getStatusLine();
       int statusCode = status.getStatusCode();
 
-      CorespringRestResponse restResponse =
-          new CorespringRestResponse(request.getURI().toString(), responseBody, statusCode);
+      try {
+        CorespringRestResponse restResponse =
+            new CorespringRestResponse(request.getURI().toString(), responseBody, statusCode);
+        return restResponse;
+      } catch (CorespringRestException restException) {
+        switch (restException.getErrorCode()) {
+          case CorespringRestException.EXPIRED_ACCESS_TOKEN:
+            getNewAccessToken();
+          default:
+            throw restException;
+        }
+      }
 
-      return restResponse;
-
-    } catch (ClientProtocolException e1) {
-      throw new RuntimeException(e1);
-    } catch (IOException e1) {
-      throw new RuntimeException(e1);
+    } catch (ClientProtocolException e) {
+      throw new RuntimeException(e);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } catch (CorespringRestException e) {
+      throw new RuntimeException(e);
     }
+  }
+
+  private void getNewAccessToken() {
+    // TODO Implement me!
   }
 
   public CorespringRestResponse get(String path) {
@@ -193,15 +206,25 @@ public class CorespringRestClient {
       StatusLine status = response.getStatusLine();
       int statusCode = status.getStatusCode();
 
-      CorespringRestResponse restResponse =
-          new CorespringRestResponse(request.getURI().toString(), responseBody, statusCode);
+      try {
+        CorespringRestResponse restResponse =
+            new CorespringRestResponse(request.getURI().toString(), responseBody, statusCode);
+        return restResponse;
+      } catch (CorespringRestException restException) {
+        switch (restException.getErrorCode()) {
+          case CorespringRestException.EXPIRED_ACCESS_TOKEN:
+            getNewAccessToken();
+          default:
+            throw restException;
+        }
+      }
 
-      return restResponse;
-
-    } catch (ClientProtocolException e1) {
-      throw new RuntimeException(e1);
-    } catch (IOException e1) {
-      throw new RuntimeException(e1);
+    } catch (ClientProtocolException e) {
+      throw new RuntimeException(e);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } catch (CorespringRestException e) {
+      throw new RuntimeException(e);
     }
   }
 
