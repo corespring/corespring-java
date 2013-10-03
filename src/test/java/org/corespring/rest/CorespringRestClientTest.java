@@ -25,7 +25,7 @@ public class CorespringRestClientTest {
   public WireMockRule wireMockRule = new WireMockRule(8089);
 
   @Test
-  public void testGetOrganizations() {
+  public void testGetOrganizations() throws CorespringRestException {
     CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");
 
@@ -39,7 +39,7 @@ public class CorespringRestClientTest {
   }
 
   @Test
-  public void testGetQuizzes() {
+  public void testGetQuizzes() throws CorespringRestException {
 
     CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");
@@ -51,7 +51,7 @@ public class CorespringRestClientTest {
   }
 
   @Test
-  public void testGetQuizById() {
+  public void testGetQuizById() throws CorespringRestException {
     CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");
 
@@ -78,7 +78,7 @@ public class CorespringRestClientTest {
   }
 
   @Test
-  public void testCreateQuiz() {
+  public void testCreateQuiz() throws CorespringRestException {
     Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
     CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");
@@ -90,7 +90,7 @@ public class CorespringRestClientTest {
   }
 
   @Test
-  public void testUpdateQuiz() {
+  public void testUpdateQuiz() throws CorespringRestException {
     Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
     CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");
@@ -102,7 +102,7 @@ public class CorespringRestClientTest {
   }
 
   @Test
-  public void testDeleteQuiz() {
+  public void testDeleteQuiz() throws CorespringRestException {
     Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
     CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");

@@ -49,6 +49,8 @@ public class CorespringRestClient {
   /** Default timeout in milliseconds */
   private static final int CONNECTION_TIMEOUT = 10000;
 
+  private static final int RETRY_COUNT = 5;
+
   /** The endpoint. */
   private String endpoint = "http://localhost:9000/";
 
@@ -73,12 +75,12 @@ public class CorespringRestClient {
     httpClient.getParams().setParameter("http.protocol.content-charset", "UTF-8");
   }
 
-  public Collection<Organization> getOrganizations() {
+  public Collection<Organization> getOrganizations() throws CorespringRestException {
     CorespringRestResponse response = get(Organization.getResourceRoute(this));
     return response.getAll(Organization.class);
   }
 
-  public Collection<Quiz> getQuizzes(Organization organization) {
+  public Collection<Quiz> getQuizzes(Organization organization) throws CorespringRestException {
     NameValuePair organizationId = new BasicNameValuePair("organization_id", organization.getId());
     List<NameValuePair> params = new ArrayList<NameValuePair>();
     params.add(organizationId);
@@ -87,22 +89,22 @@ public class CorespringRestClient {
     return response.getAll(Quiz.class);
   }
 
-  public Quiz getQuizById(String id) {
+  public Quiz getQuizById(String id) throws CorespringRestException {
     CorespringRestResponse response = get(Quiz.getResourceRoute(this, id));
     return response.get(Quiz.class);
   }
 
-  public Quiz create(Quiz quiz) {
+  public Quiz create(Quiz quiz) throws CorespringRestException {
     CorespringRestResponse response = post(Quiz.getResourcesRoute(this), quiz);
     return response.get(Quiz.class);
   }
 
-  public Quiz update(Quiz quiz) {
+  public Quiz update(Quiz quiz) throws CorespringRestException {
     CorespringRestResponse response = put(Quiz.getResourceRoute(this, quiz.getId()), quiz);
     return response.get(Quiz.class);
   }
 
-  public Quiz delete(Quiz quiz) {
+  public Quiz delete(Quiz quiz) throws CorespringRestException {
     System.err.println(Quiz.getResourceRoute(this, quiz.getId()));
     CorespringRestResponse response = delete(Quiz.getResourceRoute(this, quiz.getId()), quiz);
     if (response.getHttpStatus() != 200) {
@@ -119,111 +121,82 @@ public class CorespringRestClient {
     return accessToken;
   }
 
-
   public StringBuilder baseUrl() {
     return new StringBuilder(getEndpoint()).append("/").append(CorespringRestClient.API_VERSION).append("/");
   }
 
-  private CorespringRestResponse put(String path, CorespringResource entity) {
+  private CorespringRestResponse get(String path, List<NameValuePair> paramList) throws CorespringRestException {
+    return doRequest(path, "GET", paramList, null);
+  }
+
+  private CorespringRestResponse get(String path) throws CorespringRestException {
+    return doRequest(path, "GET", new ArrayList<NameValuePair>(), null);
+  }
+
+  private CorespringRestResponse put(String path, CorespringResource entity) throws CorespringRestException {
     return doRequest(path, "PUT", new ArrayList<NameValuePair>(), entity);
   }
 
-  private CorespringRestResponse post(String path, CorespringResource entity) {
+  private CorespringRestResponse post(String path, CorespringResource entity) throws CorespringRestException {
     return doRequest(path, "POST", new ArrayList<NameValuePair>(), entity);
   }
 
-  private CorespringRestResponse delete(String path, CorespringResource entity) {
+  private CorespringRestResponse delete(String path, CorespringResource entity) throws CorespringRestException  {
     return doRequest(path, "DELETE", new ArrayList<NameValuePair>(), entity);
   }
 
   public CorespringRestResponse doRequest(String path, String method, List<NameValuePair> paramList,
-                                          CorespringResource entity) {
+                                          CorespringResource entity) throws CorespringRestException {
     if (getAccessToken() != null) {
       paramList.add(new BasicNameValuePair("access_token", getAccessToken()));
     }
 
     HttpUriRequest request = setupRequest(path, method, paramList, entity);
-    HttpResponse response;
+    CorespringRestResponse response = null;
+    CorespringRestException exception = null;
 
+    for (int i = 0; i < RETRY_COUNT; i++) {
+      try {
+        response = tryRequest(request);
+      } catch (CorespringRestException e) {
+        if (e.getErrorCode() == CorespringRestException.EXPIRED_ACCESS_TOKEN) {
+          // reload access token if invalid
+          this.accessToken = AccessTokenProvider.getAccessToken(this.clientId, this.clientSecret, getEndpoint());
+        } else {
+          exception = e;
+        }
+      }
+    }
+
+    if (exception != null) {
+      throw exception;
+    }
+
+    return response;
+
+  }
+
+  private CorespringRestResponse tryRequest(HttpUriRequest request) throws CorespringRestException {
+    HttpResponse response;
     try {
       response = httpClient.execute(request);
       HttpEntity responseEntity = response.getEntity();
 
       String responseBody = "";
 
-      if (entity != null) {
+      if (responseEntity != null) {
         responseBody = EntityUtils.toString(responseEntity);
       }
 
       StatusLine status = response.getStatusLine();
       int statusCode = status.getStatusCode();
+      CorespringRestResponse restResponse =
+          new CorespringRestResponse(request.getURI().toString(), responseBody, statusCode);
 
-      try {
-        CorespringRestResponse restResponse =
-            new CorespringRestResponse(request.getURI().toString(), responseBody, statusCode);
-        return restResponse;
-      } catch (CorespringRestException restException) {
-        switch (restException.getErrorCode()) {
-          case CorespringRestException.EXPIRED_ACCESS_TOKEN:
-            getNewAccessToken();
-          default:
-            throw restException;
-        }
-      }
-
+      return restResponse;
     } catch (ClientProtocolException e) {
       throw new RuntimeException(e);
     } catch (IOException e) {
-      throw new RuntimeException(e);
-    } catch (CorespringRestException e) {
-      throw new RuntimeException(e);
-    }
-  }
-
-  private void getNewAccessToken() {
-    // TODO Implement me!
-  }
-
-  public CorespringRestResponse get(String path) {
-    return get(path, new ArrayList<NameValuePair>());
-  }
-
-  private CorespringRestResponse get(String path, List<NameValuePair> paramList) {
-    paramList.add(new BasicNameValuePair("access_token", getAccessToken()));
-    HttpUriRequest request = setupRequest(path, "GET", paramList, null);
-
-    HttpResponse response;
-    try {
-      response = httpClient.execute(request);
-      HttpEntity entity = response.getEntity();
-
-      String responseBody = "";
-
-      if (entity != null) {
-        responseBody = EntityUtils.toString(entity);
-      }
-
-      StatusLine status = response.getStatusLine();
-      int statusCode = status.getStatusCode();
-
-      try {
-        CorespringRestResponse restResponse =
-            new CorespringRestResponse(request.getURI().toString(), responseBody, statusCode);
-        return restResponse;
-      } catch (CorespringRestException restException) {
-        switch (restException.getErrorCode()) {
-          case CorespringRestException.EXPIRED_ACCESS_TOKEN:
-            getNewAccessToken();
-          default:
-            throw restException;
-        }
-      }
-
-    } catch (ClientProtocolException e) {
-      throw new RuntimeException(e);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    } catch (CorespringRestException e) {
       throw new RuntimeException(e);
     }
   }

@@ -19,7 +19,6 @@ public class CorespringRestResponse {
   private final int httpStatus;
   private final String url;
   private final String queryString;
-  private final boolean error;
 
   private final ObjectMapper objectMapper;
 
@@ -27,13 +26,13 @@ public class CorespringRestResponse {
     this.objectMapper = new ObjectMapper();
     this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-    if (status == 403) {
+    if (status >= 400) {
       try {
         Error error = objectMapper.readValue(text, Error.class);
         throw new CorespringRestException(error);
       }
       catch (Exception e) {
-        throw new RuntimeException(e);
+        throw new CorespringRestException(text);
       }
     }
 
@@ -44,7 +43,6 @@ public class CorespringRestResponse {
     this.queryString = m.group(2);
     this.responseText = text;
     this.httpStatus = status;
-    this.error = (status >= 400);
   }
 
   public <T> T get(Class<T> clazz) {
@@ -79,10 +77,6 @@ public class CorespringRestResponse {
 
   public String getQueryString() {
     return queryString;
-  }
-
-  public boolean isError() {
-    return error;
   }
 
 }
