@@ -36,6 +36,19 @@
     </plugins>
   </build>
 
+  <distributionManagement>
+    <repository>
+      <id>central</id>
+      <name>CoreSpring (Releases)</name>
+      <url>http://repository.corespring.org/artifactory/libs-release</url>
+    </repository>
+    <snapshotRepository>
+      <id>snapshots</id>
+      <name>CoreSpring (Snapshots)</name>
+      <url>http://repository.corespring.org/artifactory/libs-snapshot</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
