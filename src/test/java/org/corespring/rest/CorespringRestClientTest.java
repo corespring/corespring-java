@@ -1,6 +1,7 @@
 package org.corespring.rest;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.corespring.authentication.AccessTokenProvider;
 import org.corespring.resource.Organization;
 import org.corespring.resource.Question;
 import org.corespring.resource.Quiz;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class CorespringRestClientTest {
 
@@ -29,8 +31,10 @@ public class CorespringRestClientTest {
     CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");
 
-    Collection<Organization> organizations = client.getOrganizations();
+    assertOrganizationsAreCorrect(client.getOrganizations());
+  }
 
+  private void assertOrganizationsAreCorrect(Collection<Organization> organizations) {
     assertEquals(1, organizations.size());
     Organization organization = organizations.iterator().next();
 
@@ -112,6 +116,20 @@ public class CorespringRestClientTest {
     quiz = client.delete(quiz);
 
     assertNull(quiz);
+  }
+
+  @Test
+  public void testAuthTokenRetry() throws CorespringRestException {
+    AccessTokenProvider mockAccessTokenProvider = mock(AccessTokenProvider.class);
+
+    when(mockAccessTokenProvider.getAccessToken(anyString(), anyString(), anyString()))
+        .thenReturn("bad_token").thenReturn("demo_token");
+
+    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    client.setAccessTokenProvider(mockAccessTokenProvider);
+    client.setEndpoint("http://localhost:8089");
+
+    assertOrganizationsAreCorrect(client.getOrganizations());
   }
 
 }

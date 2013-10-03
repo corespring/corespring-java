@@ -23,6 +23,10 @@ public class CorespringRestException extends Exception {
     return errorCode;
   }
 
+  public boolean hasErrorCode() {
+    return errorCode != null;
+  }
+
   public String getErrorMessage() {
     return errorMessage;
   }

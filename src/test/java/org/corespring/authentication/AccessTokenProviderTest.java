@@ -16,7 +16,7 @@ public class AccessTokenProviderTest {
     String clientId = "524c5cb5300401522ab21db1";
     String clientSecret = "325hm11xiz7ykeen2ibt";
 
-    String accessToken = AccessTokenProvider.getAccessToken(clientId, clientSecret, "http://localhost:8089");
+    String accessToken = new AccessTokenProvider().getAccessToken(clientId, clientSecret, "http://localhost:8089");
 
     assertEquals("demo_token", accessToken);
   }

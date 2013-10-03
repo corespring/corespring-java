@@ -49,15 +49,16 @@ public class CorespringRestClient {
   /** Default timeout in milliseconds */
   private static final int CONNECTION_TIMEOUT = 10000;
 
-  private static final int RETRY_COUNT = 5;
-
   /** The endpoint. */
   private String endpoint = "http://localhost:9000/";
 
   private final String clientId;
   private final String clientSecret;
 
+  private final String ACCESS_TOKEN_KEY = "access_token";
+
   private String accessToken;
+  private AccessTokenProvider accessTokenProvider = new AccessTokenProvider();
 
   private HttpClient httpClient;
 
@@ -105,7 +106,6 @@ public class CorespringRestClient {
   }
 
   public Quiz delete(Quiz quiz) throws CorespringRestException {
-    System.err.println(Quiz.getResourceRoute(this, quiz.getId()));
     CorespringRestResponse response = delete(Quiz.getResourceRoute(this, quiz.getId()), quiz);
     if (response.getHttpStatus() != 200) {
       return quiz;
@@ -116,9 +116,18 @@ public class CorespringRestClient {
 
   private String getAccessToken() {
     if (this.accessToken == null) {
-      this.accessToken = AccessTokenProvider.getAccessToken(clientId, clientSecret, getEndpoint());
+      this.accessToken = getAccessTokenProvider().getAccessToken(clientId, clientSecret, getEndpoint());
     }
     return accessToken;
+  }
+
+  private AccessTokenProvider getAccessTokenProvider() {
+    return accessTokenProvider;
+  }
+
+  // Note: This is pacakge-private because it only needs to be accessed by the test
+  void setAccessTokenProvider(AccessTokenProvider accessTokenProvider) {
+    this.accessTokenProvider = accessTokenProvider;
   }
 
   public StringBuilder baseUrl() {
@@ -148,23 +157,39 @@ public class CorespringRestClient {
   public CorespringRestResponse doRequest(String path, String method, List<NameValuePair> paramList,
                                           CorespringResource entity) throws CorespringRestException {
     if (getAccessToken() != null) {
-      paramList.add(new BasicNameValuePair("access_token", getAccessToken()));
+      paramList.add(new BasicNameValuePair(ACCESS_TOKEN_KEY, getAccessToken()));
     }
 
     HttpUriRequest request = setupRequest(path, method, paramList, entity);
     CorespringRestResponse response = null;
     CorespringRestException exception = null;
 
-    for (int i = 0; i < RETRY_COUNT; i++) {
-      try {
-        response = tryRequest(request);
-      } catch (CorespringRestException e) {
-        if (e.getErrorCode() == CorespringRestException.EXPIRED_ACCESS_TOKEN) {
-          // reload access token if invalid
-          this.accessToken = AccessTokenProvider.getAccessToken(this.clientId, this.clientSecret, getEndpoint());
-        } else {
-          exception = e;
+    try {
+      response = tryRequest(request);
+    } catch (CorespringRestException e) {
+      if (e.hasErrorCode() && e.getErrorCode() == CorespringRestException.EXPIRED_ACCESS_TOKEN) {
+        // reload access token if invalid
+        this.accessToken = getAccessTokenProvider().getAccessToken(this.clientId, this.clientSecret, getEndpoint());
+
+        if (getAccessToken() != null) {
+          NameValuePair accessTokenPair = null;
+          for (NameValuePair pair : paramList) {
+            if (pair.getName().equals(ACCESS_TOKEN_KEY)) {
+              accessTokenPair = pair;
+              break;
+            }
+          }
+          if (accessTokenPair != null) {
+            paramList.remove(accessTokenPair);
+          }
+
+          paramList.add(new BasicNameValuePair(ACCESS_TOKEN_KEY, getAccessToken()));
         }
+
+        request = setupRequest(path, method, paramList, entity);
+        response = tryRequest(request);
+      } else {
+        exception = e;
       }
     }
 
@@ -173,7 +198,6 @@ public class CorespringRestClient {
     }
 
     return response;
-
   }
 
   private CorespringRestResponse tryRequest(HttpUriRequest request) throws CorespringRestException {

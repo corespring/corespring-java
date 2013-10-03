@@ -44,7 +44,7 @@ public class AccessTokenProvider {
    * @param baseUrl base URL for CoreSpring server
    * @return
    */
-  public static String getAccessToken(String clientId, String clientSecret, String baseUrl) {
+  public String getAccessToken(String clientId, String clientSecret, String baseUrl) {
 
     AccessTokenRequest authTokenRequest = new AccessTokenRequest(clientId, clientSecret);
 

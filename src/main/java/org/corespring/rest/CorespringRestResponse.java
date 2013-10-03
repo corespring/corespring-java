@@ -27,13 +27,13 @@ public class CorespringRestResponse {
     this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     if (status >= 400) {
+      Error error;
       try {
-        Error error = objectMapper.readValue(text, Error.class);
-        throw new CorespringRestException(error);
-      }
-      catch (Exception e) {
+        error = objectMapper.readValue(text, Error.class);
+      } catch (Exception e) {
         throw new CorespringRestException(text);
       }
+      throw new CorespringRestException(error);
     }
 
     Pattern p = Pattern.compile("([^?]+)\\??(.*)");

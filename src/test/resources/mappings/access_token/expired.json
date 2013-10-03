@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/api/v1/organizations?access_token=bad_token"
+    },
+    "response": {
+        "status": 403,
+        "body": "{\"code\":108,\"message\":\"Your access token expired on 2013-03-19T20:39:55.135-04:00. Please request a new one\",\"moreInfo\":\"\"}",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}
