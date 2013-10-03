@@ -1,6 +1,7 @@
 package org.corespring;
 
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
@@ -19,6 +20,8 @@ public class CorespringRestResponse {
   private final String queryString;
   private final boolean error;
 
+  private final ObjectMapper objectMapper;
+
   public CorespringRestResponse(String url, String text, int status) {
     Pattern p = Pattern.compile("([^?]+)\\??(.*)");
     Matcher m = p.matcher(url);
@@ -28,10 +31,11 @@ public class CorespringRestResponse {
     this.responseText = text;
     this.httpStatus = status;
     this.error = (status >= 400);
+    this.objectMapper = new ObjectMapper();
+    this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
   public <T> T get(Class<T> clazz) {
-    ObjectMapper objectMapper = new ObjectMapper();
     try {
       return objectMapper.readValue(responseText, clazz);
     } catch (IOException e) {
@@ -40,7 +44,6 @@ public class CorespringRestResponse {
   }
 
   public <T> Collection<T> getAll(Class<T> clazz) {
-    ObjectMapper objectMapper = new ObjectMapper();
     TypeFactory typeFactory = TypeFactory.defaultInstance();
     try {
       return objectMapper.readValue(responseText, typeFactory.constructCollectionType(List.class, clazz));
