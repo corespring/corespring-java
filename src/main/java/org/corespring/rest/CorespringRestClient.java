@@ -16,29 +16,18 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.corespring.authentication.AccessTokenProvider;
 import org.corespring.resource.CorespringResource;
-import org.corespring.resource.Organization;
-import org.corespring.resource.Quiz;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
- * {@link CorespringRestClient} serves as the main interface between the API and the CoreSpring platform. You should
- * instantiate CorespringRestClient with your client ID and client secret (which you will be issued when you sign up as
- * a developer for the CoreSpring platform):
- *
- *     String clientId = "524c5cb5300401522ab21db1";
- *     String clientSecret = "325hm11xiz7ykeen2ibt";
- *     CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
- *
- * You can then use the client object to interface with the various methods made available.
+ * Contains the REST details of the interface with the CoresSpring platform.
  */
-public class CorespringRestClient {
+public abstract class CorespringRestClient {
 
   /** Version of the API to target */
   public static final String API_VERSION = "api/v1";
@@ -50,7 +39,7 @@ public class CorespringRestClient {
   private static final int CONNECTION_TIMEOUT = 10000;
 
   /** The endpoint. */
-  private String endpoint = "http://localhost:9000/";
+  private String endpoint = "http://www.corespring.org/";
 
   private final String clientId;
   private final String clientSecret;
@@ -76,44 +65,6 @@ public class CorespringRestClient {
     httpClient.getParams().setParameter("http.protocol.content-charset", "UTF-8");
   }
 
-  public Collection<Organization> getOrganizations() throws CorespringRestException {
-    CorespringRestResponse response = get(Organization.getResourceRoute(this));
-    return response.getAll(Organization.class);
-  }
-
-  public Collection<Quiz> getQuizzes(Organization organization) throws CorespringRestException {
-    NameValuePair organizationId = new BasicNameValuePair("organization_id", organization.getId());
-    List<NameValuePair> params = new ArrayList<NameValuePair>();
-    params.add(organizationId);
-
-    CorespringRestResponse response = get(Quiz.getResourcesRoute(this), params);
-    return response.getAll(Quiz.class);
-  }
-
-  public Quiz getQuizById(String id) throws CorespringRestException {
-    CorespringRestResponse response = get(Quiz.getResourceRoute(this, id));
-    return response.get(Quiz.class);
-  }
-
-  public Quiz create(Quiz quiz) throws CorespringRestException {
-    CorespringRestResponse response = post(Quiz.getResourcesRoute(this), quiz);
-    return response.get(Quiz.class);
-  }
-
-  public Quiz update(Quiz quiz) throws CorespringRestException {
-    CorespringRestResponse response = put(Quiz.getResourceRoute(this, quiz.getId()), quiz);
-    return response.get(Quiz.class);
-  }
-
-  public Quiz delete(Quiz quiz) throws CorespringRestException {
-    CorespringRestResponse response = delete(Quiz.getResourceRoute(this, quiz.getId()), quiz);
-    if (response.getHttpStatus() != 200) {
-      return quiz;
-    } else {
-      return null;
-    }
-  }
-
   private String getAccessToken() {
     if (this.accessToken == null) {
       this.accessToken = getAccessTokenProvider().getAccessToken(clientId, clientSecret, getEndpoint());
@@ -125,8 +76,7 @@ public class CorespringRestClient {
     return accessTokenProvider;
   }
 
-  // Note: This is pacakge-private because it only needs to be accessed by the test
-  void setAccessTokenProvider(AccessTokenProvider accessTokenProvider) {
+  public void setAccessTokenProvider(AccessTokenProvider accessTokenProvider) {
     this.accessTokenProvider = accessTokenProvider;
   }
 
@@ -134,27 +84,27 @@ public class CorespringRestClient {
     return new StringBuilder(getEndpoint()).append("/").append(CorespringRestClient.API_VERSION).append("/");
   }
 
-  private CorespringRestResponse get(String path, List<NameValuePair> paramList) throws CorespringRestException {
+  protected CorespringRestResponse get(String path, List<NameValuePair> paramList) throws CorespringRestException {
     return doRequest(path, "GET", paramList, null);
   }
 
-  private CorespringRestResponse get(String path) throws CorespringRestException {
+  protected CorespringRestResponse get(String path) throws CorespringRestException {
     return doRequest(path, "GET", new ArrayList<NameValuePair>(), null);
   }
 
-  private CorespringRestResponse put(String path, CorespringResource entity) throws CorespringRestException {
+  protected CorespringRestResponse put(String path, CorespringResource entity) throws CorespringRestException {
     return doRequest(path, "PUT", new ArrayList<NameValuePair>(), entity);
   }
 
-  private CorespringRestResponse post(String path, CorespringResource entity) throws CorespringRestException {
+  protected CorespringRestResponse post(String path, CorespringResource entity) throws CorespringRestException {
     return doRequest(path, "POST", new ArrayList<NameValuePair>(), entity);
   }
 
-  private CorespringRestResponse delete(String path, CorespringResource entity) throws CorespringRestException  {
+  protected CorespringRestResponse delete(String path, CorespringResource entity) throws CorespringRestException  {
     return doRequest(path, "DELETE", new ArrayList<NameValuePair>(), entity);
   }
 
-  public CorespringRestResponse doRequest(String path, String method, List<NameValuePair> paramList,
+  private CorespringRestResponse doRequest(String path, String method, List<NameValuePair> paramList,
                                           CorespringResource entity) throws CorespringRestException {
     if (getAccessToken() != null) {
       paramList.add(new BasicNameValuePair(ACCESS_TOKEN_KEY, getAccessToken()));

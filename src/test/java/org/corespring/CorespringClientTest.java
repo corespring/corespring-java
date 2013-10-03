@@ -1,4 +1,4 @@
-package org.corespring.rest;
+package org.corespring;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.corespring.authentication.AccessTokenProvider;
@@ -6,6 +6,7 @@ import org.corespring.resource.Organization;
 import org.corespring.resource.Question;
 import org.corespring.resource.Quiz;
 import org.corespring.resource.question.Participant;
+import org.corespring.rest.CorespringRestException;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -15,7 +16,7 @@ import java.util.Collection;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class CorespringRestClientTest {
+public class CorespringClientTest {
 
   private String clientId = "524c5cb5300401522ab21db1";
   private String clientSecret = "325hm11xiz7ykeen2ibt";
@@ -28,7 +29,7 @@ public class CorespringRestClientTest {
 
   @Test
   public void testGetOrganizations() throws CorespringRestException {
-    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    CorespringClient client = new CorespringClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");
 
     assertOrganizationsAreCorrect(client.getOrganizations());
@@ -45,7 +46,7 @@ public class CorespringRestClientTest {
   @Test
   public void testGetQuizzes() throws CorespringRestException {
 
-    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    CorespringClient client = new CorespringClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");
 
     Collection<Quiz> quizzes = client.getQuizzes(organization);
@@ -56,7 +57,7 @@ public class CorespringRestClientTest {
 
   @Test
   public void testGetQuizById() throws CorespringRestException {
-    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    CorespringClient client = new CorespringClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");
 
     Quiz quiz = client.getQuizById("000000000000000000000002");
@@ -84,7 +85,7 @@ public class CorespringRestClientTest {
   @Test
   public void testCreateQuiz() throws CorespringRestException {
     Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
-    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    CorespringClient client = new CorespringClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");
     Quiz updatedQuiz = client.create(quiz);
 
@@ -96,7 +97,7 @@ public class CorespringRestClientTest {
   @Test
   public void testUpdateQuiz() throws CorespringRestException {
     Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
-    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    CorespringClient client = new CorespringClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");
 
     quiz = client.create(quiz);
@@ -108,7 +109,7 @@ public class CorespringRestClientTest {
   @Test
   public void testDeleteQuiz() throws CorespringRestException {
     Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
-    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    CorespringClient client = new CorespringClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");
 
     quiz = client.create(quiz);
@@ -125,7 +126,7 @@ public class CorespringRestClientTest {
     when(mockAccessTokenProvider.getAccessToken(anyString(), anyString(), anyString()))
         .thenReturn("bad_token").thenReturn("demo_token");
 
-    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    CorespringClient client = new CorespringClient(clientId, clientSecret);
     client.setAccessTokenProvider(mockAccessTokenProvider);
     client.setEndpoint("http://localhost:8089");
 

@@ -79,7 +79,7 @@ externalUid field which should be used to reference a student within a 3rd party
 ItemSessions which describe a response to a quiz question.
 
 
-### CorespringRestClient methods
+### CorespringClient methods
 
 #### List quizzes for an organization
 

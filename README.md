@@ -41,13 +41,13 @@ Additional information can be found on the [Apache Maven website](http://maven.a
 
 ### Quick Start
 
-Instantiate the CorespringRestClient by passing in your client ID and client secret (you will receive these when you
+Instantiate the CorespringClient by passing in your client ID and client secret (you will receive these when you
 register for the CoreSpring platform), and use its methods to interact with the platform:
 
     String clientId = "524c5cb5300401522ab21db1";
     String clientSecret = "325hm11xiz7ykeen2ibt";
 
-    CorespringRestClient client = new CorespringRestClient(clientId, clientSecret);
+    CorespringClient client = new CorespringClient(clientId, clientSecret);
 
     Collection<Organization> organizations = client.getOrganizations();
 
