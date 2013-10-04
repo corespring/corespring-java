@@ -4,7 +4,7 @@
 
   <groupId>org.corespring</groupId>
   <artifactId>corespring-java</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>corespring-java</name>
@@ -37,17 +37,18 @@
   </build>
 
   <distributionManagement>
-    <repository>
-      <id>central</id>
-      <name>CoreSpring (Releases)</name>
-      <url>http://repository.corespring.org/artifactory/libs-release</url>
-    </repository>
-    <snapshotRepository>
-      <id>snapshots</id>
-      <name>CoreSpring (Snapshots)</name>
-      <url>http://repository.corespring.org/artifactory/libs-snapshot</url>
+      <repository>
+        <id>ip-10-28-107-17</id>
+        <name>ip-10-28-107-17-releases</name>
+        <url>http://repository.corespring.org/artifactory/maven-releases</url>
+      </repository>
+      <snapshotRepository>
+      <id>ip-10-28-107-17</id>
+      <name>ip-10-28-107-17-snapshots</name>
+      <url>http://repository.corespring.org/artifactory/maven-snapshots</url>
     </snapshotRepository>
   </distributionManagement>
+
 
   <dependencies>
     <dependency>
