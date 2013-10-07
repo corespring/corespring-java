@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  * <pre>
  *   "settings" : {
- *     "maxNoOfAttempts" : 0,
+ *     "maxNoOfAttempts" : 1,
  *     "highlightUserResponse" : true,
  *     "highlightCorrectResponse" : true,
  *     "showFeedback" : false,
@@ -19,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *     "submitIncorrectMessage" : "You may revise your work before you submit your final response."
  *   }
  * </pre>
- *
  */
 @JsonAutoDetect(fieldVisibility= JsonAutoDetect.Visibility.ANY)
 public class Settings {
@@ -130,7 +129,7 @@ public class Settings {
 
   public static Settings standard() {
     return
-        new Settings(1, true, true, true, false, DEFAULT_COMPLETE_MESSAGE, DEFAULT_INCOMPLETE_MESSAGE,
+        new Settings(1, true, false, true, false, DEFAULT_COMPLETE_MESSAGE, DEFAULT_INCOMPLETE_MESSAGE,
             DEFAULT_INCORRECT_MESSAGE);
   }
 
