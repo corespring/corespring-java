@@ -68,10 +68,25 @@ Alternatively Metadata can be modified by using the Quiz.Builder helper methods:
 Questions consist fo an id for a CoreSpring Items, a set of rendering [settings](/doc/resources/settings.md), a title,
 and a list of standards that the question maps to. Quizzes also contain metadata (title, course, and a note).
 
+
 ### Participants
 
 A [Participant](/src/main/java/org/corespring/resource/question/Participant.java) describes a set of answers, as well an
 externalUid field which should be used to reference a student within a 3rd party system.
+
+Note that the Participants in Quiz objects are unique by their externalUid. If you specify a Participant with the same
+externalUid as an existing Participant, it will be overridden with the new value. For example:
+
+    String sharedExternalUid = "rjelcjdi4";
+    Participant participant = new Participant.Builder().externalUid(sharedExternalUid).build();
+    Participant anotherParticipant = new Participant.Builder().externalUid(sharedExternalUid).build();
+
+    Quiz quiz = new Quiz.Builder().participant(participant).participant(anotherParticipant).build();
+
+    System.out.println(quiz.getParticipants().size());                                          // 1
+    System.out.println(quiz.getParticipants().iterator().next().equals(participant);            // false
+    System.out.println(quiz.getParticipants().iterator().next().equals(anotherParticipant);     // true
+
 
 #### Answers
 

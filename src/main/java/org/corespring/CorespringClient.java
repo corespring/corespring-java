@@ -62,5 +62,4 @@ public class CorespringClient extends CorespringRestClient {
     CorespringRestResponse response = delete(Quiz.getResourceRoute(this, quiz.getId()), quiz);
     return null;
   }
-
 }

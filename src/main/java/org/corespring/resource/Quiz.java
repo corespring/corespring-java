@@ -3,11 +3,13 @@ package org.corespring.resource;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.corespring.rest.CorespringRestClient;
 import org.corespring.resource.question.Participant;
+import org.corespring.rest.CorespringRestClient;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A {@link Quiz} represents a set of {@link Question}s, {@link Participant}s, and associated {@link Metadata}. A JSON
@@ -83,7 +85,7 @@ public class Quiz implements CorespringResource {
     this.orgId = builder.orgId;
     this.metadata = builder.metadataBuilder.build();
     this.questions = builder.questions;
-    this.participants = builder.participants;
+    this.participants = builder.participants.values();
   }
 
   public static class Builder {
@@ -92,7 +94,7 @@ public class Quiz implements CorespringResource {
     private String orgId;
     private Metadata.Builder metadataBuilder = new Metadata.Builder();
     private Collection<Question> questions = new ArrayList<Question>();
-    private Collection<Participant> participants = new ArrayList<Participant>();
+    private Map<String, Participant> participants = new HashMap<String, Participant>();
 
     public Builder() {
     }
@@ -102,7 +104,10 @@ public class Quiz implements CorespringResource {
       this.orgId = quiz.orgId;
       this.metadataBuilder = new Metadata.Builder(quiz.metadata);
       this.questions = quiz.questions;
-      this.participants = quiz.participants;
+      this.participants = new HashMap<String, Participant>();
+      for (Participant participant : quiz.participants) {
+        this.participants.put(participant.getExternalUid(), participant);
+      }
     }
 
     public Builder id(String id) {
@@ -135,8 +140,11 @@ public class Quiz implements CorespringResource {
       return this;
     }
 
+    /**
+     * This method will override existing {@link Participant} objects based on the participant's externalUid.
+     */
     public Builder participant(Participant participant) {
-      this.participants.add(participant);
+      this.participants.put(participant.getExternalUid(), participant);
       return this;
     }
 
