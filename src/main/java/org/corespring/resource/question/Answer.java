@@ -50,7 +50,7 @@ public class Answer {
       return this;
     }
 
-    public Builder sessionid(String sessionId) {
+    public Builder sessionId(String sessionId) {
       this.sessionId = sessionId;
       return this;
     }
