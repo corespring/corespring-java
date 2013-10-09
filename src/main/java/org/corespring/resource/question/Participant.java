@@ -31,6 +31,11 @@ public class Participant {
     public Builder() {
     }
 
+    public Builder(Participant participant) {
+      this.answers = participant.answers;
+      this.externalUid = participant.externalUid;
+    }
+
     public Builder answer(Answer answer) {
       this.answers.add(answer);
       return this;
