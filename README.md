@@ -71,3 +71,7 @@ platform:
 * [Organizations](/doc/resources/organizations.md)
 * [Quizzes](/doc/resources/quizzes.md)
   * [Settings](/doc/resources/settings.md)
+
+## License
+
+This library is distributed under the MIT License found in the provided [LICENSE](/LICENSE) file.
