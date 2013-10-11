@@ -117,7 +117,7 @@ public abstract class CorespringRestClient {
     try {
       response = tryRequest(request);
     } catch (CorespringRestException e) {
-      if (e.hasErrorCode() && e.getErrorCode() == CorespringRestException.EXPIRED_ACCESS_TOKEN) {
+      if (e.hasErrorCode() && e.isInvalidAccessToken()) {
         // reload access token if invalid
         this.accessToken = getAccessTokenProvider().getAccessToken(this.clientId, this.clientSecret, getEndpoint());
 
