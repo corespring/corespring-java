@@ -19,7 +19,13 @@ import org.corespring.resource.Error;
  */
 public class CorespringRestException extends Exception {
 
-  public static final int EXPIRED_ACCESS_TOKEN = 108;
+  static final int INVALID_OR_EXPIRED_ACCESS_TOKEN = 102;
+  static final int EXPIRED_ACCESS_TOKEN = 108;
+
+  static final int[] INVALID_ACCESS_TOKEN = new int[] {
+      INVALID_OR_EXPIRED_ACCESS_TOKEN,
+      EXPIRED_ACCESS_TOKEN
+  };
 
   private final Integer errorCode;
   private final String errorMessage;
@@ -48,6 +54,18 @@ public class CorespringRestException extends Exception {
 
   public String getMessage() {
     return errorCode == null ? errorMessage : errorCode + " - " + errorMessage;
+  }
+
+  /**
+   * Returns true if the exception was generated as a result of an invalid access token, false otherwise.
+   */
+  public boolean isInvalidAccessToken() {
+    for (int invalidCode : INVALID_ACCESS_TOKEN) {
+      if (getErrorCode() == invalidCode) {
+        return true;
+      }
+    }
+    return false;
   }
 
 }
