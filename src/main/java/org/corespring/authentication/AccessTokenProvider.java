@@ -1,10 +1,12 @@
 package org.corespring.authentication;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -13,6 +15,8 @@ import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.corespring.rest.CorespringRestClient;
+import org.corespring.rest.CorespringRestException;
+import org.corespring.rest.CorespringRestResponse;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -33,6 +37,13 @@ public class AccessTokenProvider {
 
   /** Default timeout in milliseconds */
   private static final int CONNECTION_TIMEOUT = 10000;
+
+  private final ObjectMapper objectMapper;
+
+  public AccessTokenProvider() {
+    this.objectMapper = new ObjectMapper();
+    this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  }
 
 
   /**
@@ -76,10 +87,18 @@ public class AccessTokenProvider {
         responseBody = EntityUtils.toString(entity);
       }
 
-      ObjectMapper objectMapper = new ObjectMapper();
-      AccessTokenResponse accessToken = objectMapper.readValue(responseBody, AccessTokenResponse.class);
+      try {
+        StatusLine status = response.getStatusLine();
+        int statusCode = status.getStatusCode();
+        CorespringRestResponse restResponse =
+            new CorespringRestResponse(request.getURI().toString(), responseBody, statusCode);
 
-      return accessToken.toString();
+        AccessTokenResponse accessToken = restResponse.get(AccessTokenResponse.class);
+        return accessToken.toString();
+
+      } catch (CorespringRestException corespringRestException) {
+        throw new RuntimeException(corespringRestException);
+      }
 
     } catch (IOException e) {
       throw new RuntimeException(e);
