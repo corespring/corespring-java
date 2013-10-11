@@ -2,6 +2,21 @@ package org.corespring.rest;
 
 import org.corespring.resource.Error;
 
+/**
+ * This {@link Exception} is designed to catch known errors that are returned from the CoreSpring API. CoreSpring API
+ * errors come in the following JSON format:
+ *
+ * <pre>
+ *
+ *   {
+ *     "code": 102,
+ *     "message": "The Access Token is invalid or has expired",
+ *     "moreInfo": ""
+ *   }
+ *
+ * </pre>
+ *
+ */
 public class CorespringRestException extends Exception {
 
   public static final int EXPIRED_ACCESS_TOKEN = 108;
