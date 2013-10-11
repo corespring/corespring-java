@@ -14,6 +14,13 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>synergian-repo</id>
+      <url>https://raw.github.com/synergian/wagon-git/releases</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <build>
     <plugins>
       <plugin>
@@ -46,18 +53,25 @@
         </executions>
       </plugin>
     </plugins>
+    <extensions>
+      <extension>
+        <groupId>ar.com.synergian</groupId>
+        <artifactId>wagon-git</artifactId>
+        <version>0.2.0</version>
+      </extension>
+    </extensions>
   </build>
 
   <distributionManagement>
-      <repository>
-        <id>ip-10-28-107-17</id>
-        <name>ip-10-28-107-17-releases</name>
-        <url>http://repository.corespring.org/artifactory/maven-releases</url>
-      </repository>
-      <snapshotRepository>
-      <id>ip-10-28-107-17</id>
-      <name>ip-10-28-107-17-snapshots</name>
-      <url>http://repository.corespring.org/artifactory/maven-snapshots</url>
+    <repository>
+      <id>corespring-java-github</id>
+      <name>CoreSpring Java Github</name>
+      <url>git:releases://git@github.com:corespring/corespring-java.git</url>
+    </repository>
+    <snapshotRepository>
+      <id>corespring-java-github-snapshot</id>
+      <name>CoreSpring Java Github SNAPSHOT</name>
+      <url>git:snapshots://git@github.com:corespring/corespring-java.git</url>
     </snapshotRepository>
   </distributionManagement>
 
