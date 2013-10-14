@@ -1,23 +1,34 @@
 package org.corespring.resource.player;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.corespring.resource.CorespringResource;
+import org.corespring.rest.CorespringRestClient;
+
+import java.util.Date;
 
 import static org.corespring.resource.player.Mode.ALL;
 
-public class Options {
+@JsonAutoDetect(fieldVisibility= JsonAutoDetect.Visibility.ANY)
+public class Options extends CorespringResource {
+
+  private static final String ENCRYPTION_ROUTE = "player/encrypt-options";
+
+  private static final Date WILDCARD_DATE = new Date(0L);
 
   private final Mode mode;
   private final String sessionId;
   private final String itemId;
-  private final ExpirationDate expires;
+  private final Date expires;
   private final Role role;
 
   @JsonCreator
   public Options(@JsonProperty("mode") Mode mode,
                  @JsonProperty("sessionId") String sessionId,
                  @JsonProperty("itemId") String itemId,
-                 @JsonProperty("expires") ExpirationDate expires,
+                 @JsonProperty("expires") Date expires,
                  @JsonProperty("role") Role role) {
     this.mode = mode;
     this.sessionId = sessionId;
@@ -39,7 +50,7 @@ public class Options {
     private Mode mode = ALL;
     private String sessionId;
     private String itemId;
-    private ExpirationDate expires;
+    private Date expires;
     private Role role;
 
     public Builder() {
@@ -67,8 +78,13 @@ public class Options {
       return this;
     }
 
-    public Builder expires(ExpirationDate expires) {
+    public Builder expires(Date expires) {
       this.expires = expires;
+      return this;
+    }
+
+    public Builder expiresWildcard() {
+      this.expires = WILDCARD_DATE;
       return this;
     }
 
@@ -83,6 +99,10 @@ public class Options {
 
   }
 
+  public static String getEncryptionRoute(CorespringRestClient client) {
+    return new StringBuilder(client.getEndpoint()).append("/").append(ENCRYPTION_ROUTE).toString();
+  }
+
   public Mode getMode() {
     return mode;
   }
@@ -95,12 +115,17 @@ public class Options {
     return itemId;
   }
 
-  public ExpirationDate getExpires() {
+  public Date getExpires() {
     return expires;
   }
 
   public Role getRole() {
     return role;
+  }
+
+  @JsonIgnore
+  public String getId() {
+    return null;
   }
 
 }

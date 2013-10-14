@@ -4,6 +4,8 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 import org.corespring.resource.Organization;
 import org.corespring.resource.Quiz;
+import org.corespring.resource.player.Options;
+import org.corespring.resource.player.OptionsResponse;
 import org.corespring.rest.CorespringRestClient;
 import org.corespring.rest.CorespringRestException;
 import org.corespring.rest.CorespringRestResponse;
@@ -62,4 +64,11 @@ public class CorespringClient extends CorespringRestClient {
     CorespringRestResponse response = delete(Quiz.getResourceRoute(this, quiz.getId()), quiz);
     return null;
   }
+
+  public String encryptOptions(Options options) throws CorespringRestException {
+    CorespringRestResponse response = post(Options.getEncryptionRoute(this), options);
+    OptionsResponse optionsResponse = response.get(OptionsResponse.class);
+    return optionsResponse.getOptions();
+  }
+
 }

@@ -1,10 +1,12 @@
 package org.corespring.resource;
 
-public interface CorespringResource {
+public abstract class CorespringResource {
 
   /**
    * Returns the id associated with the CoreSpring resource.
    */
-  public String getId();
+  public String getId() {
+    return null;
+  }
 
 }
