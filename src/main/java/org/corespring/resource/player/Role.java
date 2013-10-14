@@ -11,11 +11,20 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.io.IOException;
 
+/**
+ * An enumerated value describing the roles of users within the CoreSpring platform.
+ */
 @JsonSerialize(using = Role.Serializer.class)
 @JsonDeserialize(using = Role.Deserializer.class)
 public enum Role {
+
+  /** All users **/
   ALL,
+
+  /** Students **/
   STUDENT,
+
+  /** Teachers **/
   INSTRUCTOR;
 
   public static class Serializer extends JsonSerializer<Role> {

@@ -83,7 +83,7 @@ public class Options extends CorespringResource {
       return this;
     }
 
-    public Builder expiresWildcard() {
+    public Builder expiresNever() {
       this.expires = WILDCARD_DATE;
       return this;
     }

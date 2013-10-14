@@ -68,6 +68,7 @@ platform:
 
 * Items
 * ItemSessions
+* [Options](/doc/resources/options.md)
 * [Organizations](/doc/resources/organizations.md)
 * [Quizzes](/doc/resources/quizzes.md)
   * [Settings](/doc/resources/settings.md)

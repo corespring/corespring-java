@@ -139,7 +139,7 @@ public class CorespringClientTest {
   @Test
   public void testEncryptOptions() throws CorespringRestException {
     Options options = new Options.Builder().itemId("*").sessionId("*").mode(Mode.ALL).role(Role.ALL)
-        .expiresWildcard().build();
+        .expiresNever().build();
 
     CorespringClient client = new CorespringClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");
