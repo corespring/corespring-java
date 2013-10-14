@@ -57,7 +57,7 @@ import java.util.Map;
  * </pre>
  *
  */
-public class Quiz implements CorespringResource {
+public class Quiz extends CorespringResource {
 
   private static final String RESOURCE_ROUTE = "quizzes";
 
@@ -162,6 +162,7 @@ public class Quiz implements CorespringResource {
     return client.baseUrl().append(RESOURCE_ROUTE).append("/").append(id).toString();
   }
 
+  @Override
   public String getId() {
     return id;
   }

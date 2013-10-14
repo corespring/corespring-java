@@ -22,7 +22,7 @@ import java.util.Collection;
  * </pre>
  *
  */
-public class Organization implements CorespringResource {
+public class Organization extends CorespringResource {
 
   private static final String RESOURCE_ROUTE = "organizations";
 
@@ -93,6 +93,7 @@ public class Organization implements CorespringResource {
     return name;
   }
 
+  @Override
   public String getId() {
     return id;
   }
