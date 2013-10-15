@@ -65,10 +65,10 @@ public class CorespringClient extends CorespringRestClient {
     return null;
   }
 
-  public String encryptOptions(Options options) throws CorespringRestException {
+  public OptionsResponse encryptOptions(Options options) throws CorespringRestException {
     CorespringRestResponse response = post(Options.getEncryptionRoute(this), options);
     OptionsResponse optionsResponse = response.get(OptionsResponse.class);
-    return optionsResponse.getOptions();
+    return optionsResponse;
   }
 
 }

@@ -7,6 +7,7 @@ import org.corespring.resource.Question;
 import org.corespring.resource.Quiz;
 import org.corespring.resource.player.Mode;
 import org.corespring.resource.player.Options;
+import org.corespring.resource.player.OptionsResponse;
 import org.corespring.resource.player.Role;
 import org.corespring.resource.question.Participant;
 import org.corespring.rest.CorespringRestException;
@@ -144,9 +145,13 @@ public class CorespringClientTest {
     CorespringClient client = new CorespringClient(clientId, clientSecret);
     client.setEndpoint("http://localhost:8089");
 
+
+    OptionsResponse optionsResponse = client.encryptOptions(options);
     assertEquals("a369de25bf73cf3479dbcfc76f8c1b4ad983f777fe4834c33e3e57c98d86d31fe9e46bc606a8e3b61c5f2c1b935a6725e9e3cf227f558d3724895ef84ce43107645baf8f53dd068eafc9759b63b1ad44--b4cee74cb43af0d6b652bb044e9f464d",
-        client.encryptOptions(options)
+        optionsResponse.getOptions()
     );
+
+    assertEquals("525bf17a92699001e6e81e6d", optionsResponse.getClientId());
   }
 
 }
