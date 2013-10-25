@@ -3,6 +3,7 @@ package org.corespring.resource;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.corespring.resource.question.Participant;
 import org.corespring.rest.CorespringRestClient;
 
@@ -57,6 +58,7 @@ import java.util.Map;
  * </pre>
  *
  */
+@JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
 public class Quiz extends CorespringResource {
 
   private static final String RESOURCE_ROUTE = "quizzes";

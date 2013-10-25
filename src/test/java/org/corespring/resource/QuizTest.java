@@ -12,20 +12,24 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class QuizTest {
 
+  /**
+   * Dummy Quiz test data
+   */
+  private final Metadata metadata = new Metadata("title", "course", "note");
+  private final List<String> standards = new ArrayList<String>() { { add("test"); } };
+  private final Question question = new Question("503c2e91e4b00f3f0a9a7a6a", Settings.standard(), "title", standards);
+  private final List<Question> questions = new ArrayList<Question>() { { add(question); } };
+  private final Answer answer = new Answer("itemId", "sessionId", 1, new Date(1380649346485L), true);
+  private final Participant participant = new Participant(new ArrayList<Answer>() { { add(answer); } }, "externalUid");
+  private final List<Participant> participants = new ArrayList<Participant>() {{ add(participant); }};
+
   @Test
   public void testSerialization() throws IOException {
-    Metadata metadata = new Metadata("title", "course", "note");
-    List<String> standards = new ArrayList<String>() { { add("test"); } };
-    final Question question = new Question("503c2e91e4b00f3f0a9a7a6a", Settings.standard(), "title", standards);
-    List<Question> questions = new ArrayList<Question>() { { add(question); } };
-    final Answer answer = new Answer("itemId", "sessionId", 1, new Date(1380649346485L), true);
-    final Participant participant = new Participant(new ArrayList<Answer>() { { add(answer); } }, "externalUid");
-    List<Participant> participants = new ArrayList<Participant>() {{ add(participant); }};
     Quiz quiz = new Quiz("000000000000000000000002", "51114b307fc1eaa866444648", metadata, questions, participants);
-
     ObjectMapper objectMapper = new ObjectMapper();
 
     assertEquals(
@@ -33,6 +37,16 @@ public class QuizTest {
         objectMapper.writeValueAsString(quiz)
     );
 
+  }
+
+  @Test
+  public void testNullIdSerialization() throws IOException {
+    Quiz quiz = new Quiz(null, "51114b307fc1eaa866444648", metadata, questions, participants);
+    ObjectMapper objectMapper = new ObjectMapper();
+
+    String json = objectMapper.writeValueAsString(quiz);
+
+    assertFalse(json.contains("null"));
   }
 
   @Test
