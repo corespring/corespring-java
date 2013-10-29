@@ -10,8 +10,9 @@ A typical quiz might be represented by the following JSON:
       "orgId": "51114b307fc1eaa866444648",
       "metadata": {
         "title": "Sample Quiz",
-        "course": "Example Course",
-        "note": "This is an exmaple of a quiz"
+        "description": "This is a sample quiz",
+        "instructions": "This quiz consists of questions to help users get up to speed using the CoreSpring platform",
+        "classroom": "1034"
       },
       "questions": [
         {
@@ -46,21 +47,22 @@ A typical quiz might be represented by the following JSON:
 
 ### Metadata
 
-[Metadata](/src/main/java/org/corespring/resource/Metadata.java) consists of data associated with a Quiz. The available
-fields for Metadata are title, course, and note:
-
-    Metadata metadata = new Metadata.Builder()
-        .title("Corespring Sample Quiz")
-        .course("CoreSpring 101")
-        .note("This quiz consists of questions to help users get up to speed using the CoreSpring platform").build();
-
-
-Alternatively Metadata can be modified by using the Quiz.Builder helper methods:
+Metadata consists of key-value pairs of data associated with a Quiz. The default fields for Metadata are title,
+description, and instructions. These can be added using the Quiz.Builder helper methods:
 
     Quiz quiz = new Quiz.Builder()
         .title("Corepring Sample Quiz")
-        .course("CoreSpring 101")
-        .note("This quiz consists of questions to help users get up to speed using the CoreSpring platform").build();
+        .description("This is a sample quiz")
+        .instructions("This quiz consists of questions to help users get up to speed using the CoreSpring platform")
+        .build();
+
+You can also add arbitrary metadata using the addMetadata method:
+
+    Quiz quiz = new Quiz.Builder()
+       .addMetadata("classroom", "1034")
+       .build();
+
+    System.out.println(quiz.getMetadataValue("classroom"));             // "1034"
 
 
 ### Questions
