@@ -5,7 +5,7 @@
     },
     "response": {
         "status": 200,
-        "body": "{\"id\":\"524c0aa9300401522ab21da3\",\"orgId\":\"51114b307fc1eaa866444648\",\"metadata\":{\"title\":\"My new quiz!\",\"course\":\"English 101\"},\"participants\":[],\"questions\":[]}",
+        "body": "{\"id\":\"524c0aa9300401522ab21da3\",\"orgId\":\"51114b307fc1eaa866444648\",\"metadata\":{\"title\":\"My new quiz!\",\"description\":\"description\"},\"participants\":[],\"questions\":[]}",
         "headers": {
             "Content-Type": "application/json"
         }

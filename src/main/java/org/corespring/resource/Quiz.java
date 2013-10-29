@@ -3,6 +3,7 @@ package org.corespring.resource;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.corespring.resource.question.Participant;
 import org.corespring.rest.CorespringRestClient;
@@ -13,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A {@link Quiz} represents a set of {@link Question}s, {@link Participant}s, and associated {@link Metadata}. A JSON
+ * A {@link Quiz} represents a set of {@link Question}s, {@link Participant}s, and associated metadata. A JSON
  * representation of a {@link Quiz} is shown below:
  *
  * <pre>
@@ -23,8 +24,9 @@ import java.util.Map;
  *     "orgId" : "51114b307fc1eaa866444648",
  *     "metadata" : {
  *       "title" : "Sample Quiz",
- *       "course" : "Example Course",
- *       "note" : "This is an exmaple of a quiz"
+ *       "description": "This is a sample quiz",
+ *       "instructions": "This quiz consists of questions to help users get up to speed using the CoreSpring platform",
+ *       "classroom": "1034"
  *     },
  *     "questions" : [
  *       {
@@ -65,14 +67,14 @@ public class Quiz extends CorespringResource {
 
   private final String id;
   private final String orgId;
-  private final Metadata metadata;
+  private final Map<String, String> metadata;
   private final Collection<Question> questions;
   private final Collection<Participant> participants;
 
   @JsonCreator
   public Quiz(@JsonProperty("id") String id,
               @JsonProperty("orgId") String orgId,
-              @JsonProperty("metadata") Metadata metadata,
+              @JsonProperty("metadata") @JsonDeserialize(as=HashMap.class) Map<String, String> metadata,
               @JsonProperty("questions") Collection<Question> questions,
               @JsonProperty("participants") Collection<Participant> participants) {
     this.id = id;
@@ -85,7 +87,7 @@ public class Quiz extends CorespringResource {
   private Quiz(Builder builder) {
     this.id = builder.id;
     this.orgId = builder.orgId;
-    this.metadata = builder.metadataBuilder.build();
+    this.metadata = builder.metadata;
     this.questions = builder.questions;
     this.participants = builder.participants.values();
   }
@@ -94,7 +96,7 @@ public class Quiz extends CorespringResource {
 
     private String id;
     private String orgId;
-    private Metadata.Builder metadataBuilder = new Metadata.Builder();
+    private Map<String, String> metadata = new HashMap<String, String>();
     private Collection<Question> questions = new ArrayList<Question>();
     private Map<String, Participant> participants = new HashMap<String, Participant>();
 
@@ -104,7 +106,7 @@ public class Quiz extends CorespringResource {
     public Builder(Quiz quiz) {
       this.id = quiz.id;
       this.orgId = quiz.orgId;
-      this.metadataBuilder = new Metadata.Builder(quiz.metadata);
+      this.metadata = new HashMap<String, String>();
       this.questions = quiz.questions;
       this.participants = new HashMap<String, Participant>();
       for (Participant participant : quiz.participants) {
@@ -123,22 +125,32 @@ public class Quiz extends CorespringResource {
     }
 
     public Builder title(String title) {
-      this.metadataBuilder.title(title);
+      metadata.put("title", title);
       return this;
     }
 
-    public Builder course(String course) {
-      this.metadataBuilder.course(course);
+    public Builder description(String description) {
+      metadata.put("description", description);
       return this;
     }
 
-    public Builder note(String note) {
-      this.metadataBuilder.note(note);
+    public Builder instructions(String instructions) {
+      metadata.put("instructions", instructions);
       return this;
     }
 
     public Builder question(Question question) {
-      this.questions.add(question);
+      questions.add(question);
+      return this;
+    }
+
+    public Builder addMetadata(String key, String value) {
+      metadata.put(key, value);
+      return this;
+    }
+
+    public Builder removeMetadata(String key) {
+      metadata.remove(key);
       return this;
     }
 
@@ -164,6 +176,10 @@ public class Quiz extends CorespringResource {
     return client.baseUrl().append(RESOURCE_ROUTE).append("/").append(id).toString();
   }
 
+  public Map<String, String> getMetadata() {
+    return metadata;
+  }
+
   @Override
   public String getId() {
     return id;
@@ -173,23 +189,24 @@ public class Quiz extends CorespringResource {
     return orgId;
   }
 
-  public Metadata getMetadata() {
-    return metadata;
-  }
-
   @JsonIgnore
   public String getTitle() {
-    return metadata.getTitle();
+    return metadata.get("title");
   }
 
   @JsonIgnore
-  public String getCourse() {
-    return metadata.getCourse();
+  public String getDescription() {
+    return metadata.get("description");
   }
 
   @JsonIgnore
-  public String getNote() {
-    return metadata.getNote();
+  public String getMetadataValue(String key) {
+    return metadata.get(key);
+  }
+
+  @JsonIgnore
+  public String getInstructions() {
+    return metadata.get("instructions");
   }
 
   public Collection<Question> getQuestions() {
