@@ -105,9 +105,9 @@ public class CorespringClientTest {
     client.setEndpoint("http://localhost:8089");
 
     quiz = client.create(quiz);
-    quiz = client.update(new Quiz.Builder(quiz).description("description").build());
+    quiz = client.update(new Quiz.Builder(quiz).course("English 101").build());
 
-    assertEquals("description", quiz.getDescription());
+    assertEquals("English 101", quiz.getCourse());
   }
 
   @Test
