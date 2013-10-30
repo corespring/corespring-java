@@ -5,7 +5,7 @@
 
 Corespring-java is a Java library designed for interfacing with the CoreSpring REST API.
 
-[![Build Status](http://23.92.16.92:8080/buildStatus/icon?job=corespring-java)](http://23.92.16.92:8080/job/corespring-java/)
+[![Build Status](https://travis-ci.org/corespring/corespring-java.png)](https://travis-ci.org/corespring/corespring-java)
 
 ### Installing
 
