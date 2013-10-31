@@ -9,7 +9,7 @@ Corespring-java is a Java library designed for interfacing with the CoreSpring R
 
 ### Installing
 
-You can find the latest corespring-java jar [here](https://github.com/corespring/corespring-java/raw/releases/org/corespring/corespring-java/0.3.3/corespring-java-0.3.3.jar) and include it on your classpath.
+You can find the latest corespring-java jar [here](https://github.com/corespring/corespring-java/raw/releases/org/corespring/corespring-java/0.3.4/corespring-java-0.3.4.jar) and include it on your classpath.
 Alternatively, CoreSpring provides a public repository with access to different versions of the library.
 
 #### Maven Setup
@@ -31,7 +31,7 @@ You will also need to add the following dependency to your project:
     <dependency>
       <groupId>org.corespring</groupId>
       <artifactId>corespring-java</artifactId>
-      <version>0.3.3</version>
+      <version>0.3.4</version>
       <scope>compile</scope>
     </dependency>
 
