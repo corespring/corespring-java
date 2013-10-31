@@ -107,6 +107,7 @@ public class Quiz extends CorespringResource {
       this.id = quiz.id;
       this.orgId = quiz.orgId;
       this.metadata = new HashMap<String, String>();
+      this.metadata.putAll(quiz.metadata);
       this.questions = quiz.questions;
       this.participants = new HashMap<String, Participant>();
       for (Participant participant : quiz.participants) {
