@@ -2,6 +2,7 @@ package org.corespring;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.corespring.resource.ItemSession;
 import org.corespring.resource.Organization;
 import org.corespring.resource.Quiz;
 import org.corespring.resource.player.Options;
@@ -61,8 +62,13 @@ public class CorespringClient extends CorespringRestClient {
   }
 
   public Quiz delete(Quiz quiz) throws CorespringRestException {
-    CorespringRestResponse response = delete(Quiz.getResourceRoute(this, quiz.getId()), quiz);
+    delete(Quiz.getResourceRoute(this, quiz.getId()), quiz);
     return null;
+  }
+
+  public ItemSession create(ItemSession itemSession) throws CorespringRestException {
+    CorespringRestResponse response = post(itemSession.getResourcesRoute(this), itemSession);
+    return response.get(ItemSession.class);
   }
 
   public OptionsResponse encryptOptions(Options options) throws CorespringRestException {

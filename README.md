@@ -67,7 +67,7 @@ Below you will find additional documentation related to the individual resources
 platform:
 
 * Items
-* ItemSessions
+* [ItemSessions](/doc/resources/itemsessions.md)
 * [Options](/doc/resources/options.md)
 * [Organizations](/doc/resources/organizations.md)
 * [Quizzes](/doc/resources/quizzes.md)

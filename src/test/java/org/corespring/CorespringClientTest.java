@@ -1,7 +1,10 @@
 package org.corespring;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.corespring.authentication.AccessTokenProvider;
+import org.corespring.resource.ItemSession;
 import org.corespring.resource.Organization;
 import org.corespring.resource.Question;
 import org.corespring.resource.Quiz;
@@ -121,6 +124,18 @@ public class CorespringClientTest {
     quiz = client.delete(quiz);
 
     assertNull(quiz);
+  }
+
+  @Test
+  public void testCreateItemSession() throws CorespringRestException, JsonProcessingException {
+    CorespringClient client = new CorespringClient(clientId, clientSecret);
+    client.setEndpoint("http://localhost:8089");
+
+    ItemSession itemSession = new ItemSession.Builder().itemId("50083ba9e4b071cb5ef79101").build();
+    itemSession = client.create(itemSession);
+
+    assertNotNull(itemSession);
+    assertNotNull(itemSession.getId());
   }
 
   @Test
