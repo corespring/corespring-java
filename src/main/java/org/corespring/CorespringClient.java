@@ -13,9 +13,7 @@ import org.corespring.rest.CorespringRestClient;
 import org.corespring.rest.CorespringRestException;
 import org.corespring.rest.CorespringRestResponse;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * {@link CorespringClient} serves as the main interface between the API and the CoreSpring platform. You should
@@ -58,15 +56,23 @@ public class CorespringClient extends CorespringRestClient {
     return response.get(Quiz.class);
   }
 
+  public Quiz addParticipant(Quiz quiz, String externalUid) throws CorespringRestException {
+    Collection<String> externalUids = new ArrayList<String>();
+    externalUids.add(externalUid);
+    return addParticipants(quiz, externalUids);
+  }
+
+  public Quiz addParticipants(Quiz quiz, Collection<String> externalUids) throws CorespringRestException {
+    Map<String, Collection<String>> wrappedExternalUids = new HashMap<String, Collection<String>>();
+    wrappedExternalUids.put("ids", externalUids);
+    return put(quiz.getParticipantsRoute(this), wrappedExternalUids).get(Quiz.class);
+  }
+
   /**
    * Adds an {@link Answer} to a {@link Quiz} for a provided external user id.
    */
   public Quiz addAnswer(Quiz quiz, Answer answer, String externalUid) throws CorespringRestException {
-    String route = Answer.getAddAnswerRoute(this, quiz, externalUid);
-    System.err.println(route);
-    CorespringRestResponse response = put(route, answer);
-    System.err.println(response.getResponseText());
-    return response.get(Quiz.class);
+    return put(Answer.getAddAnswerRoute(this, quiz, externalUid), answer).get(Quiz.class);
   }
 
   public Quiz update(Quiz quiz) throws CorespringRestException {
@@ -75,7 +81,7 @@ public class CorespringClient extends CorespringRestClient {
   }
 
   public Quiz delete(Quiz quiz) throws CorespringRestException {
-    delete(Quiz.getResourceRoute(this, quiz.getId()), quiz);
+    delete(Quiz.getResourceRoute(this, quiz.getId()));
     return null;
   }
 

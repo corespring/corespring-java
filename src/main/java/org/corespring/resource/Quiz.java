@@ -155,14 +155,6 @@ public class Quiz extends CorespringResource {
       return this;
     }
 
-    /**
-     * This method will override existing {@link Participant} objects based on the participant's externalUid.
-     */
-    public Builder participant(Participant participant) {
-      this.participants.put(participant.getExternalUid(), participant);
-      return this;
-    }
-
     public Quiz build() {
       return new Quiz(this);
     }
@@ -175,6 +167,10 @@ public class Quiz extends CorespringResource {
 
   public static String getResourceRoute(CorespringRestClient client, String id) {
     return client.baseUrl().append(RESOURCE_ROUTE).append("/").append(id).toString();
+  }
+
+  public String getParticipantsRoute(CorespringRestClient client) {
+    return new StringBuilder(getResourceRoute(client, this.getId())).append("/add-participants").toString();
   }
 
   public Map<String, String> getMetadata() {

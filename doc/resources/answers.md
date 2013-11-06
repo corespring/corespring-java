@@ -7,12 +7,10 @@ At the minimum, an answer must contain an itemId value and a sessionId value.
 
 #### Add answer to quiz
 
-    Quiz quiz = new Quiz.Builder().title("My new quiz!")
-            .participant(
-                new Participant.Builder().externalUid(externalUid).build())
-            .build();
+    Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
 
     quiz = client.create(quiz);
+    quiz = client.addParticipant(quiz, externalUid);
 
     Answer answer = new Answer.Builder().itemId(itemId).sessionId(sessionId).build();
     quiz = client.addAnswer(quiz, answer, externalUid);

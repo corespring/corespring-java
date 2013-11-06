@@ -92,25 +92,25 @@ public abstract class CorespringRestClient {
     return doRequest(path, "GET", new ArrayList<NameValuePair>(), null);
   }
 
-  protected CorespringRestResponse put(String path, CorespringResource entity) throws CorespringRestException {
-    return doRequest(path, "PUT", new ArrayList<NameValuePair>(), entity);
+  protected CorespringRestResponse put(String path, Object entity) throws CorespringRestException {
+    return doRequest(path, "PUT", new ArrayList<NameValuePair>(), buildJsonEntity(entity));
   }
 
-  protected CorespringRestResponse post(String path, CorespringResource entity) throws CorespringRestException {
-    return doRequest(path, "POST", new ArrayList<NameValuePair>(), entity);
+  protected CorespringRestResponse post(String path, Object entity) throws CorespringRestException {
+    return doRequest(path, "POST", new ArrayList<NameValuePair>(), buildJsonEntity(entity));
   }
 
-  protected CorespringRestResponse delete(String path, CorespringResource entity) throws CorespringRestException  {
-    return doRequest(path, "DELETE", new ArrayList<NameValuePair>(), entity);
+  protected CorespringRestResponse delete(String path) throws CorespringRestException  {
+    return doRequest(path, "DELETE", new ArrayList<NameValuePair>(), null);
   }
 
   private CorespringRestResponse doRequest(String path, String method, List<NameValuePair> paramList,
-                                          CorespringResource entity) throws CorespringRestException {
+                                          StringEntity jsonEntity) throws CorespringRestException {
     if (getAccessToken() != null) {
       paramList.add(new BasicNameValuePair(ACCESS_TOKEN_KEY, getAccessToken()));
     }
 
-    HttpUriRequest request = setupRequest(path, method, paramList, entity);
+    HttpUriRequest request = setupRequest(path, method, paramList, jsonEntity);
     CorespringRestResponse response = null;
     CorespringRestException exception = null;
 
@@ -136,7 +136,7 @@ public abstract class CorespringRestClient {
           paramList.add(new BasicNameValuePair(ACCESS_TOKEN_KEY, getAccessToken()));
         }
 
-        request = setupRequest(path, method, paramList, entity);
+        request = setupRequest(path, method, paramList, jsonEntity);
         response = tryRequest(request);
       } else {
         exception = e;
@@ -175,10 +175,10 @@ public abstract class CorespringRestClient {
     }
   }
 
-  private HttpUriRequest setupRequest(String path, String method, List<NameValuePair> parameters, CorespringResource entity) {
-    HttpUriRequest request = (entity == null) ?
-        buildMethod(method, path, parameters) :
-        buildMethod(method, path, parameters, entity);
+  private HttpUriRequest setupRequest(String path, String method, List<NameValuePair> parameters,
+                                      StringEntity jsonEntity) {
+    HttpUriRequest request = (jsonEntity == null) ? buildMethod(method, path, parameters) :
+        buildMethod(method, path, parameters, jsonEntity);
 
     request.addHeader(new BasicHeader("User-Agent", "corespring-java/" + VERSION));
     request.addHeader(new BasicHeader("Accept", "application/json"));
@@ -194,27 +194,26 @@ public abstract class CorespringRestClient {
   private HttpUriRequest buildMethod(String method, String path, List<NameValuePair> parameters) {
     if (method.equalsIgnoreCase("GET")) {
       return generateGetRequest(path, parameters);
+    } else if (method.equalsIgnoreCase("DELETE")) {
+      return generateDeleteRequest(path, parameters);
     } else {
       throw new IllegalArgumentException("Unknown Method: " + method);
     }
   }
 
-  private HttpUriRequest buildMethod(String method, String path, List<NameValuePair> parameters, CorespringResource entity) {
+  private HttpUriRequest buildMethod(String method, String path, List<NameValuePair> parameters, StringEntity jsonEntity) {
     if (method.equalsIgnoreCase("POST")) {
-      return generatePostRequest(path, parameters, entity);
+      return generatePostRequest(path, parameters, jsonEntity);
     } else if (method.equalsIgnoreCase("PUT")) {
-      return generatePutRequest(path, parameters, entity);
-    } else if (method.equalsIgnoreCase("DELETE")) {
-      return generateDeleteRequest(path, parameters, entity);
+      return generatePutRequest(path, parameters, jsonEntity);
     } else {
       throw new IllegalArgumentException("Unknown Method " + method);
     }
   }
 
-  private HttpPost generatePostRequest(String path, List<NameValuePair> parameters, CorespringResource entity) {
+  private HttpPost generatePostRequest(String path, List<NameValuePair> parameters, StringEntity jsonEntity) {
     URI uri = buildUri(path, parameters);
     try {
-      StringEntity jsonEntity = buildJsonEntity(entity);
       HttpPost post = new HttpPost(uri);
       post.setEntity(jsonEntity);
       return post;
@@ -223,10 +222,9 @@ public abstract class CorespringRestClient {
     }
   }
 
-  private HttpPut generatePutRequest(String path, List<NameValuePair> parameters, CorespringResource entity) {
+  private HttpPut generatePutRequest(String path, List<NameValuePair> parameters, StringEntity jsonEntity) {
     URI uri = buildUri(path, parameters);
     try {
-      StringEntity jsonEntity = buildJsonEntity(entity);
       HttpPut put = new HttpPut(uri);
       put.setEntity(jsonEntity);
       return put;
@@ -235,16 +233,23 @@ public abstract class CorespringRestClient {
     }
   }
 
-  private HttpDelete generateDeleteRequest(String path, List<NameValuePair> parameters, CorespringResource entity) {
+  private HttpDelete generateDeleteRequest(String path, List<NameValuePair> parameters) {
     URI uri = buildUri(path, parameters);
     return new HttpDelete(uri);
   }
 
-  private StringEntity buildJsonEntity(Object entity) throws JsonProcessingException, UnsupportedEncodingException {
+  private StringEntity buildJsonEntity(Object entity) {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-    String json = objectMapper.writeValueAsString(entity);
-    return new StringEntity(json);
+    String json = null;
+    try {
+      json = objectMapper.writeValueAsString(entity);
+      return new StringEntity(json);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private HttpGet generateGetRequest(String path, List<NameValuePair> parameters) {

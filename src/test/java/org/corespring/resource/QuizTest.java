@@ -85,29 +85,4 @@ public class QuizTest {
     assertEquals("externalUid", deserialized.getParticipants().iterator().next().getExternalUid());
   }
 
-  @Test
-  public void testUniqueParticipantsByExternalUid() {
-    String sharedExternalUid = "rjelcjdi4";
-    Participant participant = new Participant.Builder().externalUid(sharedExternalUid).build();
-    Participant anotherParticipant = new Participant.Builder().externalUid(sharedExternalUid).build();
-
-    Quiz quiz = new Quiz.Builder().participant(participant).participant(anotherParticipant).build();
-
-    assertEquals(1, quiz.getParticipants().size());
-    assertEquals(anotherParticipant, quiz.getParticipants().iterator().next());
-  }
-
-  @Test
-  public void testGetParticipant() {
-    String externalUid = "rjelcjdi4";
-    String missingExternalUid = "dkfljas4r";
-
-    Participant participant = new Participant.Builder().externalUid(externalUid).build();
-    Quiz quiz = new Quiz.Builder().participant(participant).build();
-
-    assertEquals(participant, quiz.getParticipant(externalUid));
-    assertNull(quiz.getParticipant(missingExternalUid));
-  }
-
-
 }

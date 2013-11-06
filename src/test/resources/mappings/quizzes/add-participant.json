@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "PUT",
+        "url": "/api/v1/quizzes/524c0aa9300401522ab21da3/add-participants?access_token=demo_token"
+    },
+    "response": {
+        "status": 200,
+        "body": "{\"id\":\"524c0aa9300401522ab21da3\",\"orgId\":\"51114b307fc1eaa866444648\",\"metadata\":{\"title\":\"My new quiz!\"},\"participants\":[{\"answers\":[],\"externalUid\":\"ben1234\"}],\"questions\":[]}",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}
