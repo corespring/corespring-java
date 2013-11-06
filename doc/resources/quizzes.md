@@ -73,11 +73,8 @@ and a list of standards that the question maps to. Quizzes also contain metadata
 
 ### Participants
 
-A [Participant](/src/main/java/org/corespring/resource/question/Participant.java) describes a set of answers, as well an
-externalUid field which should be used to reference a student within a 3rd party system.
-
-Note that the Participants in Quiz objects are unique by their externalUid. If you specify a Participant with the same
-externalUid as an existing Participant, it will be overridden with the new value. For example:
+[Participants](/doc/resources/participants.md) in Quiz objects are unique by their externalUid. If you specify a
+Participant with the same externalUid as an existing Participant, it will be overridden with the new value. For example:
 
     String sharedExternalUid = "rjelcjdi4";
     Participant participant = new Participant.Builder().externalUid(sharedExternalUid).build();
@@ -88,12 +85,6 @@ externalUid as an existing Participant, it will be overridden with the new value
     System.out.println(quiz.getParticipants().size());                                          // 1
     System.out.println(quiz.getParticipants().iterator().next().equals(participant);            // false
     System.out.println(quiz.getParticipants().iterator().next().equals(anotherParticipant);     // true
-
-
-#### Answers
-
-[Answers](/src/main/java/org/corespring/resource/question/Answer.java) are a pair of Items and
-ItemSessions which describe a response to a quiz question.
 
 
 ### CorespringClient methods

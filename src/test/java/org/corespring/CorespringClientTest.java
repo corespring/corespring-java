@@ -12,6 +12,7 @@ import org.corespring.resource.player.Mode;
 import org.corespring.resource.player.Options;
 import org.corespring.resource.player.OptionsResponse;
 import org.corespring.resource.player.Role;
+import org.corespring.resource.question.Answer;
 import org.corespring.resource.question.Participant;
 import org.corespring.rest.CorespringRestException;
 import org.junit.Rule;
@@ -124,6 +125,29 @@ public class CorespringClientTest {
     quiz = client.delete(quiz);
 
     assertNull(quiz);
+  }
+
+  @Test
+  public void testAddAnswer() throws CorespringRestException {
+    String externalUid = "ben1234";
+    String itemId = "527a3bbe8808335f66e168a5";
+    String sessionId = "527a3bca8808335f66e168a6";
+
+    Quiz quiz = new Quiz.Builder().title("My new quiz!")
+        .participant(
+            new Participant.Builder().externalUid(externalUid).build())
+        .build();
+
+    CorespringClient client = new CorespringClient(clientId, clientSecret);
+    client.setEndpoint("http://localhost:8089");
+    quiz = client.create(quiz);
+
+    Answer answer = new Answer.Builder().itemId(itemId).sessionId(sessionId).build();
+    quiz = client.addAnswer(quiz, answer, externalUid);
+
+    assertNotNull(quiz.getParticipant(externalUid));
+    assertNotNull(quiz.getParticipant(externalUid).getAnswer(itemId));
+    assertEquals(sessionId, quiz.getParticipant(externalUid).getAnswer(itemId).getSessionId());
   }
 
   @Test

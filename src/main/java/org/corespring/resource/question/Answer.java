@@ -2,10 +2,19 @@ package org.corespring.resource.question;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.corespring.resource.CorespringResource;
+import org.corespring.resource.Quiz;
+import org.corespring.rest.CorespringRestClient;
 
 import java.util.Date;
 
-public class Answer {
+/**
+ * An {@link Answer} corresponds to a student's response to an item. At the minimum, an {@link Answer} must contain an
+ * itemId value and a sessionId value.
+ */
+@JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
+public class Answer extends CorespringResource {
 
   private final String itemId;
   private final String sessionId;
@@ -71,9 +80,29 @@ public class Answer {
     }
 
     public Answer build() {
+      validate();
       return new Answer(this);
     }
 
+    /**
+     * Validates that an {@link Answer} can be built. If it cannot, an {@link IllegalStateException} is thrown.
+     *
+     * @throws IllegalStateException
+     */
+    private void validate() throws IllegalStateException {
+      if (this.itemId == null) { throw new IllegalStateException("Answer must have an itemId"); }
+      if (this.sessionId == null) { throw new IllegalStateException("Answer must have a sessionId"); }
+    }
+
+  }
+
+  /**
+   * Returns a route to for a {@link CorespringRestClient} to add the {@link Answer} to a provided {@link Quiz} and
+   * external user id.
+   */
+  public static String getAddAnswerRoute(CorespringRestClient client, Quiz quiz, String externalUid) {
+    return new StringBuilder(Quiz.getResourceRoute(client, quiz.getId())).append("/").append(externalUid)
+        .append("/add-answer").toString();
   }
 
   public String getItemId() {

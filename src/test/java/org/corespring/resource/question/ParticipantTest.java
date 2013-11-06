@@ -1,15 +1,21 @@
 package org.corespring.resource.question;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ParticipantTest {
+
+  @Rule
+  public ExpectedException exception = ExpectedException.none();
 
   @Test
   public void testSerialization() throws IOException {
@@ -35,6 +41,46 @@ public class ParticipantTest {
     assertEquals(new Date(1380648451591L), deserialized.getAnswers().iterator().next().getLastResponse());
     assertEquals(true, deserialized.getAnswers().iterator().next().isComplete());
     assertEquals("externalUid", deserialized.getExternalUid());
+  }
+
+
+  @Test
+  public void testUniqueAnswersByItemId() {
+    String sharedItemId = "527a3bbe8808335f66e168a5";
+    Answer answer = new Answer.Builder().itemId(sharedItemId).sessionId("527a3bca8808335f66e168a6").build();
+    Answer anotherAnswer = new Answer.Builder().itemId(sharedItemId).sessionId("527a3bca8808335f66e168a6").build();
+
+    Participant participant =
+        new Participant.Builder().externalUid("l23kjdf").answer(answer).answer(anotherAnswer).build();
+
+    assertEquals(1, participant.getAnswers().size());
+    assertEquals(anotherAnswer, participant.getAnswers().iterator().next());
+  }
+
+  @Test
+  public void testGetAnswer() {
+    String itemId = "527a3bbe8808335f66e168a5";
+    String missingItemId = "527a455724f5ff49ee19d13b";
+
+    Answer answer = new Answer.Builder().itemId(itemId).sessionId("527a3bca8808335f66e168a6").build();
+    Participant participant = new Participant.Builder().externalUid("l23kjdf").answer(answer).build();
+
+    assertEquals(answer, participant.getAnswer(itemId));
+    assertNull(participant.getAnswer(missingItemId));
+  }
+
+  @Test
+  public void testRequiresExternalUid() {
+    exception.expect(IllegalStateException.class);
+    new Participant.Builder().build();
+  }
+
+  @Test
+  public void testValidWithExternalUid() {
+    String externalUid = "l23kjdf";
+    Participant participant = new Participant.Builder().externalUid(externalUid).build();
+
+    assertEquals(externalUid, participant.getExternalUid());
   }
 
 }

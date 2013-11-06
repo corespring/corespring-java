@@ -218,4 +218,17 @@ public class Quiz extends CorespringResource {
     return participants;
   }
 
+  /**
+   * Convenience method for looking up a {@link Participant} based on their externalUid.
+   */
+  @JsonIgnore
+  public Participant getParticipant(String externalUid) {
+    for (Participant participant : participants) {
+      if (participant.getExternalUid().equals(externalUid)) {
+        return participant;
+      }
+    }
+    return null;
+  }
+
 }

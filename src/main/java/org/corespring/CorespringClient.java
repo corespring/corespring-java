@@ -7,6 +7,8 @@ import org.corespring.resource.Organization;
 import org.corespring.resource.Quiz;
 import org.corespring.resource.player.Options;
 import org.corespring.resource.player.OptionsResponse;
+import org.corespring.resource.question.Answer;
+import org.corespring.resource.question.Participant;
 import org.corespring.rest.CorespringRestClient;
 import org.corespring.rest.CorespringRestException;
 import org.corespring.rest.CorespringRestResponse;
@@ -53,6 +55,17 @@ public class CorespringClient extends CorespringRestClient {
 
   public Quiz create(Quiz quiz) throws CorespringRestException {
     CorespringRestResponse response = post(Quiz.getResourcesRoute(this), quiz);
+    return response.get(Quiz.class);
+  }
+
+  /**
+   * Adds an {@link Answer} to a {@link Quiz} for a provided external user id.
+   */
+  public Quiz addAnswer(Quiz quiz, Answer answer, String externalUid) throws CorespringRestException {
+    String route = Answer.getAddAnswerRoute(this, quiz, externalUid);
+    System.err.println(route);
+    CorespringRestResponse response = put(route, answer);
+    System.err.println(response.getResponseText());
     return response.get(Quiz.class);
   }
 

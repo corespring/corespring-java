@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "PUT",
+        "url": "/api/v1/quizzes/524c0aa9300401522ab21da3/ben1234/add-answer?access_token=demo_token"
+    },
+    "response": {
+        "status": 200,
+        "body": "{\"id\":\"527a3f0c300439cb029252f7\",\"orgId\":\"521cd50be4b0886a8328cb39\",\"metadata\":{\"title\":\"My new quiz!\"},\"participants\":[{\"answers\":[{\"sessionId\":\"527a3bca8808335f66e168a6\",\"itemId\":\"527a3bbe8808335f66e168a5\",\"score\":0,\"lastResponse\":-1,\"isComplete\":false}],\"externalUid\":\"ben1234\"}],\"questions\":[]}",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}
