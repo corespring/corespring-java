@@ -58,7 +58,12 @@ public class Participant {
     }
 
     public Participant build() {
+      validate();
       return new Participant(this);
+    }
+
+    private void validate() {
+      if (externalUid == null) { throw new IllegalStateException("Participant must have an externalUid"); }
     }
 
   }

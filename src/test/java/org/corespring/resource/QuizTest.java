@@ -14,6 +14,7 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 
 public class QuizTest {
 
@@ -95,5 +96,18 @@ public class QuizTest {
     assertEquals(1, quiz.getParticipants().size());
     assertEquals(anotherParticipant, quiz.getParticipants().iterator().next());
   }
+
+  @Test
+  public void testGetParticipant() {
+    String externalUid = "rjelcjdi4";
+    String missingExternalUid = "dkfljas4r";
+
+    Participant participant = new Participant.Builder().externalUid(externalUid).build();
+    Quiz quiz = new Quiz.Builder().participant(participant).build();
+
+    assertEquals(participant, quiz.getParticipant(externalUid));
+    assertNull(quiz.getParticipant(missingExternalUid));
+  }
+
 
 }
