@@ -1,11 +1,19 @@
 package org.corespring.resource.question;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * A {@link Participant} defines a student by an external user id, as well as a set of {@link Answer}s to items within
+ * a {@link org.corespring.resource.Quiz}. A {@link Participant}'s {@link Answer}s are unique by item id (i.e., the
+ * {@link Builder} for {@link Participant} will not allow duplicate itemIds for {@link Answer}s, and will override
+ * existing {@link Answer}s with matching itemId).
+ */
 public class Participant {
 
   private final Collection<Answer> answers;
@@ -19,25 +27,28 @@ public class Participant {
   }
 
   private Participant(Builder builder) {
-    this.answers = builder.answers;
+    this.answers = builder.answers.values();
     this.externalUid = builder.externalUid;
   }
 
   public static class Builder {
 
-    private Collection<Answer> answers = new ArrayList<Answer>();
+    private Map<String, Answer> answers = new HashMap<String, Answer>();
     private String externalUid;
 
     public Builder() {
     }
 
     public Builder(Participant participant) {
-      this.answers = participant.answers;
+      this.answers = new HashMap<String, Answer>();
+      for (Answer answer : participant.answers) {
+        this.answers.put(answer.getItemId(), answer);
+      }
       this.externalUid = participant.externalUid;
     }
 
     public Builder answer(Answer answer) {
-      this.answers.add(answer);
+      this.answers.put(answer.getItemId(), answer);
       return this;
     }
 
@@ -58,6 +69,19 @@ public class Participant {
 
   public String getExternalUid() {
     return externalUid;
+  }
+
+  /**
+   * Convenience method for looking up an {@link Answer} based on itemId.
+   */
+  @JsonIgnore
+  public Answer getAnswer(String itemId) {
+    for (Answer answer : answers) {
+      if (answer.getItemId().equals(itemId)) {
+        return answer;
+      }
+    }
+    return null;
   }
 
 }

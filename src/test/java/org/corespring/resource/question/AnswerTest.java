@@ -1,7 +1,9 @@
 package org.corespring.resource.question;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 import java.util.Date;
@@ -9,6 +11,9 @@ import java.util.Date;
 import static org.junit.Assert.assertEquals;
 
 public class AnswerTest {
+
+  @Rule
+  public ExpectedException exception = ExpectedException.none();
 
   @Test
   public void testSerialization() throws IOException {
@@ -32,6 +37,25 @@ public class AnswerTest {
     assertEquals(new Integer(1), deserialized.getScore());
     assertEquals(new Date(1380648184309L), deserialized.getLastResponse());
     assertEquals(true, deserialized.isComplete());
+  }
+
+  @Test
+  public void testRequiresItemId() {
+    exception.expect(IllegalStateException.class);
+    new Answer.Builder().sessionId("sessionId").build();
+  }
+
+  @Test
+  public void testRequiresSessionId() {
+    exception.expect(IllegalStateException.class);
+    new Answer.Builder().itemId("itemId").build();
+  }
+
+  @Test
+  public void testValidWithItemIdAndSessionId() {
+    Answer answer = new Answer.Builder().itemId("itemId").sessionId("sessionId").build();
+    assertEquals("itemId", answer.getItemId());
+    assertEquals("sessionId", answer.getSessionId());
   }
 
 }

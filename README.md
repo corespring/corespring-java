@@ -72,6 +72,8 @@ platform:
 * [Organizations](/doc/resources/organizations.md)
 * [Quizzes](/doc/resources/quizzes.md)
   * [Settings](/doc/resources/settings.md)
+  * [Participants](/doc/resources/participants.md)
+    * [Answers](/doc/resources/answers.md)
 
 ## License
 
