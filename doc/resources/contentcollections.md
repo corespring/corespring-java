@@ -1,9 +1,9 @@
 ## ContentCollections
 
-A [ContentCollection](src/main/java/org/corespring/resource/ContentCollection.java) represents a set of
+A [ContentCollection](/src/main/java/org/corespring/resource/ContentCollection.java) represents a set of
 [items](/doc/resources/items.md) within the CoreSpring platform. You can access the items associated with a
-content collection by passing a content collection's id into an [ItemQuery](docs/resources/items.md#itemquery) object
-and using [CorespringClient](src/main/java/org/corespring/CorespringClient)'s findItems method.
+content collection by passing a content collection's id into an [ItemQuery](/doc/resources/items.md#itemquery) object
+and using [CorespringClient](/src/main/java/org/corespring/CorespringClient.java)'s findItems method.
 
 
 ### CorespringClient methods

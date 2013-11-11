@@ -6,7 +6,7 @@ through URLs based on the id.
 
 ### ItemQuery
 
-An [Item](/src/main/java/org/corespring/rest/ItemQuery.java) is a query object which is passed to the CoreSpring API in
+An [ItemQuery](/src/main/java/org/corespring/rest/ItemQuery.java) is a query object which is passed to the CoreSpring API in
 order to return a subset of available items. An ItemQuery can be built as follows:
 
     ItemQuery itemQuery = new ItemQuery.Builder()
