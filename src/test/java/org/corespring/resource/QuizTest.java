@@ -1,12 +1,9 @@
 package org.corespring.resource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.corespring.CorespringClient;
 import org.corespring.resource.question.Answer;
 import org.corespring.resource.question.Participant;
 import org.corespring.resource.question.Settings;
-import org.corespring.rest.CorespringRestClient;
-import org.corespring.rest.CorespringRestException;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -14,7 +11,6 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 
 public class QuizTest {
 

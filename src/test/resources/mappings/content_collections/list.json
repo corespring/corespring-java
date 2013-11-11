@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/api/v1/collections?access_token=demo_token"
+    },
+    "response": {
+        "status": 200,
+        "body": "[{\"name\":\"CoreSpring ELA (Public)\",\"permission\":\"read\",\"itemCount\":143,\"isPublic\":true,\"id\":\"4ff2e4cae4b077b9e31689fd\"},{\"name\":\"CoreSpring Mathematics (Public)\",\"permission\":\"read\",\"itemCount\":802,\"isPublic\":true,\"id\":\"4ff2e56fe4b077b9e3168a05\"},{\"name\":\"Beta Items (Public)\",\"permission\":\"read\",\"itemCount\":22,\"isPublic\":true,\"id\":\"505777f5e4b05f7845735bc1\"},{\"name\":\"Demo Collection\",\"permission\":\"read\",\"itemCount\":5,\"isPublic\":true,\"id\":\"51114b127fc1eaa866444647\"}]",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

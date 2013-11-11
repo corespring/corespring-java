@@ -66,7 +66,8 @@ register for the CoreSpring platform), and use its methods to interact with the 
 Below you will find additional documentation related to the individual resources in the domain model of the CoreSpring
 platform:
 
-* Items
+* [ContentCollections](/doc/resources/contentcollections.md)
+* [Items](/doc/resources/items.md)
 * [ItemSessions](/doc/resources/itemsessions.md)
 * [Options](/doc/resources/options.md)
 * [Organizations](/doc/resources/organizations.md)

@@ -2,16 +2,14 @@ package org.corespring;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.corespring.resource.ItemSession;
-import org.corespring.resource.Organization;
-import org.corespring.resource.Quiz;
+import org.corespring.resource.*;
 import org.corespring.resource.player.Options;
 import org.corespring.resource.player.OptionsResponse;
 import org.corespring.resource.question.Answer;
-import org.corespring.resource.question.Participant;
 import org.corespring.rest.CorespringRestClient;
 import org.corespring.rest.CorespringRestException;
 import org.corespring.rest.CorespringRestResponse;
+import org.corespring.rest.ItemQuery;
 
 import java.util.*;
 
@@ -95,5 +93,47 @@ public class CorespringClient extends CorespringRestClient {
     OptionsResponse optionsResponse = response.get(OptionsResponse.class);
     return optionsResponse;
   }
+
+  public Collection<ContentCollection> getCollections() throws CorespringRestException {
+    CorespringRestResponse response = get(ContentCollection.getResourcesRoute(this));
+    return response.getAll(ContentCollection.class);
+  }
+
+  public Collection<Item> findItems(ItemQuery itemQuery) throws CorespringRestException {
+    return findItems(itemQuery, null, null);
+  }
+
+  public Collection<Item> findItems(ItemQuery itemQuery, Integer size, Integer offset) throws CorespringRestException {
+    List<NameValuePair> params = new ArrayList<NameValuePair>();
+    params.add(new BasicNameValuePair("q", itemQuery.toString()));
+    if (size != null) {
+      params.add(new BasicNameValuePair("l", size.toString()));
+    }
+    if (offset != null) {
+      params.add(new BasicNameValuePair("sk", offset.toString()));
+    }
+    CorespringRestResponse response = get(Item.getResourceRoute(this), params);
+    return response.getAll(Item.class);
+  }
+
+  public int countItems(ItemQuery itemQuery) throws CorespringRestException {
+    return countItems(itemQuery, null, null);
+  }
+
+  public int countItems(ItemQuery itemQuery, Integer size, Integer offset) throws CorespringRestException {
+    List<NameValuePair> params = new ArrayList<NameValuePair>();
+    params.add(new BasicNameValuePair("q", itemQuery.toString()));
+    params.add(new BasicNameValuePair("c", "true"));
+    if (size != null) {
+      params.add(new BasicNameValuePair("l", size.toString()));
+    }
+    if (offset != null) {
+      params.add(new BasicNameValuePair("sk", offset.toString()));
+    }
+    CorespringRestResponse response = get(Item.getResourceRoute(this), params);
+    HashMap map = response.get(HashMap.class);
+    return (Integer) map.get("count");
+  }
+
 
 }

@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.corespring.authentication.AccessTokenProvider;
-import org.corespring.resource.ItemSession;
-import org.corespring.resource.Organization;
-import org.corespring.resource.Question;
-import org.corespring.resource.Quiz;
+import org.corespring.resource.*;
 import org.corespring.resource.player.Mode;
 import org.corespring.resource.player.Options;
 import org.corespring.resource.player.OptionsResponse;
@@ -15,6 +12,7 @@ import org.corespring.resource.player.Role;
 import org.corespring.resource.question.Answer;
 import org.corespring.resource.question.Participant;
 import org.corespring.rest.CorespringRestException;
+import org.corespring.rest.ItemQuery;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -29,7 +27,7 @@ public class CorespringClientTest {
   private String clientId = "524c5cb5300401522ab21db1";
   private String clientSecret = "325hm11xiz7ykeen2ibt";
 
-  private final CorespringClient client = new CorespringClient(clientId, clientSecret);
+  private CorespringClient client = new CorespringClient(clientId, clientSecret);
 
   {
     client.setEndpoint("http://localhost:8089");
@@ -153,6 +151,44 @@ public class CorespringClientTest {
 
     assertNotNull(itemSession);
     assertNotNull(itemSession.getId());
+  }
+
+  @Test
+  public void testGetCollections() throws CorespringRestException {
+    Collection<ContentCollection> collections = client.getCollections();
+    for (ContentCollection collection : collections) {
+      checkCollection(collection);
+    }
+  }
+
+  private void checkCollection(ContentCollection collection) {
+    assertNotNull(collection.getId());
+    assertNotNull(collection.getName());
+    assertNotNull(collection.isPublic());
+  }
+
+  @Test
+  public void testFindItems() throws CorespringRestException {
+    ItemQuery itemQuery = new ItemQuery.Builder().collection("4ff2e4cae4b077b9e31689fd").gradeLevel("03").itemType("Multiple Choice").build();
+    Collection<Item> items = client.findItems(itemQuery);
+
+    for (Item item : items) {
+      checkItem(item);
+    }
+  }
+
+  @Test
+  public void testCountItems() throws CorespringRestException {
+    ItemQuery itemQuery = new ItemQuery.Builder().collection("4ff2e4cae4b077b9e31689fd").gradeLevel("03").itemType("Multiple Choice").build();
+    int itemCount = client.countItems(itemQuery);
+
+    assertEquals(11, itemCount);
+  }
+
+  private void checkItem(Item item) {
+    assertNotNull(item.getId());
+    assertNotNull(item.getTitle());
+    assertNotNull(item.getCollectionId());
   }
 
   @Test

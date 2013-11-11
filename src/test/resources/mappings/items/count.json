@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/api/v1/items?q=%7B%22gradeLevel%22%3A%7B%22%24in%22%3A%5B%2203%22%5D%7D%2C%22itemType%22%3A%7B%22%24in%22%3A%5B%22Multiple+Choice%22%5D%7D%2C%22collectionId%22%3A%7B%22%24in%22%3A%5B%224ff2e4cae4b077b9e31689fd%22%5D%7D%7D&c=true&access_token=demo_token"
+    },
+    "response": {
+        "status": 200,
+        "body": "{\"count\":11}",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

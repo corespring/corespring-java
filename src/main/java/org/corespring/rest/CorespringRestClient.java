@@ -15,7 +15,6 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.corespring.authentication.AccessTokenProvider;
-import org.corespring.resource.CorespringResource;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -164,6 +163,7 @@ public abstract class CorespringRestClient {
 
       StatusLine status = response.getStatusLine();
       int statusCode = status.getStatusCode();
+
       CorespringRestResponse restResponse =
           new CorespringRestResponse(request.getURI().toString(), responseBody, statusCode);
 
