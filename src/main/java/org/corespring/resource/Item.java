@@ -23,6 +23,7 @@ public class Item {
   private final Collection<String> gradeLevel;
   private final Collection<String> keySkills;
   private final Subject primarySubject;
+  private final Collection<Standard> standards;
   private final Boolean published;
 
   @JsonCreator
@@ -34,6 +35,7 @@ public class Item {
               @JsonProperty("gradeLevel") Collection<String> gradeLevel,
               @JsonProperty("keySkills") Collection<String> keySkills,
               @JsonProperty("primarySubject") Subject primarySubject,
+              @JsonProperty("standards") Collection<Standard> standards,
               @JsonProperty("published") Boolean published) {
     this.id = id;
     this.collectionId = collectionId;
@@ -43,6 +45,7 @@ public class Item {
     this.gradeLevel = gradeLevel;
     this.keySkills = keySkills;
     this.primarySubject = primarySubject;
+    this.standards = standards;
     this.published = published;
   }
 
@@ -80,6 +83,10 @@ public class Item {
 
   public Subject getPrimarySubject() {
     return primarySubject;
+  }
+
+  public Collection<Standard> getStandards() {
+    return standards;
   }
 
   public Boolean getPublished() {

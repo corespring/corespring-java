@@ -8,6 +8,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
@@ -20,14 +21,17 @@ public class ItemTest {
     Collection<String> keySkills = new ArrayList<String>();
     keySkills.add("Identify");
     Subject primarySubject = new Subject("527d2f4aa81fbc1839792a21", "category", "subject");
+    Standard standard = new Standard("527d2c81a81fbc1839792a1d", "category", "subCategory", "standard", "subject", "dotNotation");
+    Collection<Standard> standards = new ArrayList<Standard>();
+    standards.add(standard);
 
     Item item = new Item("527d2ed9a81fbc1839792a1f", "527d2edaa81fbc1839792a20", "title", "author", "itemType",
-        gradeLevel, keySkills, primarySubject, false);
+        gradeLevel, keySkills, primarySubject, standards, false);
 
     ObjectMapper objectMapper = new ObjectMapper();
 
     assertEquals(
-        "{\"id\":\"527d2ed9a81fbc1839792a1f\",\"title\":\"title\",\"author\":\"author\",\"itemType\":\"itemType\",\"gradeLevel\":[\"04\"],\"keySkills\":[\"Identify\"],\"primarySubject\":{\"id\":\"527d2f4aa81fbc1839792a21\",\"category\":\"category\",\"subject\":\"subject\"},\"published\":false,\"collectionId\":\"527d2edaa81fbc1839792a20\"}",
+        "{\"id\":\"527d2ed9a81fbc1839792a1f\",\"title\":\"title\",\"author\":\"author\",\"itemType\":\"itemType\",\"gradeLevel\":[\"04\"],\"keySkills\":[\"Identify\"],\"primarySubject\":{\"id\":\"527d2f4aa81fbc1839792a21\",\"category\":\"category\",\"subject\":\"subject\"},\"standards\":[{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"dotNotation\":\"dotNotation\"}],\"published\":false,\"collectionId\":\"527d2edaa81fbc1839792a20\"}",
         objectMapper.writeValueAsString(item)
     );
 
@@ -35,7 +39,7 @@ public class ItemTest {
 
   @Test
   public void testDeserialization() throws IOException {
-    String json = "{\"id\":\"527d2ed9a81fbc1839792a1f\",\"title\":\"title\",\"author\":\"author\",\"itemType\":\"itemType\",\"gradeLevel\":[\"04\"],\"keySkills\":[\"Identify\"],\"primarySubject\":{\"id\":\"527d2f4aa81fbc1839792a21\",\"category\":\"category\",\"subject\":\"subject\"},\"published\":false,\"collectionId\":\"527d2edaa81fbc1839792a20\"}";
+    String json = "{\"id\":\"527d2ed9a81fbc1839792a1f\",\"title\":\"title\",\"author\":\"author\",\"itemType\":\"itemType\",\"gradeLevel\":[\"04\"],\"keySkills\":[\"Identify\"],\"primarySubject\":{\"id\":\"527d2f4aa81fbc1839792a21\",\"category\":\"category\",\"subject\":\"subject\"},\"standards\":[{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"dotNotation\":\"dotNotation\"}],\"published\":false,\"collectionId\":\"527d2edaa81fbc1839792a20\"}";
     ObjectMapper objectMapper = new ObjectMapper();
 
     Item deserialized = objectMapper.readValue(json, Item.class);
@@ -51,6 +55,13 @@ public class ItemTest {
     assertEquals("category", deserialized.getPrimarySubject().getCategory());
     assertEquals("subject", deserialized.getPrimarySubject().getSubject());
     assertEquals(false, deserialized.getPublished());
+
+    assertEquals("527d2c81a81fbc1839792a1d", deserialized.getStandards().iterator().next().getId());
+    assertEquals("category", deserialized.getStandards().iterator().next().getCategory());
+    assertEquals("subCategory", deserialized.getStandards().iterator().next().getSubCategory());
+    assertEquals("standard", deserialized.getStandards().iterator().next().getStandard());
+    assertEquals("subject", deserialized.getStandards().iterator().next().getSubject());
+    assertEquals("dotNotation", deserialized.getStandards().iterator().next().getDotNotation());
   }
 
 }
