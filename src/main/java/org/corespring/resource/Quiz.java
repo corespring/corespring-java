@@ -8,10 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.corespring.resource.question.Participant;
 import org.corespring.rest.CorespringRestClient;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A {@link Quiz} represents a set of {@link Question}s, {@link Participant}s, and associated metadata. A JSON
@@ -65,16 +62,22 @@ public class Quiz extends CorespringResource {
 
   private static final String RESOURCE_ROUTE = "quizzes";
 
+  private static final String TITLE_KEY = "title";
+  private static final String DESCRIPTION_KEY = "description";
+  private static final String INSTRUCTIONS_KEY = "instructions";
+  static final String START_DATE_KEY = "startDate";
+  static final String END_DATE_KEY = "endDate";
+
   private final String id;
   private final String orgId;
-  private final Map<String, String> metadata;
+  private final Map<String, Object> metadata;
   private final Collection<Question> questions;
   private final Collection<Participant> participants;
 
   @JsonCreator
   public Quiz(@JsonProperty("id") String id,
               @JsonProperty("orgId") String orgId,
-              @JsonProperty("metadata") @JsonDeserialize(as=HashMap.class) Map<String, String> metadata,
+              @JsonProperty("metadata") @JsonDeserialize(as=HashMap.class) Map<String, Object> metadata,
               @JsonProperty("questions") Collection<Question> questions,
               @JsonProperty("participants") Collection<Participant> participants) {
     this.id = id;
@@ -96,7 +99,7 @@ public class Quiz extends CorespringResource {
 
     private String id;
     private String orgId;
-    private Map<String, String> metadata = new HashMap<String, String>();
+    private Map<String, Object> metadata = new HashMap<String, Object>();
     private Collection<Question> questions = new ArrayList<Question>();
     private Map<String, Participant> participants = new HashMap<String, Participant>();
 
@@ -106,7 +109,7 @@ public class Quiz extends CorespringResource {
     public Builder(Quiz quiz) {
       this.id = quiz.id;
       this.orgId = quiz.orgId;
-      this.metadata = new HashMap<String, String>();
+      this.metadata = new HashMap<String, Object>();
       this.metadata.putAll(quiz.metadata);
       this.questions = quiz.questions;
       this.participants = new HashMap<String, Participant>();
@@ -126,17 +129,17 @@ public class Quiz extends CorespringResource {
     }
 
     public Builder title(String title) {
-      metadata.put("title", title);
+      metadata.put(TITLE_KEY, title);
       return this;
     }
 
     public Builder description(String description) {
-      metadata.put("description", description);
+      metadata.put(DESCRIPTION_KEY, description);
       return this;
     }
 
     public Builder instructions(String instructions) {
-      metadata.put("instructions", instructions);
+      metadata.put(INSTRUCTIONS_KEY, instructions);
       return this;
     }
 
@@ -150,12 +153,37 @@ public class Quiz extends CorespringResource {
       return this;
     }
 
+    public Builder starts(Date startDate) {
+      Date endDate = (Date) metadata.get(END_DATE_KEY);
+      if (endDate != null && endDate.before(startDate)) {
+        throw new IllegalArgumentException("Start date cannot come after end date.");
+      }
+      metadata.put(START_DATE_KEY, startDate);
+      return this;
+    }
+
+    public Builder ends(Date endDate) {
+      Date startDate = (Date) metadata.get(START_DATE_KEY);
+      if (startDate != null && endDate.before(startDate)) {
+        throw new IllegalArgumentException("End date must come before start date.");
+      }
+      metadata.put(END_DATE_KEY, endDate);
+      return this;
+    }
+
     public Builder removeMetadata(String key) {
       metadata.remove(key);
       return this;
     }
 
     public Quiz build() {
+      if ((metadata.get(START_DATE_KEY) != null) ^ (metadata.get(END_DATE_KEY) != null)) {
+        if (metadata.get(START_DATE_KEY) == null) {
+          throw new IllegalStateException("Quiz with a start date must have an end date");
+        } else {
+          throw new IllegalStateException("Quiz with an end date must have a start date");
+        }
+      }
       return new Quiz(this);
     }
 
@@ -173,7 +201,7 @@ public class Quiz extends CorespringResource {
     return new StringBuilder(getResourceRoute(client, this.getId())).append("/add-participants").toString();
   }
 
-  public Map<String, String> getMetadata() {
+  public Map<String, Object> getMetadata() {
     return metadata;
   }
 
@@ -188,22 +216,61 @@ public class Quiz extends CorespringResource {
 
   @JsonIgnore
   public String getTitle() {
-    return metadata.get("title");
+    return metadata.get(TITLE_KEY).toString();
   }
 
   @JsonIgnore
   public String getDescription() {
-    return metadata.get("description");
+    return metadata.get(DESCRIPTION_KEY).toString();
   }
 
   @JsonIgnore
-  public String getMetadataValue(String key) {
+  public Date getStart() {
+    return getDateFromKey(START_DATE_KEY);
+  }
+
+  @JsonIgnore
+  public Date getEnd() {
+    return getDateFromKey(END_DATE_KEY);
+  }
+
+  private Date getDateFromKey(String key) {
+    if (metadata.containsKey(key)) {
+      if (metadata.get(key) instanceof Date) {
+        return (Date) metadata.get(key);
+      } else if (metadata.get(key) instanceof Long) {
+        return new Date((Long) metadata.get(key));
+      } else {
+        throw new IllegalStateException(
+            "Value in metadata does not represent a valid date: " + metadata.get(key).toString());
+      }
+    } else {
+      return null;
+    }
+  }
+
+  @JsonIgnore
+  public boolean isActive(Date date) {
+    if (getStart() != null && getEnd() != null) {
+      return getStart().before(date) && getEnd().after(date);
+    } else {
+      return true;
+    }
+  }
+
+  @JsonIgnore
+  public boolean isActive() {
+    return isActive(new Date());
+  }
+
+  @JsonIgnore
+  public Object getMetadataValue(String key) {
     return metadata.get(key);
   }
 
   @JsonIgnore
   public String getInstructions() {
-    return metadata.get("instructions");
+    return metadata.get(INSTRUCTIONS_KEY).toString();
   }
 
   public Collection<Question> getQuestions() {
