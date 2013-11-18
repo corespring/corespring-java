@@ -216,12 +216,12 @@ public class Quiz extends CorespringResource {
 
   @JsonIgnore
   public String getTitle() {
-    return metadata.get(TITLE_KEY).toString();
+    return metadata.containsKey(TITLE_KEY) ? metadata.get(TITLE_KEY).toString() : null;
   }
 
   @JsonIgnore
   public String getDescription() {
-    return metadata.get(DESCRIPTION_KEY).toString();
+    return metadata.containsKey(DESCRIPTION_KEY) ? metadata.get(DESCRIPTION_KEY).toString() : null;
   }
 
   @JsonIgnore
