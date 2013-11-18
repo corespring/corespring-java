@@ -82,17 +82,17 @@ public class Quiz extends CorespringResource {
               @JsonProperty("participants") Collection<Participant> participants) {
     this.id = id;
     this.orgId = orgId;
-    this.metadata = metadata;
-    this.questions = questions;
-    this.participants = participants;
+    this.metadata = metadata == null ? new HashMap<String, Object>() : metadata;
+    this.questions = questions == null ? new ArrayList<Question>() : questions;
+    this.participants = participants == null ? new ArrayList<Participant>() : participants;
   }
 
   private Quiz(Builder builder) {
     this.id = builder.id;
     this.orgId = builder.orgId;
-    this.metadata = builder.metadata;
-    this.questions = builder.questions;
-    this.participants = builder.participants.values();
+    this.metadata = builder.metadata == null ? new HashMap<String, Object>() : builder.metadata;
+    this.questions = builder.questions == null ? new ArrayList<Question>() : builder.questions;
+    this.participants = builder.participants == null ? new ArrayList<Participant>() : builder.participants.values();
   }
 
   public static class Builder {
