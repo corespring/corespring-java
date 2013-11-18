@@ -13,6 +13,7 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class QuizTest {
@@ -124,6 +125,26 @@ public class QuizTest {
     assertTrue(new Quiz.Builder().starts(yesterday).ends(tomorrow).build().isActive(today));
     assertFalse(new Quiz.Builder().starts(today).ends(tomorrow).build().isActive(yesterday));
     assertFalse(new Quiz.Builder().starts(yesterday).ends(today).build().isActive(tomorrow));
+  }
+
+  @Test
+  public void testGetTitle() {
+    assertNull(new Quiz.Builder().build().getTitle());
+  }
+
+  @Test
+  public void testGetDescription() {
+    assertNull(new Quiz.Builder().build().getDescription());
+  }
+
+  @Test
+  public void testGetInstructions() {
+    assertNull(new Quiz.Builder().build().getInstructions());
+  }
+
+  @Test
+  public void testGetMetadataValue() {
+    assertNull(new Quiz.Builder().build().getMetadataValue("random value"));
   }
 
 }

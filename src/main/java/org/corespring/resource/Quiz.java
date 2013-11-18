@@ -225,6 +225,11 @@ public class Quiz extends CorespringResource {
   }
 
   @JsonIgnore
+  public String getInstructions() {
+    return metadata.containsKey(INSTRUCTIONS_KEY) ? metadata.get(INSTRUCTIONS_KEY).toString() : null;
+  }
+
+  @JsonIgnore
   public Date getStart() {
     return getDateFromKey(START_DATE_KEY);
   }
@@ -265,12 +270,7 @@ public class Quiz extends CorespringResource {
 
   @JsonIgnore
   public Object getMetadataValue(String key) {
-    return metadata.get(key);
-  }
-
-  @JsonIgnore
-  public String getInstructions() {
-    return metadata.get(INSTRUCTIONS_KEY).toString();
+    return metadata.containsKey(key) ? metadata.get(key) : null;
   }
 
   public Collection<Question> getQuestions() {
