@@ -54,8 +54,8 @@ description, and instructions. These can be added using the Quiz.Builder helper 
         .title("Corepring Sample Quiz")
         .description("This is a sample quiz")
         .instructions("This quiz consists of questions to help users get up to speed using the CoreSpring platform")
-        .starts(today)
-        .ends(tomorrow)
+        .start(today)
+        .end(tomorrow)
         .build();
 
 You can also add arbitrary metadata using the addMetadata method:
@@ -66,7 +66,7 @@ You can also add arbitrary metadata using the addMetadata method:
 
     System.out.println(quiz.getMetadataValue("classroom"));             // "1034"
 
-#### Starts/Ends/isActive
+#### Start/End/isActive
 
 Quiz objects contain special metadata for the start and end of quizzes. If you're constructing a Quiz using the builder,
 and you would like to define a time frame for the quiz, you must ensure that the following conditions are met:
@@ -80,10 +80,10 @@ There is also a convenience method isActive to determine whether a quiz is curre
 time range are active by default. For example:
 
     System.out.println(new Quiz.Builder().build().isActive(today));                                     // true
-    System.out.println(new Quiz.Builder().starts(yesterday).ends(tomorrow).build().isActive());         // true
-    System.out.println(new Quiz.Builder().starts(yesterday).ends(tomorrow).build().isActive(today));    // true
-    System.out.println(new Quiz.Builder().starts(today).ends(tomorrow).build().isActive(yesterday));    // false
-    System.out.println(new Quiz.Builder().starts(yesterday).ends(today).build().isActive(tomorrow));    // false
+    System.out.println(new Quiz.Builder().start(yesterday).end(tomorrow).build().isActive());           // true
+    System.out.println(new Quiz.Builder().start(yesterday).end(tomorrow).build().isActive(today));      // true
+    System.out.println(new Quiz.Builder().start(today).end(tomorrow).build().isActive(yesterday));      // false
+    System.out.println(new Quiz.Builder().start(yesterday).end(today).build().isActive(tomorrow));      // false
     
 
 ### Questions
