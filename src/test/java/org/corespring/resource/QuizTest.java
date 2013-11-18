@@ -38,8 +38,6 @@ public class QuizTest {
     metadata.put("description", "description");
     metadata.put("instructions", "instructions");
     metadata.put("classroom", "1034");
-    metadata.put(Quiz.START_DATE_KEY, today);
-    metadata.put(Quiz.END_DATE_KEY, tomorrow);
   }
 
   @Rule
@@ -47,11 +45,11 @@ public class QuizTest {
 
   @Test
   public void testSerialization() throws IOException {
-    Quiz quiz = new Quiz("000000000000000000000002", "51114b307fc1eaa866444648", metadata, questions, participants);
+    Quiz quiz = new Quiz("000000000000000000000002", "51114b307fc1eaa866444648", today, tomorrow, metadata, questions, participants);
     ObjectMapper objectMapper = new ObjectMapper();
 
     assertEquals(
-        "{\"id\":\"000000000000000000000002\",\"orgId\":\"51114b307fc1eaa866444648\",\"metadata\":{\"startDate\":1384550763228,\"classroom\":\"1034\",\"title\":\"title\",\"instructions\":\"instructions\",\"description\":\"description\",\"endDate\":1384550863228},\"questions\":[{\"itemId\":\"503c2e91e4b00f3f0a9a7a6a\",\"settings\":{\"highlightUserResponse\":true,\"highlightCorrectResponse\":false,\"showFeedback\":true,\"allowEmptyResponses\":false,\"submitCompleteMessage\":\"Ok! Your response was submitted.\",\"submitIncompleteMessage\":\"You may revise your work before you submit your final response.\",\"submitIncorrectMessage\":\"You may revise your work before you submit your final response.\",\"maxNumberOfAttempts\":1},\"title\":\"title\",\"standards\":[\"test\"]}],\"participants\":[{\"answers\":[{\"itemId\":\"itemId\",\"sessionId\":\"sessionId\",\"score\":1,\"lastResponse\":1380649346485,\"complete\":true}],\"externalUid\":\"externalUid\"}]}",
+        "{\"id\":\"000000000000000000000002\",\"orgId\":\"51114b307fc1eaa866444648\",\"start\":1384550763228,\"end\":1384550863228,\"metadata\":{\"classroom\":\"1034\",\"title\":\"title\",\"instructions\":\"instructions\",\"description\":\"description\"},\"questions\":[{\"itemId\":\"503c2e91e4b00f3f0a9a7a6a\",\"settings\":{\"highlightUserResponse\":true,\"highlightCorrectResponse\":false,\"showFeedback\":true,\"allowEmptyResponses\":false,\"submitCompleteMessage\":\"Ok! Your response was submitted.\",\"submitIncompleteMessage\":\"You may revise your work before you submit your final response.\",\"submitIncorrectMessage\":\"You may revise your work before you submit your final response.\",\"maxNumberOfAttempts\":1},\"title\":\"title\",\"standards\":[\"test\"]}],\"participants\":[{\"answers\":[{\"itemId\":\"itemId\",\"sessionId\":\"sessionId\",\"score\":1,\"lastResponse\":1380649346485,\"complete\":true}],\"externalUid\":\"externalUid\"}]}",
         objectMapper.writeValueAsString(quiz)
     );
 
@@ -59,7 +57,7 @@ public class QuizTest {
 
   @Test
   public void testNullIdSerialization() throws IOException {
-    Quiz quiz = new Quiz(null, "51114b307fc1eaa866444648", metadata, questions, participants);
+    Quiz quiz = new Quiz(null, "51114b307fc1eaa866444648", today, tomorrow, metadata, questions, participants);
     ObjectMapper objectMapper = new ObjectMapper();
 
     String json = objectMapper.writeValueAsString(quiz);
@@ -69,7 +67,7 @@ public class QuizTest {
 
   @Test
   public void testDeserialization() throws IOException {
-    String json = "{\"id\":\"000000000000000000000002\",\"orgId\":\"51114b307fc1eaa866444648\",\"metadata\":{\"startDate\":1384550763228,\"classroom\":\"1034\",\"title\":\"title\",\"instructions\":\"instructions\",\"description\":\"description\",\"endDate\":1384550863228},\"questions\":[{\"itemId\":\"503c2e91e4b00f3f0a9a7a6a\",\"settings\":{\"highlightUserResponse\":true,\"highlightCorrectResponse\":false,\"showFeedback\":true,\"allowEmptyResponses\":false,\"submitCompleteMessage\":\"Ok! Your response was submitted.\",\"submitIncompleteMessage\":\"You may revise your work before you submit your final response.\",\"submitIncorrectMessage\":\"You may revise your work before you submit your final response.\",\"maxNumberOfAttempts\":1},\"title\":\"title\",\"standards\":[\"test\"]}],\"participants\":[{\"answers\":[{\"itemId\":\"itemId\",\"sessionId\":\"sessionId\",\"score\":1,\"lastResponse\":1380649346485,\"complete\":true}],\"externalUid\":\"externalUid\"}]}";
+    String json = "{\"id\":\"000000000000000000000002\",\"orgId\":\"51114b307fc1eaa866444648\",\"start\":1384550763228,\"end\":1384550863228,\"metadata\":{\"classroom\":\"1034\",\"title\":\"title\",\"instructions\":\"instructions\",\"description\":\"description\"},\"questions\":[{\"itemId\":\"503c2e91e4b00f3f0a9a7a6a\",\"settings\":{\"highlightUserResponse\":true,\"highlightCorrectResponse\":false,\"showFeedback\":true,\"allowEmptyResponses\":false,\"submitCompleteMessage\":\"Ok! Your response was submitted.\",\"submitIncompleteMessage\":\"You may revise your work before you submit your final response.\",\"submitIncorrectMessage\":\"You may revise your work before you submit your final response.\",\"maxNumberOfAttempts\":1},\"title\":\"title\",\"standards\":[\"test\"]}],\"participants\":[{\"answers\":[{\"itemId\":\"itemId\",\"sessionId\":\"sessionId\",\"score\":1,\"lastResponse\":1380649346485,\"complete\":true}],\"externalUid\":\"externalUid\"}]}";
     ObjectMapper objectMapper = new ObjectMapper();
     Quiz deserialized = objectMapper.readValue(json, Quiz.class);
 
@@ -98,33 +96,33 @@ public class QuizTest {
   @Test
   public void testStartDateAfterEndDateThrowsException() {
     exception.expect(IllegalArgumentException.class);
-    new Quiz.Builder().starts(tomorrow).ends(today);
+    new Quiz.Builder().start(tomorrow).end(today);
   }
 
   @Test
   public void testEndDateBeforeStartDateThrowsException() {
     exception.expect(IllegalArgumentException.class);
-    new Quiz.Builder().ends(today).starts(tomorrow);
+    new Quiz.Builder().end(today).start(tomorrow);
   }
 
   @Test
   public void testEndDateWithoutStartDateThrowsException() {
     exception.expect(IllegalStateException.class);
-    new Quiz.Builder().ends(tomorrow).build();
+    new Quiz.Builder().end(tomorrow).build();
   }
 
   @Test
   public void testStartDateWithoutEndDateThrowsException() {
     exception.expect(IllegalStateException.class);
-    new Quiz.Builder().starts(today).build();
+    new Quiz.Builder().start(today).build();
   }
 
   @Test
   public void testIsActive() {
     assertTrue(new Quiz.Builder().build().isActive(today));
-    assertTrue(new Quiz.Builder().starts(yesterday).ends(tomorrow).build().isActive(today));
-    assertFalse(new Quiz.Builder().starts(today).ends(tomorrow).build().isActive(yesterday));
-    assertFalse(new Quiz.Builder().starts(yesterday).ends(today).build().isActive(tomorrow));
+    assertTrue(new Quiz.Builder().start(yesterday).end(tomorrow).build().isActive(today));
+    assertFalse(new Quiz.Builder().start(today).end(tomorrow).build().isActive(yesterday));
+    assertFalse(new Quiz.Builder().start(yesterday).end(today).build().isActive(tomorrow));
   }
 
   @Test

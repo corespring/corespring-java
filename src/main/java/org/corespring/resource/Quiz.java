@@ -65,11 +65,11 @@ public class Quiz extends CorespringResource {
   private static final String TITLE_KEY = "title";
   private static final String DESCRIPTION_KEY = "description";
   private static final String INSTRUCTIONS_KEY = "instructions";
-  static final String START_DATE_KEY = "startDate";
-  static final String END_DATE_KEY = "endDate";
 
   private final String id;
   private final String orgId;
+  private final Date start;
+  private final Date end;
   private final Map<String, Object> metadata;
   private final Collection<Question> questions;
   private final Collection<Participant> participants;
@@ -77,11 +77,15 @@ public class Quiz extends CorespringResource {
   @JsonCreator
   public Quiz(@JsonProperty("id") String id,
               @JsonProperty("orgId") String orgId,
+              @JsonProperty("start") Date start,
+              @JsonProperty("end") Date end,
               @JsonProperty("metadata") @JsonDeserialize(as=HashMap.class) Map<String, Object> metadata,
               @JsonProperty("questions") Collection<Question> questions,
               @JsonProperty("participants") Collection<Participant> participants) {
     this.id = id;
     this.orgId = orgId;
+    this.start = start;
+    this.end = end;
     this.metadata = metadata == null ? new HashMap<String, Object>() : metadata;
     this.questions = questions == null ? new ArrayList<Question>() : questions;
     this.participants = participants == null ? new ArrayList<Participant>() : participants;
@@ -90,6 +94,8 @@ public class Quiz extends CorespringResource {
   private Quiz(Builder builder) {
     this.id = builder.id;
     this.orgId = builder.orgId;
+    this.start = builder.start;
+    this.end = builder.end;
     this.metadata = builder.metadata == null ? new HashMap<String, Object>() : builder.metadata;
     this.questions = builder.questions == null ? new ArrayList<Question>() : builder.questions;
     this.participants = builder.participants == null ? new ArrayList<Participant>() : builder.participants.values();
@@ -99,6 +105,8 @@ public class Quiz extends CorespringResource {
 
     private String id;
     private String orgId;
+    private Date start;
+    private Date end;
     private Map<String, Object> metadata = new HashMap<String, Object>();
     private Collection<Question> questions = new ArrayList<Question>();
     private Map<String, Participant> participants = new HashMap<String, Participant>();
@@ -109,6 +117,8 @@ public class Quiz extends CorespringResource {
     public Builder(Quiz quiz) {
       this.id = quiz.id;
       this.orgId = quiz.orgId;
+      this.start = quiz.start;
+      this.end = quiz.end;
       this.metadata = new HashMap<String, Object>();
       this.metadata.putAll(quiz.metadata);
       this.questions = quiz.questions;
@@ -153,21 +163,19 @@ public class Quiz extends CorespringResource {
       return this;
     }
 
-    public Builder starts(Date startDate) {
-      Date endDate = (Date) metadata.get(END_DATE_KEY);
-      if (endDate != null && endDate.before(startDate)) {
+    public Builder start(Date start) {
+      if (end != null && end.before(start)) {
         throw new IllegalArgumentException("Start date cannot come after end date.");
       }
-      metadata.put(START_DATE_KEY, startDate);
+      this.start = start;
       return this;
     }
 
-    public Builder ends(Date endDate) {
-      Date startDate = (Date) metadata.get(START_DATE_KEY);
-      if (startDate != null && endDate.before(startDate)) {
+    public Builder end(Date end) {
+      if (start != null && end.before(start)) {
         throw new IllegalArgumentException("End date must come before start date.");
       }
-      metadata.put(END_DATE_KEY, endDate);
+      this.end = end;
       return this;
     }
 
@@ -177,8 +185,8 @@ public class Quiz extends CorespringResource {
     }
 
     public Quiz build() {
-      if ((metadata.get(START_DATE_KEY) != null) ^ (metadata.get(END_DATE_KEY) != null)) {
-        if (metadata.get(START_DATE_KEY) == null) {
+      if ((start != null) ^ (end != null)) {
+        if (start == null) {
           throw new IllegalStateException("Quiz with a start date must have an end date");
         } else {
           throw new IllegalStateException("Quiz with an end date must have a start date");
@@ -214,6 +222,14 @@ public class Quiz extends CorespringResource {
     return orgId;
   }
 
+  public Date getStart() {
+    return start;
+  }
+
+  public Date getEnd() {
+    return end;
+  }
+
   @JsonIgnore
   public String getTitle() {
     return metadata.containsKey(TITLE_KEY) ? metadata.get(TITLE_KEY).toString() : null;
@@ -227,31 +243,6 @@ public class Quiz extends CorespringResource {
   @JsonIgnore
   public String getInstructions() {
     return metadata.containsKey(INSTRUCTIONS_KEY) ? metadata.get(INSTRUCTIONS_KEY).toString() : null;
-  }
-
-  @JsonIgnore
-  public Date getStart() {
-    return getDateFromKey(START_DATE_KEY);
-  }
-
-  @JsonIgnore
-  public Date getEnd() {
-    return getDateFromKey(END_DATE_KEY);
-  }
-
-  private Date getDateFromKey(String key) {
-    if (metadata.containsKey(key)) {
-      if (metadata.get(key) instanceof Date) {
-        return (Date) metadata.get(key);
-      } else if (metadata.get(key) instanceof Long) {
-        return new Date((Long) metadata.get(key));
-      } else {
-        throw new IllegalStateException(
-            "Value in metadata does not represent a valid date: " + metadata.get(key).toString());
-      }
-    } else {
-      return null;
-    }
   }
 
   @JsonIgnore
