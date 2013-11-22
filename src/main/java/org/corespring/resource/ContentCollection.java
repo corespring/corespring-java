@@ -8,6 +8,11 @@ import org.corespring.CorespringClient;
 import org.corespring.rest.CorespringRestClient;
 import org.corespring.rest.ItemQuery;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 /**
  * A {@link ContentCollection} represents a set of {@link Item}s within the CoreSpring platform. You can access the
  * items associated with a content collection by passing a content collection's id into an {@link ItemQuery} object and
@@ -17,6 +22,7 @@ import org.corespring.rest.ItemQuery;
 public class ContentCollection {
 
   private static final String RESOURCE_ROUTE = "collections";
+  private static final String FIELD_VALUE_ROUTE = "collections/:ids/fieldValues/:field";
 
   private final String id;
   private final String name;
@@ -36,6 +42,22 @@ public class ContentCollection {
 
   public static String getResourcesRoute(CorespringRestClient client) {
     return client.baseUrl().append(RESOURCE_ROUTE).toString();
+  }
+
+  public static String getFieldValuesRoute(CorespringRestClient client, Collection<String> collectionIds,
+                                           String field) {
+    StringBuilder collectionIdBuilder = new StringBuilder();
+    List<String> collectionIdsList = new ArrayList<String>(collectionIds);
+
+    for (int i = 0; i < collectionIdsList.size(); i++) {
+      collectionIdBuilder.append(collectionIdsList.get(i));
+      if (i != collectionIdsList.size() - 1) {
+        collectionIdBuilder.append(",");
+      }
+    }
+
+    return client.baseUrl()
+        .append(FIELD_VALUE_ROUTE.replace(":ids", collectionIdBuilder.toString()).replace(":field", field)).toString();
   }
 
   public String getId() {

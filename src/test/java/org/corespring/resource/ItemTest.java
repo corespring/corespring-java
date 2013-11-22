@@ -2,6 +2,7 @@ package org.corespring.resource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.corespring.resource.question.ItemType;
 import org.corespring.resource.question.Subject;
 import org.junit.Test;
 
@@ -25,13 +26,13 @@ public class ItemTest {
     Collection<Standard> standards = new ArrayList<Standard>();
     standards.add(standard);
 
-    Item item = new Item("527d2ed9a81fbc1839792a1f", "527d2edaa81fbc1839792a20", "title", "author", "itemType",
-        gradeLevel, keySkills, primarySubject, standards, false);
+    Item item = new Item("527d2ed9a81fbc1839792a1f", "527d2edaa81fbc1839792a20", "title", "author",
+        ItemType.MULTI_CHOICE, gradeLevel, keySkills, primarySubject, standards, false);
 
     ObjectMapper objectMapper = new ObjectMapper();
 
     assertEquals(
-        "{\"id\":\"527d2ed9a81fbc1839792a1f\",\"title\":\"title\",\"author\":\"author\",\"itemType\":\"itemType\",\"gradeLevel\":[\"04\"],\"keySkills\":[\"Identify\"],\"primarySubject\":{\"id\":\"527d2f4aa81fbc1839792a21\",\"category\":\"category\",\"subject\":\"subject\"},\"standards\":[{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"dotNotation\":\"dotNotation\"}],\"published\":false,\"collectionId\":\"527d2edaa81fbc1839792a20\"}",
+        "{\"id\":\"527d2ed9a81fbc1839792a1f\",\"title\":\"title\",\"author\":\"author\",\"itemType\":\"Multiple Choice\",\"gradeLevel\":[\"04\"],\"keySkills\":[\"Identify\"],\"primarySubject\":{\"id\":\"527d2f4aa81fbc1839792a21\",\"category\":\"category\",\"subject\":\"subject\"},\"standards\":[{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"dotNotation\":\"dotNotation\"}],\"published\":false,\"collectionId\":\"527d2edaa81fbc1839792a20\"}",
         objectMapper.writeValueAsString(item)
     );
 
@@ -39,7 +40,7 @@ public class ItemTest {
 
   @Test
   public void testDeserialization() throws IOException {
-    String json = "{\"id\":\"527d2ed9a81fbc1839792a1f\",\"title\":\"title\",\"author\":\"author\",\"itemType\":\"itemType\",\"gradeLevel\":[\"04\"],\"keySkills\":[\"Identify\"],\"primarySubject\":{\"id\":\"527d2f4aa81fbc1839792a21\",\"category\":\"category\",\"subject\":\"subject\"},\"standards\":[{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"dotNotation\":\"dotNotation\"}],\"published\":false,\"collectionId\":\"527d2edaa81fbc1839792a20\"}";
+    String json = "{\"id\":\"527d2ed9a81fbc1839792a1f\",\"title\":\"title\",\"author\":\"author\",\"itemType\":\"Multiple Choice\",\"gradeLevel\":[\"04\"],\"keySkills\":[\"Identify\"],\"primarySubject\":{\"id\":\"527d2f4aa81fbc1839792a21\",\"category\":\"category\",\"subject\":\"subject\"},\"standards\":[{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"dotNotation\":\"dotNotation\"}],\"published\":false,\"collectionId\":\"527d2edaa81fbc1839792a20\"}";
     ObjectMapper objectMapper = new ObjectMapper();
 
     Item deserialized = objectMapper.readValue(json, Item.class);
@@ -48,7 +49,7 @@ public class ItemTest {
     assertEquals("527d2edaa81fbc1839792a20", deserialized.getCollectionId());
     assertEquals("title", deserialized.getTitle());
     assertEquals("author", deserialized.getAuthor());
-    assertEquals("itemType", deserialized.getItemType());
+    assertEquals(ItemType.MULTI_CHOICE, deserialized.getItemType());
     assertEquals("04", deserialized.getGradeLevel().iterator().next());
     assertEquals("Identify", deserialized.getKeySkills().iterator().next());
     assertEquals("527d2f4aa81fbc1839792a21", deserialized.getPrimarySubject().getId());
