@@ -2,6 +2,7 @@ package org.corespring.resource;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.corespring.resource.question.ItemType;
 import org.corespring.resource.question.Subject;
 import org.corespring.rest.CorespringRestClient;
 
@@ -19,7 +20,7 @@ public class Item {
   private final String collectionId;
   private final String title;
   private final String author;
-  private final String itemType;
+  private final ItemType itemType;
   private final Collection<String> gradeLevel;
   private final Collection<String> keySkills;
   private final Subject primarySubject;
@@ -31,7 +32,7 @@ public class Item {
               @JsonProperty("collectionid") String collectionId,
               @JsonProperty("title") String title,
               @JsonProperty("author") String author,
-              @JsonProperty("itemType") String itemType,
+              @JsonProperty("itemType") ItemType itemType,
               @JsonProperty("gradeLevel") Collection<String> gradeLevel,
               @JsonProperty("keySkills") Collection<String> keySkills,
               @JsonProperty("primarySubject") Subject primarySubject,
@@ -69,7 +70,7 @@ public class Item {
     return author;
   }
 
-  public String getItemType() {
+  public ItemType getItemType() {
     return itemType;
   }
 

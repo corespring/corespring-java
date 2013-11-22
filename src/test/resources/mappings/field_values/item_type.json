@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/api/v1/collections/4ff2e4cae4b077b9e31689fd,4ff2e56fe4b077b9e3168a05,505777f5e4b05f7845735bc1,51114b127fc1eaa866444647/fieldValues/itemType?access_token=demo_token"
+    },
+    "response": {
+        "status": 200,
+        "body": "{\"Constructed Response - Short Answer\":1300.0,\"Visual Multi Choice\":1.0,\"Select Evidence in Text\":1.0,\"Inline Choice\":4.0,\"Drag and Drop\":1.0,\"Activity\":1.0,\"Constructed Response - Open Ended\":96.0,\"Graphing\":3.0,\"Multi-Multi Choice\":7.0,\"Multiple Choice\":4212.0,\"Drag & Drop\":1.0,\"Drag And Drop\":4.0,\"Composite - MC and SA\":3.0,\"Passage With Questions\":39.0,\"Composite - Multiple MC\":9.0,\"Composite - MC, SA, OE\":1.0,\"Pencil & Paper Activity\":1.0,\"Performance\":20.0,\"Ordering\":4.0}",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

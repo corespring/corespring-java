@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/api/v1/collections/4ff2e4cae4b077b9e31689fd,4ff2e56fe4b077b9e3168a05,505777f5e4b05f7845735bc1,51114b127fc1eaa866444647/fieldValues/contributor?access_token=demo_token"
+    },
+    "response": {
+        "status": 200,
+        "body": "{\"Smarter Balanced Assessment Consortium\":2.0,\"New York State Education Department\":97.0,\"New England Common Assessment Program\":199.0,\"State of New Jersey Department of Education\":357.0,\"Illustrative Mathematics\":122.0,\"PARCC\":1.0,\"Kentucky Department of Education\":52.0,\"TIMSS\":136.0,\"Mathematics Assessment Resource Service\":4.0,\"Institute of Education Sciences National Center for Education Statistics\":1.0}",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}

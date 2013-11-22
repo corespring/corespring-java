@@ -3,6 +3,7 @@ package org.corespring;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.google.common.collect.Iterables;
 import org.corespring.authentication.AccessTokenProvider;
 import org.corespring.resource.*;
 import org.corespring.resource.player.Mode;
@@ -10,6 +11,7 @@ import org.corespring.resource.player.Options;
 import org.corespring.resource.player.OptionsResponse;
 import org.corespring.resource.player.Role;
 import org.corespring.resource.question.Answer;
+import org.corespring.resource.question.ItemType;
 import org.corespring.resource.question.Participant;
 import org.corespring.rest.CorespringRestException;
 import org.corespring.rest.ItemQuery;
@@ -21,6 +23,7 @@ import java.util.Collection;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.corespring.resource.question.ItemType.*;
 
 public class CorespringClientTest {
 
@@ -165,6 +168,57 @@ public class CorespringClientTest {
     assertNotNull(collection.getId());
     assertNotNull(collection.getName());
     assertNotNull(collection.isPublic());
+  }
+
+  @Test
+  public void testGetItemTypesByCollections() throws CorespringRestException {
+    Collection<ContentCollection> collections = client.getCollections();
+
+    assertTrue(Iterables.elementsEqual(
+        client.getItemTypesByCollections(collections),
+        new ArrayList<ItemType>() {
+          {
+            add(MULTI_CHOICE);
+            add(SHORT_ANSWER);
+            add(OPEN_ENDED);
+            add(PASSAGE_WITH_QUESTIONS_EVIDENCE);
+            add(COMPOSITE_PERFORMANCE);
+            add(COMPOSITE_MULTI_MULTI_CHOICE);
+            add(MULTI_MULTI_CHOICE);
+            add(ORDERING);
+            add(DRAG_AND_DROP);
+            add(INLINE_CHOICE);
+            add(COMPOSITE_MULTI_CHOICE_AND_SHORT_ANSWER);
+            add(COMPOSITE_MULTI_CHOICE_SHORT_ANSWER_AND_OPEN_ENDED);
+            add(COMPOSITE_ACTIVITY);
+            add(TEXT_EVIDENCE);
+            add(VISUAL_MULTI_CHOICE);
+          }
+        }
+    ));
+  }
+
+  @Test
+  public void testGetContributorsByCollections() throws CorespringRestException {
+    Collection<ContentCollection> collections = client.getCollections();
+    
+    assertTrue(Iterables.elementsEqual(
+        client.getContributorsByCollections(collections),
+        new ArrayList<String>() {
+          {
+            add("State of New Jersey Department of Education");
+            add("New England Common Assessment Program");
+            add("TIMSS");
+            add("Illustrative Mathematics");
+            add("New York State Education Department");
+            add("Kentucky Department of Education");
+            add("Mathematics Assessment Resource Service");
+            add("Smarter Balanced Assessment Consortium");
+            add("Institute of Education Sciences National Center for Education Statistics");
+            add("PARCC");
+          }
+        }
+    ));
   }
 
   @Test

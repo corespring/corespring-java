@@ -6,12 +6,15 @@ import org.corespring.resource.*;
 import org.corespring.resource.player.Options;
 import org.corespring.resource.player.OptionsResponse;
 import org.corespring.resource.question.Answer;
+import org.corespring.resource.question.Contributor;
+import org.corespring.resource.question.ItemType;
 import org.corespring.rest.CorespringRestClient;
 import org.corespring.rest.CorespringRestException;
 import org.corespring.rest.CorespringRestResponse;
 import org.corespring.rest.ItemQuery;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * {@link CorespringClient} serves as the main interface between the API and the CoreSpring platform. You should
@@ -99,6 +102,83 @@ public class CorespringClient extends CorespringRestClient {
     return response.getAll(ContentCollection.class);
   }
 
+  public List<ItemType> getItemTypesByCollection(ContentCollection contentCollection) throws CorespringRestException {
+    Collection<ContentCollection> contentCollections = new ArrayList<ContentCollection>();
+    contentCollections.add(contentCollection);
+    return this.getItemTypesByCollections(contentCollections);
+  }
+
+  /**
+   * Returns a {@link List} of {@link ItemType}s, ordered by the frequency with which they appear in the provided
+   * @{link ContentCollection}s.
+   */
+  public List<ItemType> getItemTypesByCollections(Collection<ContentCollection> collections)
+      throws CorespringRestException {
+    Collection<String> collectionIds = new ArrayList<String>();
+    for (ContentCollection collection : collections) {
+      collectionIds.add(collection.getId());
+    }
+
+    return getItemTypesByCollectionIds(collectionIds);
+  }
+
+  public List<ItemType> getItemTypesByCollectionIds(Collection<String> collectionIds) throws CorespringRestException {
+    String route = ContentCollection.getFieldValuesRoute(this, collectionIds, ItemType.FIELD_NAME);
+    Map<String, Double> map = get(route).get(Map.class);
+
+    ValueComparator valueComparator = new ValueComparator(map);
+    TreeMap<String, Double> sortedMap = new TreeMap<String, Double>(valueComparator);
+    sortedMap.putAll(map);
+
+    List<ItemType> itemTypes = new ArrayList<ItemType>();
+    for (Entry<String, Double> entry : sortedMap.entrySet()) {
+      ItemType itemType = ItemType.fromDescription(entry.getKey());
+      if (itemType != null) {
+        itemTypes.add(itemType);
+      }
+    }
+
+    return itemTypes;
+  }
+
+  public List<String> getContributorsByCollection(ContentCollection contentCollection) throws CorespringRestException {
+    Collection<ContentCollection> contentCollections = new ArrayList<ContentCollection>();
+    contentCollections.add(contentCollection);
+    return this.getContributorsByCollections(contentCollections);
+  }
+
+  /**
+   * Returns a {@link List} of Strings representing contributors to the provided {@link ContentCollection}s, ordered by
+   * frequency with which they appear.
+   */
+  public List<String> getContributorsByCollections(Collection<ContentCollection> contentCollections)
+      throws CorespringRestException {
+    Collection<String> collectionIds = new ArrayList<String>();
+    for (ContentCollection collection : contentCollections) {
+      collectionIds.add(collection.getId());
+    }
+
+    return getContributorsByCollectionIds(collectionIds);
+  }
+
+  public List<String> getContributorsByCollectionIds(Collection<String> collectionIds) throws CorespringRestException {
+    String route = ContentCollection.getFieldValuesRoute(this, collectionIds, Contributor.FIELD_NAME);
+    Map<String, Double> map = get(route).get(Map.class);
+
+    ValueComparator valueComparator = new ValueComparator(map);
+    TreeMap<String, Double> sortedMap = new TreeMap<String, Double>(valueComparator);
+    sortedMap.putAll(map);
+
+    List<String> contributors = new ArrayList<String>();
+    for (Entry<String, Double> entry : sortedMap.entrySet()) {
+      if (entry.getKey() != null) {
+        contributors.add(entry.getKey());
+      }
+    }
+
+    return contributors;
+  }
+
   public Collection<Item> findItems(ItemQuery itemQuery) throws CorespringRestException {
     return findItems(itemQuery, null, null);
   }
@@ -135,5 +215,22 @@ public class CorespringClient extends CorespringRestClient {
     return (Integer) map.get("count");
   }
 
+
+  private class ValueComparator implements Comparator<String> {
+
+    Map<String, Double> base;
+    public ValueComparator(Map<String, Double> base) {
+      this.base = base;
+    }
+
+    // Note: this comparator imposes orderings that are inconsistent with equals.
+    public int compare(String a, String b) {
+      if (base.get(a) >= base.get(b)) {
+        return -1;
+      } else {
+        return 1;
+      } // returning 0 would merge keys
+    }
+  }
 
 }
