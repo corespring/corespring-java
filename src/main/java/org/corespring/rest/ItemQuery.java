@@ -18,7 +18,7 @@ public class ItemQuery implements Serializable {
   private static final long serialVersionUID = 1L;
 
   static final String BLOOMS_TAXONOMY_KEY = "bloomsTaxonomy";
-  static final String CONTRIBUTORS_KEY = "contributors";
+  static final String CONTRIBUTORS_KEY = "contributor";
   static final String GRADE_LEVEL_KEY = "gradeLevel";
   static final String DEMONSTRATED_KNOWLEDGE_KEY = "demonstratedKnowledge";
   static final String ITEM_TYPE_KEY = "itemType";
