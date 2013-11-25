@@ -179,6 +179,25 @@ public class CorespringClient extends CorespringRestClient {
     return contributors;
   }
 
+  public Map<String, Collection<String>> getFieldValuesByContributor(String contributor)
+      throws CorespringRestException {
+    String route = Contributor.getFieldValuesRoute(this, contributor);
+    Map<String, Collection<String>> map = get(route).get(Map.class);
+    return map;
+  }
+
+  public Map<String, Collection<String>> getFieldValuesByCollection(String collectionId)
+      throws CorespringRestException {
+    String route = ContentCollection.getFieldValuesRoute(this, collectionId);
+    Map<String, Collection<String>> map = get(route).get(Map.class);
+    return map;
+  }
+
+  public Map<String, Collection<String>> getFieldValuesByCollection(ContentCollection collection)
+      throws CorespringRestException {
+    return getFieldValuesByCollection(collection.getId());
+  }
+
   public Collection<Item> findItems(ItemQuery itemQuery) throws CorespringRestException {
     return findItems(itemQuery, null, null);
   }

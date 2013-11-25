@@ -13,6 +13,7 @@ import org.corespring.resource.player.Role;
 import org.corespring.resource.question.Answer;
 import org.corespring.resource.question.ItemType;
 import org.corespring.resource.question.Participant;
+import org.corespring.rest.CorespringRestClient;
 import org.corespring.rest.CorespringRestException;
 import org.corespring.rest.ItemQuery;
 import org.junit.Rule;
@@ -20,6 +21,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -218,6 +220,140 @@ public class CorespringClientTest {
             add("PARCC");
           }
         }
+    ));
+  }
+
+  @Test
+  public void testGetFieldValuesByCollection() throws CorespringRestException {
+    Map<String, Collection<String>> fieldValues = client.getFieldValuesByCollection("4ff5abe2e4b0e3bfeb9d2011");
+
+    assertTrue(Iterables.elementsEqual(
+        fieldValues.keySet(),
+        new ArrayList<String>() {
+          { add("gradeLevel"); add("bloomsTaxonomy"); add("keySkill"); add("itemType"); add("demonstratedKnowledge"); }
+        }
+    ));
+
+    assertTrue(Iterables.elementsEqual(
+        fieldValues.get("gradeLevel"),
+        new ArrayList<String>() { { add("04"); add("08"); add("10"); add("11"); add("AP"); } }
+    ));
+
+    assertTrue(Iterables.elementsEqual(
+        fieldValues.get("bloomsTaxonomy"),
+        new ArrayList<String>() { { add("Analyzing"); add("Applying"); add("Remembering"); add("Understanding"); } }
+    ));
+
+    assertTrue(Iterables.elementsEqual(
+        fieldValues.get("keySkill"),
+        new ArrayList<String>() { { add("Analyze"); add("Choose"); add("Classify"); add("Compare"); add("Compute");
+          add("Contrast"); add("Convert"); add("Define"); add("Describe"); add("Discuss"); add("Examine");
+          add("Explain"); add("Express"); add("Give"); add("Identify"); add("Indicate"); add("Infer"); add("List");
+          add("Predict"); add("Recall"); add("Relate"); add("Review"); add("Select"); add("classify"); add("explain");
+          add("identify"); add("state");
+        } }
+    ));
+
+    assertTrue(Iterables.elementsEqual(
+        fieldValues.get("itemType"),
+        new ArrayList<String>() { {
+          add("Constructed Response - Open Ended"); add("Constructed Response - Short Answer"); add("Multiple Choice");
+          add("Performance");
+        } }
+    ));
+
+    assertTrue(Iterables.elementsEqual(
+        fieldValues.get("demonstratedKnowledge"),
+        new ArrayList<String>() { { add("Conceptual"); add("Factual"); add("Procedural"); } }
+    ));
+  }
+
+  @Test
+  public void testGetValuesByContributor() throws CorespringRestException {
+    Map<String, Collection<String>> fieldValues =
+        client.getFieldValuesByContributor("New York State Education Department");
+
+    assertTrue(Iterables.elementsEqual(
+        fieldValues.keySet(),
+        new ArrayList<String>() {
+          { add("standard"); add("gradeLevel"); add("bloomsTaxonomy"); add("keySkill"); add("itemType");
+            add("demonstratedKnowledge");
+          }
+        }
+    ));
+
+    assertTrue(Iterables.elementsEqual(
+        fieldValues.get("standard"),
+        new ArrayList<String>() {
+          {
+            add("3.NF.A.1"); add("3.NF.A.2a"); add("3.NF.A.2b"); add("3.NF.A.3b"); add("3.OA.A.1"); add("3.OA.A.2");
+            add("3.OA.A.3"); add("3.OA.A.4"); add("3.OA.B.5"); add("3.OA.B.6"); add("3.OA.D.8"); add("3.W.9");
+            add("4.MD.A.3"); add("4.MD.B.4"); add("4.NF.B.3d"); add("4.NF.B.4c"); add("4.OA.A.2"); add("4.OA.A.3");
+            add("4.OA.C.5"); add("5.G.A.2"); add("5.MD.A.1"); add("5.MD.C.5b"); add("5.NBT.A.1"); add("5.NBT.A.2");
+            add("5.NBT.A.3"); add("5.NBT.A.3a"); add("5.NF.A.1"); add("5.NF.B.7c"); add("5.OA.A.2"); add("6.EE.A.1");
+            add("6.EE.A.2a"); add("6.EE.A.2b"); add("6.EE.A.2c"); add("6.EE.A.3"); add("6.EE.B.7"); add("6.G.A.1");
+            add("6.G.A.3"); add("6.G.A.4"); add("6.RP.A.1"); add("6.RP.A.2"); add("6.RP.A.3b"); add("6.RP.A.3c");
+            add("6.RP.A.3d"); add("6.SP.B.4"); add("7.EE.A.1"); add("7.EE.B.3"); add("7.EE.B.4b"); add("7.G.A.1");
+            add("7.NS.A.1d"); add("7.NS.A.2c"); add("7.RP.A.2b"); add("7.RP.A.2c"); add("7.RP.A.3"); add("7.SP.C.8b");
+            add("8.EE.A.1"); add("8.EE.A.4"); add("8.EE.B.6"); add("8.EE.C.7b"); add("8.F.A.2"); add("8.F.B.4");
+            add("8.G.A.4"); add("L.5.4"); add("L.6.4"); add("L.6.4a"); add("RI.3.1"); add("RI.3.4"); add("RI.3.7");
+            add("RI.3.8"); add("RI.4.1"); add("RI.4.2"); add("RI.4.3"); add("RI.4.5"); add("RI.4.8"); add("RI.4.9");
+            add("RI.5.2"); add("RI.5.3"); add("RI.6.2"); add("RI.6.4"); add("RI.6.5"); add("RI.7.1"); add("RI.7.2");
+            add("RI.7.4"); add("RI.7.5"); add("RI.8.1"); add("RI.8.2"); add("RI.8.4"); add("RI.8.5"); add("RI.8.6");
+            add("RL.3.1"); add("RL.3.3"); add("RL.3.4"); add("RL.3.5"); add("RL.4.1"); add("RL.4.2"); add("RL.4.3");
+            add("RL.4.9"); add("RL.5.1"); add("RL.5.2"); add("RL.5.3"); add("RL.5.4"); add("RL.5.5"); add("RL.5.6");
+            add("RL.6.1"); add("RL.6.3"); add("RL.6.4"); add("RL.6.5"); add("RL.6.6"); add("RL.6.9"); add("RL.7.1");
+            add("RL.7.2"); add("RL.7.3"); add("RL.7.6"); add("RL.8.2"); add("RL.8.3"); add("RL.8.4"); add("RL.8.6");
+            add("W.3.2"); add("W.3.4"); add("W.4.2"); add("W.4.4"); add("W.5.2"); add("W.6.1"); add("W.6.4");
+            add("W.6.8"); add("W.6.9a"); add("W.6.9b"); add("W.7.2"); add("W.7.9"); add("W.8.2"); add("W.8.9");
+          }
+        }
+    ));
+
+    assertTrue(Iterables.elementsEqual(
+        fieldValues.get("gradeLevel"),
+        new ArrayList<String>() { { add("03"); add("04"); add("05"); add("06"); add("07"); add("08"); } }
+    ));
+
+    assertTrue(Iterables.elementsEqual(
+        fieldValues.get("bloomsTaxonomy"),
+        new ArrayList<String>() { { add("Analyzing"); add("Applying"); add("Evaluating"); add("Remembering");
+          add("Understanding"); } }
+    ));
+
+    assertTrue(Iterables.elementsEqual(
+        fieldValues.get("keySkill"),
+        new ArrayList<String>() {
+          {
+            add("Analyze"); add("Apply"); add("Appraise"); add("Arrange"); add("Breakdown"); add("Calculate");
+            add("Categorize"); add("Choose"); add("Classify"); add("Collect"); add("Compare"); add("Compute");
+            add("Contrast"); add("Convert"); add("Create"); add("Defend"); add("Define"); add("Demonstrate");
+            add("Describe"); add("Design"); add("Diagram"); add("Discover"); add("Discriminate"); add("Discuss");
+            add("Distinguish"); add("Evaluate"); add("Examine"); add("Explain"); add("Express"); add("Extend");
+            add("Formulate"); add("Generalize"); add("Generate"); add("Give"); add("Identify"); add("Illustrate");
+            add("Indicate"); add("Infer"); add("Interpret"); add("Label"); add("List"); add("Locate"); add("Match");
+            add("Model"); add("Name"); add("Operate"); add("Order"); add("Point-Out"); add("Predict"); add("Produce");
+            add("Rearrange"); add("Recognize"); add("Relate"); add("Reproduce"); add("Review"); add("Rewrite");
+            add("Select"); add("Show"); add("Sketch"); add("Solve"); add("State"); add("Summarize"); add("Translate");
+            add("Understand"); add("Write");
+          }
+        }
+    ));
+
+    assertTrue(Iterables.elementsEqual(
+        fieldValues.get("itemType"),
+        new ArrayList<String>() {
+          {
+            add("Composite - Multiple MC"); add("Constructed Response - Open Ended");
+            add("Constructed Response - Short Answer"); add("Multiple Choice"); add("Passage With Questions");
+            add("Performance"); add("Visual Multi Choice");
+          }
+        }
+    ));
+
+    assertTrue(Iterables.elementsEqual(
+       fieldValues.get("demonstratedKnowledge"),
+        new ArrayList<String>() { { add("Conceptual"); add("Factual"); add("Metacognitive"); add("Procedural"); } }
     ));
   }
 

@@ -23,6 +23,7 @@ public class ContentCollection {
 
   private static final String RESOURCE_ROUTE = "collections";
   private static final String FIELD_VALUE_ROUTE = "collections/:ids/fieldValues/:field";
+  private static final String FIELD_VALUES_ROUTE = "field_values/collection/:collectionId";
 
   private final String id;
   private final String name;
@@ -40,11 +41,11 @@ public class ContentCollection {
     this.isPublic = isPublic;
   }
 
-  public static String getResourcesRoute(CorespringRestClient client) {
+  public static String getResourcesRoute(CorespringClient client) {
     return client.baseUrl().append(RESOURCE_ROUTE).toString();
   }
 
-  public static String getFieldValuesRoute(CorespringRestClient client, Collection<String> collectionIds,
+  public static String getFieldValuesRoute(CorespringClient client, Collection<String> collectionIds,
                                            String field) {
     StringBuilder collectionIdBuilder = new StringBuilder();
     List<String> collectionIdsList = new ArrayList<String>(collectionIds);
@@ -58,6 +59,11 @@ public class ContentCollection {
 
     return client.baseUrl()
         .append(FIELD_VALUE_ROUTE.replace(":ids", collectionIdBuilder.toString()).replace(":field", field)).toString();
+  }
+
+  public static String getFieldValuesRoute(CorespringClient client, String collectionId) {
+    return client.baseUrl()
+        .append(FIELD_VALUES_ROUTE.replace(":collectionId", collectionId)).toString();
   }
 
   public String getId() {

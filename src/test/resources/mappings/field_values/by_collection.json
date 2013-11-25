@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "GET",
+        "url": "/api/v1/field_values/collection/4ff5abe2e4b0e3bfeb9d2011?access_token=demo_token"
+    },
+    "response": {
+        "status": 200,
+        "body": "{\"gradeLevel\":[\"04\",\"08\",\"10\",\"11\",\"AP\"],\"bloomsTaxonomy\":[\"Analyzing\",\"Applying\",\"Remembering\",\"Understanding\"],\"keySkill\":[\"Analyze\",\"Choose\",\"Classify\",\"Compare\",\"Compute\",\"Contrast\",\"Convert\",\"Define\",\"Describe\",\"Discuss\",\"Examine\",\"Explain\",\"Express\",\"Give\",\"Identify\",\"Indicate\",\"Infer\",\"List\",\"Predict\",\"Recall\",\"Relate\",\"Review\",\"Select\",\"classify\",\"explain\",\"identify\",\"state\"],\"itemType\":[\"Constructed Response - Open Ended\",\"Constructed Response - Short Answer\",\"Multiple Choice\",\"Performance\"],\"demonstratedKnowledge\":[\"Conceptual\",\"Factual\",\"Procedural\"]}",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}a
