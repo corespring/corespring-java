@@ -91,12 +91,13 @@ public class CorespringClientTest {
 
   @Test
   public void testCreateQuiz() throws CorespringRestException {
-    Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
+    Quiz quiz = new Quiz.Builder().title("My new quiz!").addMetadata("authorId", "fd707fc3c").build();
     Quiz updatedQuiz = client.create(quiz);
 
     // Created quiz has id and orgId
     assertNotNull(updatedQuiz.getId());
     assertNotNull(updatedQuiz.getOrgId());
+    assertEquals(updatedQuiz.getMetadataValue("authorId"), "fd707fc3c");
   }
 
   @Test
@@ -146,6 +147,12 @@ public class CorespringClientTest {
     assertNotNull(quiz.getParticipant(externalUid));
     assertNotNull(quiz.getParticipant(externalUid).getAnswer(itemId));
     assertEquals(sessionId, quiz.getParticipant(externalUid).getAnswer(itemId).getSessionId());
+  }
+
+  @Test
+  public void testGetQuizzesByAuthor() throws CorespringRestException {
+    Collection<Quiz> quizzes = client.getQuizzesByAuthor("fd707fc3c");
+    assertEquals(quizzes.size(), 1);
   }
 
   @Test

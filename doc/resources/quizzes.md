@@ -126,6 +126,12 @@ Participant with the same externalUid as an existing Participant, it will be ove
     System.out.println(quiz.getCourse());               // "Challenge Course"
 
 
+#### Retrieve quizzes by author id
+
+    Quizzes quizzes = client.getQuizzesByAuthor("fd707fc3c");
+    System.out.println(quiz.getTitle();                 // "Sample Quiz"
+
+
 #### Create a quiz
 
 Create a quiz by using the Quiz.Builder class, and persist to CoreSpring using the cilent's create method. Note that the
