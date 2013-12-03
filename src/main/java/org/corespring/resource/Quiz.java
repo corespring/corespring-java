@@ -61,6 +61,7 @@ import java.util.*;
 public class Quiz extends CorespringResource {
 
   private static final String RESOURCE_ROUTE = "quizzes";
+  private static final String AUTHOR_KEY = "author";
 
   private static final String TITLE_KEY = "title";
   private static final String DESCRIPTION_KEY = "description";
@@ -207,6 +208,11 @@ public class Quiz extends CorespringResource {
 
   public String getParticipantsRoute(CorespringRestClient client) {
     return new StringBuilder(getResourceRoute(client, this.getId())).append("/add-participants").toString();
+  }
+
+  public static String getAuthorRoute(CorespringRestClient client, String authorId) {
+    return client.baseUrl().append(RESOURCE_ROUTE).append("/").append(AUTHOR_KEY).append("/").append(authorId)
+        .toString();
   }
 
   public Map<String, Object> getMetadata() {

@@ -69,6 +69,10 @@ public class CorespringClient extends CorespringRestClient {
     return put(quiz.getParticipantsRoute(this), wrappedExternalUids).get(Quiz.class);
   }
 
+  public Collection<Quiz> getQuizzesByAuthor(String authorId) throws CorespringRestException {
+    return get(Quiz.getAuthorRoute(this, authorId)).getAll(Quiz.class);
+  }
+
   /**
    * Adds an {@link Answer} to a {@link Quiz} for a provided external user id.
    */
