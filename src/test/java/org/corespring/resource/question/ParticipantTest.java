@@ -14,24 +14,26 @@ import static org.junit.Assert.assertNull;
 
 public class ParticipantTest {
 
+  private final Date today = new Date(1384550763228L);
+
   @Rule
   public ExpectedException exception = ExpectedException.none();
 
   @Test
   public void testSerialization() throws IOException {
     final Answer answer = new Answer("itemId", "sessionId", 1, new Date(1380648451591L), true);
-    Participant participant = new Participant(new ArrayList<Answer>() { { add(answer); } }, "externalUid");
+    Participant participant = new Participant(new ArrayList<Answer>() { { add(answer); } }, "externalUid", today);
     ObjectMapper objectMapper = new ObjectMapper();
 
     assertEquals(
-        "{\"answers\":[{\"itemId\":\"itemId\",\"sessionId\":\"sessionId\",\"score\":1,\"lastResponse\":1380648451591,\"complete\":true}],\"externalUid\":\"externalUid\"}",
+        "{\"answers\":[{\"itemId\":\"itemId\",\"sessionId\":\"sessionId\",\"score\":1,\"lastResponse\":1380648451591,\"complete\":true}],\"externalUid\":\"externalUid\",\"lastModified\":1384550763228}",
         objectMapper.writeValueAsString(participant)
     );
   }
 
   @Test
   public void testDeserialization() throws IOException {
-    String json = "{\"answers\":[{\"itemId\":\"itemId\",\"sessionId\":\"sessionId\",\"score\":1,\"lastResponse\":1380648451591,\"complete\":true}],\"externalUid\":\"externalUid\"}";
+    String json = "{\"answers\":[{\"itemId\":\"itemId\",\"sessionId\":\"sessionId\",\"score\":1,\"lastResponse\":1380648451591,\"complete\":true}],\"externalUid\":\"externalUid\",\"lastModified\":1384550763228}";
     ObjectMapper objectMapper = new ObjectMapper();
     Participant deserialized = objectMapper.readValue(json, Participant.class);
 
@@ -41,8 +43,8 @@ public class ParticipantTest {
     assertEquals(new Date(1380648451591L), deserialized.getAnswers().iterator().next().getLastResponse());
     assertEquals(true, deserialized.getAnswers().iterator().next().isComplete());
     assertEquals("externalUid", deserialized.getExternalUid());
+    assertEquals(today, deserialized.getLastModified());
   }
-
 
   @Test
   public void testUniqueAnswersByItemId() {

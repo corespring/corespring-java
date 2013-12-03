@@ -18,6 +18,10 @@ import static org.junit.Assert.assertTrue;
 
 public class QuizTest {
 
+  private final Date yesterday = new Date(1384550263228L);
+  private final Date today = new Date(1384550763228L);
+  private final Date tomorrow = new Date(1384550863228L);
+
   /**
    * Dummy Quiz test data
    */
@@ -26,12 +30,8 @@ public class QuizTest {
   private final Question question = new Question("503c2e91e4b00f3f0a9a7a6a", Settings.standard(), "title", standards);
   private final List<Question> questions = new ArrayList<Question>() { { add(question); } };
   private final Answer answer = new Answer("itemId", "sessionId", 1, new Date(1380649346485L), true);
-  private final Participant participant = new Participant(new ArrayList<Answer>() { { add(answer); } }, "externalUid");
+  private final Participant participant = new Participant(new ArrayList<Answer>() { { add(answer); } }, "externalUid", null);
   private final List<Participant> participants = new ArrayList<Participant>() {{ add(participant); }};
-
-  private final Date yesterday = new Date(1384550263228L);
-  private final Date today = new Date(1384550763228L);
-  private final Date tomorrow = new Date(1384550863228L);
 
   {
     metadata.put("title", "title");

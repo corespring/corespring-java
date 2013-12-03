@@ -3,8 +3,10 @@ package org.corespring.resource.question;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,27 +16,33 @@ import java.util.Map;
  * {@link Builder} for {@link Participant} will not allow duplicate itemIds for {@link Answer}s, and will override
  * existing {@link Answer}s with matching itemId).
  */
+@JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
 public class Participant {
 
   private final Collection<Answer> answers;
   private final String externalUid;
+  private final Date lastModified;
 
   @JsonCreator
   public Participant(@JsonProperty("answers") Collection<Answer> answers,
-                     @JsonProperty("externalUid") String externalUid) {
+                     @JsonProperty("externalUid") String externalUid,
+                     @JsonProperty("lastModified") Date lastModified) {
     this.answers = answers;
     this.externalUid = externalUid;
+    this.lastModified = lastModified;
   }
 
   private Participant(Builder builder) {
     this.answers = builder.answers.values();
     this.externalUid = builder.externalUid;
+    this.lastModified = builder.lastModified;
   }
 
   public static class Builder {
 
     private Map<String, Answer> answers = new HashMap<String, Answer>();
     private String externalUid;
+    private Date lastModified;
 
     public Builder() {
     }
@@ -57,6 +65,11 @@ public class Participant {
       return this;
     }
 
+    public Builder lastModified(Date lastModified) {
+      this.lastModified = lastModified;
+      return this;
+    }
+
     public Participant build() {
       validate();
       return new Participant(this);
@@ -74,6 +87,10 @@ public class Participant {
 
   public String getExternalUid() {
     return externalUid;
+  }
+
+  public Date getLastModified() {
+    return lastModified;
   }
 
   /**
