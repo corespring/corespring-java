@@ -32,91 +32,70 @@ public class ItemQueryTest {
   @Test
   public void testBloomsTaxonomy() {
     String query = new ItemQuery.Builder().bloomsTaxonomy(BLOOMS_TAXONOMY).build().toString();
-
-    StringBuilder stringBuilder = new StringBuilder("{");
-    stringBuilder = expectedInClause(BLOOMS_TAXONOMY_KEY, BLOOMS_TAXONOMY, stringBuilder).append("}");
-
-    assertEquals(stringBuilder.toString(), query);
+    assertEquals(withBrackets(queryForKey(BLOOMS_TAXONOMY_KEY, expectedInClause(BLOOMS_TAXONOMY))), query);
   }
 
   @Test
   public void testContributors() {
     String query = new ItemQuery.Builder().contributor(CONTRIBUTOR).build().toString();
-
-    StringBuilder stringBuilder = new StringBuilder("{");
-    stringBuilder = expectedInClause(CONTRIBUTORS_KEY, CONTRIBUTOR, stringBuilder).append("}");
-
-    assertEquals(stringBuilder.toString(), query);
+    assertEquals(withBrackets(queryForKey(CONTRIBUTORS_KEY, expectedInClause(CONTRIBUTOR))), query);
   }
 
   @Test
   public void testDemonstratedKnowledge() {
     String query = new ItemQuery.Builder().demonstratedKnowledge(DEMONSTRATED_KNOWLEDGE).build().toString();
-
-    StringBuilder stringBuilder = new StringBuilder("{");
-    stringBuilder = expectedInClause(DEMONSTRATED_KNOWLEDGE_KEY, DEMONSTRATED_KNOWLEDGE, stringBuilder).append("}");
-
-    assertEquals(stringBuilder.toString(), query);
+    assertEquals(withBrackets(queryForKey(DEMONSTRATED_KNOWLEDGE_KEY, expectedInClause(DEMONSTRATED_KNOWLEDGE))),
+        query);
   }
 
   @Test
   public void testGradeLevels() {
     String query = new ItemQuery.Builder().gradeLevel(GRADE_LEVEL).build().toString();
-
-    StringBuilder stringBuilder = new StringBuilder("{");
-    stringBuilder = expectedInClause(GRADE_LEVEL_KEY, GRADE_LEVEL, stringBuilder).append("}");
-
-    assertEquals(stringBuilder.toString(), query);
+    assertEquals(withBrackets(queryForKey(GRADE_LEVEL_KEY, expectedInClause(GRADE_LEVEL))), query);
   }
 
   @Test
   public void testItemType() {
     String query = new ItemQuery.Builder().itemType(ITEM_TYPE).build().toString();
-
-    StringBuilder stringBuilder = new StringBuilder("{");
-    stringBuilder = expectedInClause(ITEM_TYPE_KEY, ITEM_TYPE, stringBuilder).append("}");
-
-    assertEquals(stringBuilder.toString(), query);
+    assertEquals(withBrackets(queryForKey(ITEM_TYPE_KEY, expectedInClause(ITEM_TYPE))), query);
   }
 
   @Test
   public void testKeySkills() {
     String query = new ItemQuery.Builder().keySkill(KEY_SKILL).build().toString();
-
-    StringBuilder stringBuilder = new StringBuilder("{");
-    stringBuilder = expectedInClause(KEY_SKILLS_KEY, KEY_SKILL, stringBuilder).append("}");
-
-    assertEquals(stringBuilder.toString(), query);
+    assertEquals(withBrackets(queryForKey(KEY_SKILLS_KEY, expectedInClause(KEY_SKILL))), query);
   }
 
   @Test
-  public void testSubjects() {
+  public void testSubject() {
     String query = new ItemQuery.Builder().subject(SUBJECT).build().toString();
+    assertEquals(withBrackets(queryForKey(PRIMARY_SUBJECT_KEY, expectedInClause(SUBJECT))), query);
+  }
 
-    StringBuilder stringBuilder = new StringBuilder("{");
-    stringBuilder = expectedInClause(PRIMARY_SUBJECT_KEY, SUBJECT, stringBuilder).append("}");
+  @Test
+  public void testNullSubject() {
+    String query = new ItemQuery.Builder().subject(null).build().toString();
+    assertEquals(withBrackets(queryForKey(PRIMARY_SUBJECT_KEY, expectedEmptyClause())), query);
+  }
 
-    assertEquals(stringBuilder.toString(), query);
+  @Test
+  public void testSubjectOrNull() {
+    String query = new ItemQuery.Builder().subject(SUBJECT).subject(null).build().toString();
+    assertEquals(
+        withBrackets(queryForKey(PRIMARY_SUBJECT_KEY, joinWithOr(expectedInClause(SUBJECT), expectedEmptyClause()))),
+        query);
   }
 
   @Test
   public void testStandards() {
     String query = new ItemQuery.Builder().standard(STANDARD).build().toString();
-
-    StringBuilder stringBuilder = new StringBuilder("{");
-    stringBuilder = expectedInClause(STANDARDS_KEY, STANDARD, stringBuilder).append("}");
-
-    assertEquals(stringBuilder.toString(), query);
+    assertEquals(withBrackets(queryForKey(STANDARDS_KEY, expectedInClause(STANDARD))), query);
   }
 
   @Test
   public void testCollections() {
     String query = new ItemQuery.Builder().collection(COLLECTION).build().toString();
-
-    StringBuilder stringBuilder = new StringBuilder("{");
-    stringBuilder = expectedInClause(COLLECTIONS_KEY, COLLECTION, stringBuilder).append("}");
-
-    assertEquals(stringBuilder.toString(), query);
+    assertEquals(withBrackets(queryForKey(COLLECTIONS_KEY, expectedInClause(COLLECTION))), query);
   }
 
   @Test
@@ -128,15 +107,15 @@ public class ItemQueryTest {
 
     StringBuilder stringBuilder = new StringBuilder("{");
     stringBuilder = expectedSearchStringClause(SEARCH_STRING, stringBuilder).append(",");
-    stringBuilder = expectedInClause(BLOOMS_TAXONOMY_KEY, BLOOMS_TAXONOMY, stringBuilder).append(",");
-    stringBuilder = expectedInClause(CONTRIBUTORS_KEY, CONTRIBUTOR, stringBuilder).append(",");
-    stringBuilder = expectedInClause(GRADE_LEVEL_KEY, GRADE_LEVEL, stringBuilder).append(",");
-    stringBuilder = expectedInClause(DEMONSTRATED_KNOWLEDGE_KEY, DEMONSTRATED_KNOWLEDGE, stringBuilder).append(",");
-    stringBuilder = expectedInClause(ITEM_TYPE_KEY, ITEM_TYPE, stringBuilder).append(",");
-    stringBuilder = expectedInClause(KEY_SKILLS_KEY, KEY_SKILL, stringBuilder).append(",");
-    stringBuilder = expectedInClause(PRIMARY_SUBJECT_KEY, SUBJECT, stringBuilder).append(",");
-    stringBuilder = expectedInClause(STANDARDS_KEY, STANDARD, stringBuilder).append(",");
-    stringBuilder = expectedInClause(COLLECTIONS_KEY, COLLECTION, stringBuilder);
+    stringBuilder.append(queryForKey(BLOOMS_TAXONOMY_KEY, expectedInClause(BLOOMS_TAXONOMY))).append(",");
+    stringBuilder.append(queryForKey(CONTRIBUTORS_KEY, expectedInClause(CONTRIBUTOR))).append(",");
+    stringBuilder.append(queryForKey(GRADE_LEVEL_KEY, expectedInClause(GRADE_LEVEL))).append(",");
+    stringBuilder.append(queryForKey(DEMONSTRATED_KNOWLEDGE_KEY, expectedInClause(DEMONSTRATED_KNOWLEDGE))).append(",");
+    stringBuilder.append(queryForKey(ITEM_TYPE_KEY, expectedInClause(ITEM_TYPE))).append(",");
+    stringBuilder.append(queryForKey(KEY_SKILLS_KEY, expectedInClause(KEY_SKILL))).append(",");
+    stringBuilder.append(queryForKey(PRIMARY_SUBJECT_KEY, expectedInClause(SUBJECT))).append(",");
+    stringBuilder.append(queryForKey(STANDARDS_KEY, expectedInClause(STANDARD))).append(",");
+    stringBuilder.append(queryForKey(COLLECTIONS_KEY, expectedInClause(COLLECTION)));
     stringBuilder.append("}");
 
     assertEquals(stringBuilder.toString(), query);
@@ -146,8 +125,24 @@ public class ItemQueryTest {
     return stringBuilder.append("\"$or\":[{\"title\":{\"$options\":\"i\",\"$regex\":\"\\\\").append(searchString).append("\"}},{\"standards.dotNotation\":{\"$options\":\"i\",\"$regex\":\"\\\\").append(searchString).append("\"}},{\"copyrightOwner\":{\"$options\":\"i\",\"$regex\":\"\\\\").append(searchString).append("\"}},{\"contributor\":{\"$options\":\"i\",\"$regex\":\"\\\\").append(searchString).append("\"}},{\"author\":{\"$options\":\"i\",\"$regex\":\"\\\\").append(searchString).append("\"}}]");
   }
 
-  private StringBuilder expectedInClause(String key, String value, StringBuilder stringBuilder) {
-    return stringBuilder.append("\"").append(key).append("\":{\"$in\":[\"").append(value).append("\"]}");
+  private String expectedInClause(String value) {
+    return new StringBuilder("\"$in\":[\"").append(value).append("\"]").toString();
+  }
+
+  private static String expectedEmptyClause() {
+    return "\"$not\":{\"$exists\":true}";
+  }
+
+  private String queryForKey(String key, String query) {
+    return new StringBuilder("\"").append(key).append("\":{").append(query).append("}").toString();
+  }
+
+  private String withBrackets(String string) {
+    return new StringBuilder("{").append(string).append("}").toString();
+  }
+
+  private String joinWithOr(String one, String two) {
+    return new StringBuilder(one).append(",\"$or\":{").append(two).append("}").toString();
   }
 
 }

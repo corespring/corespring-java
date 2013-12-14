@@ -68,7 +68,6 @@ public class ItemQuery implements Serializable {
       addIfNotEmpty(clauses, asInJson(STANDARDS_KEY, this.standards));
       addIfNotEmpty(clauses, asInJson(COLLECTIONS_KEY, this.collections));
 
-
       StringBuilder stringBuilder = new StringBuilder("{");
       for (int i = 0; i < clauses.size(); i++) {
         stringBuilder.append(clauses.get(i));
@@ -105,13 +104,13 @@ public class ItemQuery implements Serializable {
       };
       return new StringBuilder("\"$or\":").append(objectMapper.writeValueAsString(or)).toString();
     } else {
-      return "";
+      return null;
     }
   }
 
-  private void addIfNotEmpty(Collection<String> strings, String string) {
-    if (!string.equals("")) {
-      strings.add(string);
+  private void addIfNotEmpty(Collection<String> clauses, String newClause) {
+    if (!(newClause == null || newClause.isEmpty())) {
+      clauses.add(newClause);
     }
   }
 
@@ -121,9 +120,38 @@ public class ItemQuery implements Serializable {
    * For example, given Strings "test1", "test2", the result would be "{\"$in\":[\"\test1",\"test2\"]}".
    */
   private String asInJson(String key, Collection<String> strings) throws JsonProcessingException {
-    return strings.isEmpty() ? "" :
-        new StringBuilder("\"").append(key).append("\":").append("{\"$in\":")
-            .append(objectMapper.writeValueAsString(strings)).append("}").toString();
+    List<String> nonNullStrings = new ArrayList<String>();
+
+    String clause = null;
+    String emptyClause = null;
+
+    for (String string : strings) {
+      if (string != null) {
+        nonNullStrings.add(string);
+      }
+    }
+
+    if (!strings.isEmpty()) {
+      if (strings.contains(null)) {
+        emptyClause = "\"$not\":{\"$exists\":true}";
+      }
+      if (!nonNullStrings.isEmpty()) {
+        clause = new StringBuilder("\"$in\":")
+            .append(objectMapper.writeValueAsString(nonNullStrings)).toString();
+      }
+    }
+
+    StringBuilder stringBuilder = new StringBuilder("\"").append(key).append("\":{");
+
+    if (clause != null && emptyClause != null) {
+      return stringBuilder.append(clause).append(",\"$or\":{").append(emptyClause).append("}}").toString();
+    } else if (clause != null && emptyClause == null) {
+      return stringBuilder.append(clause).append("}").toString();
+    } else if (clause == null && emptyClause != null) {
+      return stringBuilder.append(emptyClause).append("}").toString();
+    } else {
+      return null;
+    }
   }
 
   public static class Builder {
