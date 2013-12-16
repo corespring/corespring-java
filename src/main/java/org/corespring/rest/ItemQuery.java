@@ -206,7 +206,11 @@ public class ItemQuery implements Serializable {
     }
 
     public Builder subject(String subjectCategory) {
-      this.subjects.add(subjectCategory);
+      if (subjectCategory == null) {
+        throw new NullPointerException("subject cannot be null");
+      } else {
+        this.subjects.add(subjectCategory);
+      }
       return this;
     }
 

@@ -1,6 +1,8 @@
 package org.corespring.rest;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import static org.corespring.rest.ItemQuery.*;
 import static org.junit.Assert.assertEquals;
@@ -18,6 +20,8 @@ public class ItemQueryTest {
   private static final String STANDARD = "RL.K.2";
   private static final String COLLECTION = "4ff2e4cae4b077b9e31689fd";
 
+  @Rule
+  public ExpectedException exception = ExpectedException.none();
 
   @Test
   public void testSearchString() {
@@ -74,16 +78,8 @@ public class ItemQueryTest {
 
   @Test
   public void testNullSubject() {
-    String query = new ItemQuery.Builder().subject(null).build().toString();
-    assertEquals(withBrackets(queryForKey(PRIMARY_SUBJECT_KEY, expectedEmptyClause())), query);
-  }
-
-  @Test
-  public void testSubjectOrNull() {
-    String query = new ItemQuery.Builder().subject(SUBJECT).subject(null).build().toString();
-    assertEquals(
-        withBrackets(queryForKey(PRIMARY_SUBJECT_KEY, joinWithOr(expectedInClause(SUBJECT), expectedEmptyClause()))),
-        query);
+    exception.expect(NullPointerException.class);
+    new ItemQuery.Builder().subject(null);
   }
 
   @Test
@@ -129,10 +125,6 @@ public class ItemQueryTest {
     return new StringBuilder("\"$in\":[\"").append(value).append("\"]").toString();
   }
 
-  private static String expectedEmptyClause() {
-    return "\"$not\":{\"$exists\":true}";
-  }
-
   private String queryForKey(String key, String query) {
     return new StringBuilder("\"").append(key).append("\":{").append(query).append("}").toString();
   }
@@ -141,8 +133,5 @@ public class ItemQueryTest {
     return new StringBuilder("{").append(string).append("}").toString();
   }
 
-  private String joinWithOr(String one, String two) {
-    return new StringBuilder(one).append(",\"$or\":{").append(two).append("}").toString();
-  }
 
 }
