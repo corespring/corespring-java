@@ -13,7 +13,6 @@ import org.corespring.resource.player.Role;
 import org.corespring.resource.question.Answer;
 import org.corespring.resource.question.ItemType;
 import org.corespring.resource.question.Participant;
-import org.corespring.rest.CorespringRestClient;
 import org.corespring.rest.CorespringRestException;
 import org.corespring.rest.ItemQuery;
 import org.junit.Rule;
@@ -23,9 +22,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import static org.corespring.resource.question.ItemType.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.corespring.resource.question.ItemType.*;
 
 public class CorespringClientTest {
 
