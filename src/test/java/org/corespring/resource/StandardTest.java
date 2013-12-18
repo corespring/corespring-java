@@ -5,25 +5,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class StandardTest {
 
   @Test
   public void testSerialization() throws JsonProcessingException {
-    Standard standard = new Standard("527d2c81a81fbc1839792a1d", "category", "subCategory", "standard", "subject", "dotNotation");
+    String[] grades = new String[] { "K", "1", "2" };
+    Standard standard = new Standard("527d2c81a81fbc1839792a1d", "category", "subCategory", "standard", "subject", Arrays.asList(grades), "dotNotation");
     ObjectMapper objectMapper = new ObjectMapper();
 
     assertEquals(
-        "{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"dotNotation\":\"dotNotation\"}",
+        "{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"grades\":[\"K\",\"1\",\"2\"],\"dotNotation\":\"dotNotation\"}",
         objectMapper.writeValueAsString(standard)
     );
   }
 
   @Test
   public void testDeserialization() throws IOException {
-    String json = "{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"dotNotation\":\"dotNotation\"}";
+    String json = "{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"grades\":[\"K\",\"1\",\"2\"],\"dotNotation\":\"dotNotation\"}";
     ObjectMapper objectMapper = new ObjectMapper();
 
     Standard deserialized = objectMapper.readValue(json, Standard.class);
@@ -34,6 +37,9 @@ public class StandardTest {
     assertEquals("standard", deserialized.getStandard());
     assertEquals("subject", deserialized.getSubject());
     assertEquals("dotNotation", deserialized.getDotNotation());
+    assertTrue(deserialized.getGrades().contains("K"));
+    assertTrue(deserialized.getGrades().contains("1"));
+    assertTrue(deserialized.getGrades().contains("2"));
   }
 
 }

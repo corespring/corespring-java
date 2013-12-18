@@ -8,10 +8,13 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 
 public class ItemTest {
 
@@ -22,7 +25,9 @@ public class ItemTest {
     Collection<String> keySkills = new ArrayList<String>();
     keySkills.add("Identify");
     Subject primarySubject = new Subject("527d2f4aa81fbc1839792a21", "category", "subject");
-    Standard standard = new Standard("527d2c81a81fbc1839792a1d", "category", "subCategory", "standard", "subject", "dotNotation");
+    String[] grades = new String[] { "K", "1", "2" };
+    Standard standard = new Standard("527d2c81a81fbc1839792a1d", "category", "subCategory", "standard", "subject",
+        Arrays.asList(grades), "dotNotation");
     Collection<Standard> standards = new ArrayList<Standard>();
     standards.add(standard);
 
@@ -32,7 +37,7 @@ public class ItemTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
     assertEquals(
-        "{\"id\":\"527d2ed9a81fbc1839792a1f\",\"title\":\"title\",\"author\":\"author\",\"itemType\":\"Multiple Choice\",\"gradeLevel\":[\"04\"],\"keySkills\":[\"Identify\"],\"primarySubject\":{\"id\":\"527d2f4aa81fbc1839792a21\",\"category\":\"category\",\"subject\":\"subject\"},\"standards\":[{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"dotNotation\":\"dotNotation\"}],\"published\":false,\"collectionId\":\"527d2edaa81fbc1839792a20\"}",
+        "{\"id\":\"527d2ed9a81fbc1839792a1f\",\"title\":\"title\",\"author\":\"author\",\"itemType\":\"Multiple Choice\",\"gradeLevel\":[\"04\"],\"keySkills\":[\"Identify\"],\"primarySubject\":{\"id\":\"527d2f4aa81fbc1839792a21\",\"category\":\"category\",\"subject\":\"subject\"},\"standards\":[{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"grades\":[\"K\",\"1\",\"2\"],\"dotNotation\":\"dotNotation\"}],\"published\":false,\"collectionId\":\"527d2edaa81fbc1839792a20\"}",
         objectMapper.writeValueAsString(item)
     );
 
@@ -40,7 +45,7 @@ public class ItemTest {
 
   @Test
   public void testDeserialization() throws IOException {
-    String json = "{\"id\":\"527d2ed9a81fbc1839792a1f\",\"title\":\"title\",\"author\":\"author\",\"itemType\":\"Multiple Choice\",\"gradeLevel\":[\"04\"],\"keySkills\":[\"Identify\"],\"primarySubject\":{\"id\":\"527d2f4aa81fbc1839792a21\",\"category\":\"category\",\"subject\":\"subject\"},\"standards\":[{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"dotNotation\":\"dotNotation\"}],\"published\":false,\"collectionId\":\"527d2edaa81fbc1839792a20\"}";
+    String json = "{\"id\":\"527d2ed9a81fbc1839792a1f\",\"title\":\"title\",\"author\":\"author\",\"itemType\":\"Multiple Choice\",\"gradeLevel\":[\"04\"],\"keySkills\":[\"Identify\"],\"primarySubject\":{\"id\":\"527d2f4aa81fbc1839792a21\",\"category\":\"category\",\"subject\":\"subject\"},\"standards\":[{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"grades\":[\"K\",\"1\",\"2\"],\"dotNotation\":\"dotNotation\"}],\"published\":false,\"collectionId\":\"527d2edaa81fbc1839792a20\"}";
     ObjectMapper objectMapper = new ObjectMapper();
 
     Item deserialized = objectMapper.readValue(json, Item.class);
@@ -63,6 +68,9 @@ public class ItemTest {
     assertEquals("standard", deserialized.getStandards().iterator().next().getStandard());
     assertEquals("subject", deserialized.getStandards().iterator().next().getSubject());
     assertEquals("dotNotation", deserialized.getStandards().iterator().next().getDotNotation());
+    assertTrue(deserialized.getStandards().iterator().next().getGrades().contains("K"));
+    assertTrue(deserialized.getStandards().iterator().next().getGrades().contains("1"));
+    assertTrue(deserialized.getStandards().iterator().next().getGrades().contains("2"));
   }
 
 }
