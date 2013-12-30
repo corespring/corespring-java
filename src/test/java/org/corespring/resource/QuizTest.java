@@ -142,4 +142,25 @@ public class QuizTest {
     assertNull(new Quiz.Builder().build().getMetadataValue("random value"));
   }
 
+  @Test
+  public void testIsFinished() {
+    Collection<Answer> answers = new ArrayList<Answer>(questions.size());
+    for (Question question : questions) {
+      answers.add(new Answer(question.getItemId(), "sessionId", 1, new Date(1380649346485L), true));
+    }
+
+    final Participant unfinishedParticipant = participant;
+    final Participant finishedParticipant = new Participant(answers, "otherExternalUid", null);
+
+    Quiz quiz = new Quiz("000000000000000000000002", "51114b307fc1eaa866444648", today, tomorrow, metadata, questions, new ArrayList<Participant>(2) {
+      {
+        add(unfinishedParticipant);
+        add(finishedParticipant);
+      }
+    });
+
+    assertFalse(quiz.isFinished(unfinishedParticipant));
+    assertTrue(quiz.isFinished(finishedParticipant));
+  }
+
 }

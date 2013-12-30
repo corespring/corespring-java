@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.corespring.resource.question.Answer;
 import org.corespring.resource.question.Participant;
 import org.corespring.rest.CorespringRestClient;
 
@@ -286,6 +287,38 @@ public class Quiz extends CorespringResource {
     for (Participant participant : participants) {
       if (participant.getExternalUid().equals(externalUid)) {
         return participant;
+      }
+    }
+    return null;
+  }
+
+  @JsonIgnore
+  public boolean isFinished(Participant participant) {
+    Participant existingParticipant = getExistingParticipant(participant);
+
+    if (existingParticipant != null) {
+      Collection<String> questionIds = new HashSet<String>(questions.size());
+      for (Question question : this.getQuestions()) {
+        questionIds.add(question.getItemId());
+      }
+
+      Collection<String> answerQuestionIds = new HashSet<String>(existingParticipant.getAnswers().size());
+      for (Answer answer : existingParticipant.getAnswers()) {
+        answerQuestionIds.add(answer.getItemId());
+      }
+
+      questionIds.removeAll(answerQuestionIds);
+      return questionIds.isEmpty();
+
+    } else {
+      return false;
+    }
+  }
+
+  private Participant getExistingParticipant(Participant participant) {
+    for (Participant existingParticipant : participants) {
+      if (existingParticipant.getExternalUid().equals(participant.getExternalUid())) {
+        return existingParticipant;
       }
     }
     return null;
