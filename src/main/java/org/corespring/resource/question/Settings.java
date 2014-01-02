@@ -81,6 +81,17 @@ public class Settings {
     public Builder() {
     }
 
+    public Builder(Settings settings) {
+      this.maxNumberOfAttempts = settings.maxNumberOfAttempts;
+      this.highlightUserResponse = settings.highlightUserResponse;
+      this.highlightCorrectResponse = settings.highlightCorrectResponse;
+      this.showFeedback = settings.showFeedback;
+      this.allowEmptyResponses = settings.allowEmptyResponses;
+      this.submitCompleteMessage = settings.submitCompleteMessage;
+      this.submitIncompleteMessage = settings.submitIncompleteMessage;
+      this.submitIncorrectMessage = settings.submitIncorrectMessage;
+    }
+
     public Builder maxNumberOfAttempts(Integer maxNumberOfAttempts) {
       this.maxNumberOfAttempts = maxNumberOfAttempts;
       return this;
