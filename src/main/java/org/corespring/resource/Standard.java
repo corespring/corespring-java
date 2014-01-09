@@ -14,6 +14,7 @@ public class Standard {
   private final String subject;
   private final Collection<String> grades;
   private final String dotNotation;
+  private final String categoryAbbreviation;
 
   @JsonCreator
   public Standard(@JsonProperty("id") String id,
@@ -22,7 +23,8 @@ public class Standard {
                   @JsonProperty("standard") String standard,
                   @JsonProperty("subject") String subject,
                   @JsonProperty("grades") Collection<String> grades,
-                  @JsonProperty("dotNotation") String dotNotation) {
+                  @JsonProperty("dotNotation") String dotNotation,
+                  @JsonProperty("categoryAbbreviation") String categoryAbbreviation) {
     this.id = id;
     this.category = category;
     this.subCategory = subCategory;
@@ -30,6 +32,7 @@ public class Standard {
     this.subject = subject;
     this.grades = grades;
     this.dotNotation = dotNotation;
+    this.categoryAbbreviation = categoryAbbreviation;
   }
 
   public String getId() {
@@ -58,6 +61,10 @@ public class Standard {
 
   public String getDotNotation() {
     return dotNotation;
+  }
+
+  public String getCategoryAbbreviation() {
+    return categoryAbbreviation;
   }
 
 }

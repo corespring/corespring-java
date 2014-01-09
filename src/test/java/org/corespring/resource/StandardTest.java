@@ -15,18 +15,18 @@ public class StandardTest {
   @Test
   public void testSerialization() throws JsonProcessingException {
     String[] grades = new String[] { "K", "1", "2" };
-    Standard standard = new Standard("527d2c81a81fbc1839792a1d", "category", "subCategory", "standard", "subject", Arrays.asList(grades), "dotNotation");
+    Standard standard = new Standard("527d2c81a81fbc1839792a1d", "category", "subCategory", "standard", "subject", Arrays.asList(grades), "dotNotation", "CC");
     ObjectMapper objectMapper = new ObjectMapper();
 
     assertEquals(
-        "{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"grades\":[\"K\",\"1\",\"2\"],\"dotNotation\":\"dotNotation\"}",
+        "{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"grades\":[\"K\",\"1\",\"2\"],\"dotNotation\":\"dotNotation\",\"categoryAbbreviation\":\"CC\"}",
         objectMapper.writeValueAsString(standard)
     );
   }
 
   @Test
   public void testDeserialization() throws IOException {
-    String json = "{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"grades\":[\"K\",\"1\",\"2\"],\"dotNotation\":\"dotNotation\"}";
+    String json = "{\"id\":\"527d2c81a81fbc1839792a1d\",\"category\":\"category\",\"subCategory\":\"subCategory\",\"standard\":\"standard\",\"subject\":\"subject\",\"grades\":[\"K\",\"1\",\"2\"],\"dotNotation\":\"dotNotation\",\"categoryAbbreviation\":\"CC\"}";
     ObjectMapper objectMapper = new ObjectMapper();
 
     Standard deserialized = objectMapper.readValue(json, Standard.class);
