@@ -4,8 +4,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.apache.commons.lang.StringEscapeUtils.escapeJavaScript;
 import static org.corespring.rest.ItemQuery.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class ItemQueryTest {
 
@@ -31,6 +32,16 @@ public class ItemQueryTest {
     stringBuilder = expectedSearchStringClause(SEARCH_STRING, stringBuilder).append("}");
 
     assertEquals(stringBuilder.toString(), query);
+  }
+
+  @Test
+  public void testSearchStringEscapesCharacters() {
+    String searchStringWithSlashes = "\\this\\is\\fantastic";
+    String query = new ItemQuery.Builder().searchString(searchStringWithSlashes).build().toString();
+
+    assertFalse(query.contains(searchStringWithSlashes));
+    assertFalse(query.contains(escapeJavaScript(searchStringWithSlashes)));
+    assertTrue(query.contains(escapeJavaScript(escapeJavaScript(searchStringWithSlashes))));
   }
 
   @Test
