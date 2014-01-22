@@ -9,6 +9,8 @@ import org.corespring.resource.Item;
 import java.io.Serializable;
 import java.util.*;
 
+import static org.apache.commons.lang.StringEscapeUtils.escapeJavaScript;
+
 /**
  * An {@link ItemQuery} is a query object which is passed to the CoreSpring API in order to return a subset of available
  * {@link Item}s.
@@ -93,7 +95,11 @@ public class ItemQuery implements Serializable {
               {
                 this.put(field, new HashMap<String, String>() {
                   {
-                    this.put("$regex", "\\" + "b" + searchString);
+                    /**
+                     * searchString must be escaped here and then later escaped again by Jackson because Mongo utilizes
+                     * the string as a regular expression, which requires the string literal to be escaped.
+                     */
+                    this.put("$regex", "\\b" + escapeJavaScript(searchString));
                     this.put("$options", "i");
                   }
                 });
