@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ItemQueryTest {
 
-  private static final String SEARCH_STRING = "bd";
+  private static final String SEARCH_STRING = "string";
   private static final String BLOOMS_TAXONOMY = "Remembering";
   private static final String CONTRIBUTOR = "Corespring Assessment Professionals";
   private static final String DEMONSTRATED_KNOWLEDGE = "Factual";
@@ -118,7 +118,7 @@ public class ItemQueryTest {
   }
 
   private StringBuilder expectedSearchStringClause(String searchString, StringBuilder stringBuilder) {
-    return stringBuilder.append("\"$or\":[{\"title\":{\"$options\":\"i\",\"$regex\":\"\\\\").append(searchString).append("\"}},{\"standards.dotNotation\":{\"$options\":\"i\",\"$regex\":\"\\\\").append(searchString).append("\"}},{\"copyrightOwner\":{\"$options\":\"i\",\"$regex\":\"\\\\").append(searchString).append("\"}},{\"contributor\":{\"$options\":\"i\",\"$regex\":\"\\\\").append(searchString).append("\"}},{\"author\":{\"$options\":\"i\",\"$regex\":\"\\\\").append(searchString).append("\"}}]");
+    return stringBuilder.append("\"$or\":[{\"title\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}},{\"standards.dotNotation\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}},{\"copyrightOwner\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}},{\"contributor\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}},{\"author\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}}]");
   }
 
   private String expectedInClause(String value) {
