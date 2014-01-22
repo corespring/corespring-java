@@ -93,7 +93,7 @@ public class ItemQuery implements Serializable {
               {
                 this.put(field, new HashMap<String, String>() {
                   {
-                    this.put("$regex", "\\" + searchString);
+                    this.put("$regex", "\\" + "b" + searchString);
                     this.put("$options", "i");
                   }
                 });
