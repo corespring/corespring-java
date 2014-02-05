@@ -109,7 +109,15 @@ public abstract class CorespringRestClient {
       paramList.add(new BasicNameValuePair(ACCESS_TOKEN_KEY, getAccessToken()));
     }
 
-    HttpUriRequest request = setupRequest(path, method, paramList, jsonEntity);
+    try {
+      paramList.addAll(URLEncodedUtils.parse(new URI(path), "UTF-8"));
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+
+    HttpUriRequest request = setupRequest(urlWithoutQueryString(path), method, paramList, jsonEntity);
+
     CorespringRestResponse response = null;
     CorespringRestException exception = null;
 
@@ -147,6 +155,15 @@ public abstract class CorespringRestClient {
     }
 
     return response;
+  }
+
+  private String urlWithoutQueryString(String url) {
+    try {
+      String queryString = new URI(url).getQuery();
+      return queryString == null ? url : url.substring(0, url.indexOf(queryString) - 1);
+    } catch (URISyntaxException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private CorespringRestResponse tryRequest(HttpUriRequest request) throws CorespringRestException {

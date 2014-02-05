@@ -13,6 +13,7 @@ import org.corespring.resource.player.Role;
 import org.corespring.resource.question.Answer;
 import org.corespring.resource.question.ItemType;
 import org.corespring.resource.question.Participant;
+import org.corespring.resource.question.Settings;
 import org.corespring.rest.CorespringRestException;
 import org.corespring.rest.ItemQuery;
 import org.junit.Rule;
@@ -162,6 +163,17 @@ public class CorespringClientTest {
 
     assertNotNull(itemSession);
     assertNotNull(itemSession.getId());
+  }
+
+  @Test
+  public void testUpdateSettings() throws CorespringRestException {
+    ItemSession itemSession = new ItemSession.Builder().itemId("50083ba9e4b071cb5ef79101").build();
+    itemSession = client.create(itemSession);
+    Settings newSettings = new Settings.Builder(itemSession.getSettings()).showFeedback(false).build();
+    itemSession = new ItemSession.Builder(itemSession).settings(newSettings).build();
+    itemSession = client.updateSettings(itemSession);
+
+    assertFalse(itemSession.getSettings().getShowFeedback());
   }
 
   @Test
