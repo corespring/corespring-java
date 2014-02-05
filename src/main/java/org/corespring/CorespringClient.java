@@ -95,6 +95,14 @@ public class CorespringClient extends CorespringRestClient {
     return response.get(ItemSession.class);
   }
 
+  /**
+   * Persists the updated {@link org.corespring.resource.question.Settings} of an {@link ItemSession}.
+   */
+  public ItemSession updateSettings(ItemSession itemSession) throws CorespringRestException {
+    CorespringRestResponse response = put(new StringBuilder(itemSession.getResourceRoute(this, itemSession)).append("?action=updateSettings").toString(), itemSession);
+    return response.get(ItemSession.class);
+  }
+
   public OptionsResponse encryptOptions(Options options) throws CorespringRestException {
     CorespringRestResponse response = post(Options.getEncryptionRoute(this), options);
     OptionsResponse optionsResponse = response.get(OptionsResponse.class);

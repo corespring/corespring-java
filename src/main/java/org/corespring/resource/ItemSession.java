@@ -53,8 +53,9 @@ public class ItemSession extends CorespringResource {
     return client.baseUrl().append(RESOURCE_ROUTE.replace(":itemId", this.getItemId())).toString();
   }
 
-  public static String getResourceRoute(CorespringRestClient client, String id) {
-    return client.baseUrl().append(RESOURCE_ROUTE).append("/").append(id).toString();
+  public static String getResourceRoute(CorespringRestClient client, ItemSession itemSession) {
+    return client.baseUrl().append(RESOURCE_ROUTE.replace(":itemId", itemSession.getItemId()))
+        .append("/").append(itemSession.getId()).toString();
   }
 
   @Override
@@ -89,6 +90,18 @@ public class ItemSession extends CorespringResource {
     private Date start;
     private Date finish;
     private Settings settings;
+
+    public Builder() {
+    }
+
+    public Builder(ItemSession itemSession) {
+      this.id = itemSession.id;
+      this.itemId = itemSession.itemId;
+      this.attempts = itemSession.attempts;
+      this.start = itemSession.start;
+      this.finish = itemSession.finish;
+      this.settings = itemSession.settings;
+    }
 
     public Builder id(String id) {
       this.id = id;

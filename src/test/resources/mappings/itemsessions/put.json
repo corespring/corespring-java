@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "PUT",
+        "url": "/api/v1/items/50083ba9e4b071cb5ef79101:0/sessions/5278f6c33004fe93e2c34d6f?access_token=demo_token&action=updateSettings"
+    },
+    "response": {
+        "status": 200,
+        "body": "{\"id\":\"5278f6c33004fe93e2c34d6f\",\"itemId\":\"50083ba9e4b071cb5ef79101:0\",\"settings\":{\"highlightUserResponse\":true,\"highlightCorrectResponse\":true,\"showFeedback\":false,\"allowEmptyResponses\":false,\"submitCompleteMessage\":\"Ok! Your response was submitted.\",\"submitIncompleteMessage\":null,\"submitIncorrectMessage\":\"You may revise your work before you submit your final response.\",\"maxNumberOfAttempts\":1}}",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}
