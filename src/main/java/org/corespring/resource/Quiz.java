@@ -61,7 +61,7 @@ import java.util.*;
 @JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
 public class Quiz extends CorespringResource {
 
-  private static final String RESOURCE_ROUTE = "quizzes";
+  private static final String RESOURCE_ROUTE = "assessments";
   private static final String AUTHOR_KEY = "author";
 
   private static final String TITLE_KEY = "title";

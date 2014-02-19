@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "url": "/api/v1/quizzes/author/fd707fc3c?access_token=demo_token"
+        "url": "/api/v1/assessments/author/fd707fc3c?access_token=demo_token"
     },
     "response": {
         "status": 200,

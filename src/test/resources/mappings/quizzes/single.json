@@ -1,7 +1,7 @@
 {
     "request": {
         "method": "GET",
-        "url": "/api/v1/quizzes/000000000000000000000002?access_token=demo_token"
+        "url": "/api/v1/assessments/000000000000000000000002?access_token=demo_token"
     },
     "response": {
         "status": 200,
