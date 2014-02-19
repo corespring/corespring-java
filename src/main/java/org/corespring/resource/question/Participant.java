@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * A {@link Participant} defines a student by an external user id, as well as a set of {@link Answer}s to items within
- * a {@link org.corespring.resource.Quiz}. A {@link Participant}'s {@link Answer}s are unique by item id (i.e., the
+ * a {@link org.corespring.resource.Assessment}. A {@link Participant}'s {@link Answer}s are unique by item id (i.e., the
  * {@link Builder} for {@link Participant} will not allow duplicate itemIds for {@link Answer}s, and will override
  * existing {@link Answer}s with matching itemId).
  */

@@ -5,7 +5,7 @@
     },
     "response": {
         "status": 200,
-        "body": "{\"id\":\"527a3f0c300439cb029252f7\",\"orgId\":\"521cd50be4b0886a8328cb39\",\"metadata\":{\"title\":\"My new quiz!\"},\"participants\":[{\"answers\":[{\"sessionId\":\"527a3bca8808335f66e168a6\",\"itemId\":\"527a3bbe8808335f66e168a5\",\"score\":0,\"lastResponse\":-1,\"isComplete\":false}],\"externalUid\":\"ben1234\"}],\"questions\":[]}",
+        "body": "{\"id\":\"527a3f0c300439cb029252f7\",\"orgId\":\"521cd50be4b0886a8328cb39\",\"metadata\":{\"title\":\"My new assessment!\"},\"participants\":[{\"answers\":[{\"sessionId\":\"527a3bca8808335f66e168a6\",\"itemId\":\"527a3bbe8808335f66e168a5\",\"score\":0,\"lastResponse\":-1,\"isComplete\":false}],\"externalUid\":\"ben1234\"}],\"questions\":[]}",
         "headers": {
             "Content-Type": "application/json"
         }

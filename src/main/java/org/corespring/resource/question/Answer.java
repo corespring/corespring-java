@@ -3,8 +3,8 @@ package org.corespring.resource.question;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.corespring.resource.Assessment;
 import org.corespring.resource.CorespringResource;
-import org.corespring.resource.Quiz;
 import org.corespring.rest.CorespringRestClient;
 
 import java.util.Date;
@@ -97,11 +97,11 @@ public class Answer extends CorespringResource {
   }
 
   /**
-   * Returns a route to for a {@link CorespringRestClient} to add the {@link Answer} to a provided {@link Quiz} and
+   * Returns a route to for a {@link CorespringRestClient} to add the {@link Answer} to a provided {@link org.corespring.resource.Assessment} and
    * external user id.
    */
-  public static String getAddAnswerRoute(CorespringRestClient client, Quiz quiz, String externalUid) {
-    return new StringBuilder(Quiz.getResourceRoute(client, quiz.getId())).append("/").append(externalUid)
+  public static String getAddAnswerRoute(CorespringRestClient client, Assessment assessment, String externalUid) {
+    return new StringBuilder(Assessment.getResourceRoute(client, assessment.getId())).append("/").append(externalUid)
         .append("/add-answer").toString();
   }
 
