@@ -58,22 +58,22 @@ public class CorespringClientTest {
   }
 
   @Test
-  public void testGetQuizzes() throws CorespringRestException {
-    Collection<Quiz> quizzes = client.getQuizzes(organization);
-    for (Quiz quiz : quizzes) {
-      checkQuiz(quiz);
+  public void testGetAssessments() throws CorespringRestException {
+    Collection<Assessment> assessments = client.getAssessments(organization);
+    for (Assessment assessment : assessments) {
+      checkAssessment(assessment);
     }
   }
 
   @Test
-  public void testGetQuizById() throws CorespringRestException {
-    Quiz quiz = client.getQuizById("000000000000000000000002");
-    checkQuiz(quiz);
+  public void testGetAssessmentById() throws CorespringRestException {
+    Assessment assessment = client.getAssessmentById("000000000000000000000002");
+    checkAssessment(assessment);
   }
 
-  private void checkQuiz(Quiz quiz) {
-    if (!quiz.getQuestions().isEmpty()) {
-      Collection<Question> questions = quiz.getQuestions();
+  private void checkAssessment(Assessment assessment) {
+    if (!assessment.getQuestions().isEmpty()) {
+      Collection<Question> questions = assessment.getQuestions();
       for (Question question : questions) {
         assertNotNull(question.getTitle());
         assertNotNull(question.getItemId());
@@ -81,7 +81,7 @@ public class CorespringClientTest {
         assertNotNull(question.getStandards());
       }
 
-      Collection<Participant> participants = quiz.getParticipants();
+      Collection<Participant> participants = assessment.getParticipants();
       for (Participant participant : participants) {
         assertNotNull(participant.getAnswers());
         assertNotNull(participant.getExternalUid());
@@ -90,44 +90,44 @@ public class CorespringClientTest {
   }
 
   @Test
-  public void testCreateQuiz() throws CorespringRestException {
-    Quiz quiz = new Quiz.Builder().title("My new quiz!").addMetadata("authorId", "fd707fc3c").build();
-    Quiz updatedQuiz = client.create(quiz);
+  public void testCreateAssessment() throws CorespringRestException {
+    Assessment assessment = new Assessment.Builder().title("My new assessment!").addMetadata("authorId", "fd707fc3c").build();
+    Assessment updatedAssessment = client.create(assessment);
 
-    // Created quiz has id and orgId
-    assertNotNull(updatedQuiz.getId());
-    assertNotNull(updatedQuiz.getOrgId());
-    assertEquals(updatedQuiz.getMetadataValue("authorId"), "fd707fc3c");
+    // Created assessment has id and orgId
+    assertNotNull(updatedAssessment.getId());
+    assertNotNull(updatedAssessment.getOrgId());
+    assertEquals(updatedAssessment.getMetadataValue("authorId"), "fd707fc3c");
   }
 
   @Test
   public void testAddParticipants() throws CorespringRestException, JsonProcessingException {
-    Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
-    quiz = client.create(quiz);
-    quiz = client.addParticipant(quiz, "ben1234");
+    Assessment assessment = new Assessment.Builder().title("My new assessment!").build();
+    assessment = client.create(assessment);
+    assessment = client.addParticipant(assessment, "ben1234");
     ObjectMapper objectMapper = new ObjectMapper();
-    assertNotNull(quiz.getParticipant("ben1234"));
+    assertNotNull(assessment.getParticipant("ben1234"));
   }
 
   @Test
-  public void testUpdateQuiz() throws CorespringRestException {
-    Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
+  public void testUpdateAssessment() throws CorespringRestException {
+    Assessment assessment = new Assessment.Builder().title("My new assessment!").build();
 
-    quiz = client.create(quiz);
-    quiz = client.update(new Quiz.Builder(quiz).description("description").build());
+    assessment = client.create(assessment);
+    assessment = client.update(new Assessment.Builder(assessment).description("description").build());
 
-    assertEquals("description", quiz.getDescription());
+    assertEquals("description", assessment.getDescription());
   }
 
   @Test
-  public void testDeleteQuiz() throws CorespringRestException {
-    Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
+  public void testDeleteAssessment() throws CorespringRestException {
+    Assessment assessment = new Assessment.Builder().title("My new assessment!").build();
 
-    quiz = client.create(quiz);
-    assertNotNull(quiz);
-    quiz = client.delete(quiz);
+    assessment = client.create(assessment);
+    assertNotNull(assessment);
+    assessment = client.delete(assessment);
 
-    assertNull(quiz);
+    assertNull(assessment);
   }
 
   @Test
@@ -136,23 +136,23 @@ public class CorespringClientTest {
     String itemId = "527a3bbe8808335f66e168a5";
     String sessionId = "527a3bca8808335f66e168a6";
 
-    Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
+    Assessment assessment = new Assessment.Builder().title("My new assessment!").build();
 
-    quiz = client.create(quiz);
-    quiz = client.addParticipant(quiz, externalUid);
+    assessment = client.create(assessment);
+    assessment = client.addParticipant(assessment, externalUid);
 
     Answer answer = new Answer.Builder().itemId(itemId).sessionId(sessionId).build();
-    quiz = client.addAnswer(quiz, answer, externalUid);
+    assessment = client.addAnswer(assessment, answer, externalUid);
 
-    assertNotNull(quiz.getParticipant(externalUid));
-    assertNotNull(quiz.getParticipant(externalUid).getAnswer(itemId));
-    assertEquals(sessionId, quiz.getParticipant(externalUid).getAnswer(itemId).getSessionId());
+    assertNotNull(assessment.getParticipant(externalUid));
+    assertNotNull(assessment.getParticipant(externalUid).getAnswer(itemId));
+    assertEquals(sessionId, assessment.getParticipant(externalUid).getAnswer(itemId).getSessionId());
   }
 
   @Test
-  public void testGetQuizzesByAuthor() throws CorespringRestException {
-    Collection<Quiz> quizzes = client.getQuizzesByAuthor("fd707fc3c");
-    assertEquals(quizzes.size(), 1);
+  public void testGetAssessmentsByAuthor() throws CorespringRestException {
+    Collection<Assessment> assessments = client.getAssessmentsByAuthor("fd707fc3c");
+    assertEquals(assessments.size(), 1);
   }
 
   @Test

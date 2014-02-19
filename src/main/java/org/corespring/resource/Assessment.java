@@ -12,8 +12,8 @@ import org.corespring.rest.CorespringRestClient;
 import java.util.*;
 
 /**
- * A {@link Quiz} represents a set of {@link Question}s, {@link Participant}s, and associated metadata. A JSON
- * representation of a {@link Quiz} is shown below:
+ * An {@link Assessment} represents a set of {@link Question}s, {@link Participant}s, and associated metadata. A JSON
+ * representation of an {@link Assessment} is shown below:
  *
  * <pre>
  *
@@ -21,9 +21,9 @@ import java.util.*;
  *     "id" : "000000000000000000000002",
  *     "orgId" : "51114b307fc1eaa866444648",
  *     "metadata" : {
- *       "title" : "Sample Quiz",
- *       "description": "This is a sample quiz",
- *       "instructions": "This quiz consists of questions to help users get up to speed using the CoreSpring platform",
+ *       "title" : "Sample Assessment",
+ *       "description": "This is a sample assessment",
+ *       "instructions": "This assessment consists of questions to help users get up to speed using the CoreSpring platform",
  *       "classroom": "1034"
  *     },
  *     "questions" : [
@@ -59,7 +59,7 @@ import java.util.*;
  *
  */
 @JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
-public class Quiz extends CorespringResource {
+public class Assessment extends CorespringResource {
 
   private static final String RESOURCE_ROUTE = "assessments";
   private static final String AUTHOR_KEY = "author";
@@ -77,13 +77,13 @@ public class Quiz extends CorespringResource {
   private final Collection<Participant> participants;
 
   @JsonCreator
-  public Quiz(@JsonProperty("id") String id,
-              @JsonProperty("orgId") String orgId,
-              @JsonProperty("start") Date start,
-              @JsonProperty("end") Date end,
-              @JsonProperty("metadata") @JsonDeserialize(as=HashMap.class) Map<String, Object> metadata,
-              @JsonProperty("questions") Collection<Question> questions,
-              @JsonProperty("participants") Collection<Participant> participants) {
+  public Assessment(@JsonProperty("id") String id,
+                    @JsonProperty("orgId") String orgId,
+                    @JsonProperty("start") Date start,
+                    @JsonProperty("end") Date end,
+                    @JsonProperty("metadata") @JsonDeserialize(as = HashMap.class) Map<String, Object> metadata,
+                    @JsonProperty("questions") Collection<Question> questions,
+                    @JsonProperty("participants") Collection<Participant> participants) {
     this.id = id;
     this.orgId = orgId;
     this.start = start;
@@ -93,7 +93,7 @@ public class Quiz extends CorespringResource {
     this.participants = participants == null ? new ArrayList<Participant>() : participants;
   }
 
-  private Quiz(Builder builder) {
+  private Assessment(Builder builder) {
     this.id = builder.id;
     this.orgId = builder.orgId;
     this.start = builder.start;
@@ -116,16 +116,16 @@ public class Quiz extends CorespringResource {
     public Builder() {
     }
 
-    public Builder(Quiz quiz) {
-      this.id = quiz.id;
-      this.orgId = quiz.orgId;
-      this.start = quiz.start;
-      this.end = quiz.end;
+    public Builder(Assessment assessment) {
+      this.id = assessment.id;
+      this.orgId = assessment.orgId;
+      this.start = assessment.start;
+      this.end = assessment.end;
       this.metadata = new HashMap<String, Object>();
-      this.metadata.putAll(quiz.metadata);
-      this.questions = quiz.questions;
+      this.metadata.putAll(assessment.metadata);
+      this.questions = assessment.questions;
       this.participants = new HashMap<String, Participant>();
-      for (Participant participant : quiz.participants) {
+      for (Participant participant : assessment.participants) {
         this.participants.put(participant.getExternalUid(), participant);
       }
     }
@@ -186,15 +186,15 @@ public class Quiz extends CorespringResource {
       return this;
     }
 
-    public Quiz build() {
+    public Assessment build() {
       if ((start != null) ^ (end != null)) {
         if (start == null) {
-          throw new IllegalStateException("Quiz with a start date must have an end date");
+          throw new IllegalStateException("Assessment with a start date must have an end date");
         } else {
-          throw new IllegalStateException("Quiz with an end date must have a start date");
+          throw new IllegalStateException("Assessment with an end date must have a start date");
         }
       }
-      return new Quiz(this);
+      return new Assessment(this);
     }
 
   }

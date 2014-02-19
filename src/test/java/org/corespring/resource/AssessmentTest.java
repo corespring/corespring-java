@@ -13,14 +13,14 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-public class QuizTest {
+public class AssessmentTest {
 
   private final Date yesterday = new Date(1384550263228L);
   private final Date today = new Date(1384550763228L);
   private final Date tomorrow = new Date(1384550863228L);
 
   /**
-   * Dummy Quiz test data
+   * Dummy Assessment test data
    */
   private final Map<String, Object> metadata = new HashMap<String, Object>();
   private final List<String> standards = new ArrayList<String>() { { add("test"); } };
@@ -42,22 +42,22 @@ public class QuizTest {
 
   @Test
   public void testSerialization() throws IOException {
-    Quiz quiz = new Quiz("000000000000000000000002", "51114b307fc1eaa866444648", today, tomorrow, metadata, questions, participants);
+    Assessment assessment = new Assessment("000000000000000000000002", "51114b307fc1eaa866444648", today, tomorrow, metadata, questions, participants);
     ObjectMapper objectMapper = new ObjectMapper();
 
     assertEquals(
         "{\"id\":\"000000000000000000000002\",\"orgId\":\"51114b307fc1eaa866444648\",\"start\":1384550763228,\"end\":1384550863228,\"metadata\":{\"classroom\":\"1034\",\"title\":\"title\",\"instructions\":\"instructions\",\"description\":\"description\"},\"questions\":[{\"itemId\":\"503c2e91e4b00f3f0a9a7a6a\",\"settings\":{\"highlightUserResponse\":true,\"highlightCorrectResponse\":false,\"showFeedback\":true,\"allowEmptyResponses\":false,\"submitCompleteMessage\":\"Ok! Your response was submitted.\",\"submitIncompleteMessage\":\"You may revise your work before you submit your final response.\",\"submitIncorrectMessage\":\"You may revise your work before you submit your final response.\",\"maxNumberOfAttempts\":1},\"title\":\"title\",\"standards\":[\"test\"]}],\"participants\":[{\"answers\":[{\"itemId\":\"itemId\",\"sessionId\":\"sessionId\",\"score\":1,\"lastResponse\":1380649346485,\"complete\":true}],\"externalUid\":\"externalUid\"}]}",
-        objectMapper.writeValueAsString(quiz)
+        objectMapper.writeValueAsString(assessment)
     );
 
   }
 
   @Test
   public void testNullIdSerialization() throws IOException {
-    Quiz quiz = new Quiz(null, "51114b307fc1eaa866444648", today, tomorrow, metadata, questions, participants);
+    Assessment assessment = new Assessment(null, "51114b307fc1eaa866444648", today, tomorrow, metadata, questions, participants);
     ObjectMapper objectMapper = new ObjectMapper();
 
-    String json = objectMapper.writeValueAsString(quiz);
+    String json = objectMapper.writeValueAsString(assessment);
 
     assertFalse(json.contains("null"));
   }
@@ -66,7 +66,7 @@ public class QuizTest {
   public void testDeserialization() throws IOException {
     String json = "{\"id\":\"000000000000000000000002\",\"orgId\":\"51114b307fc1eaa866444648\",\"start\":1384550763228,\"end\":1384550863228,\"metadata\":{\"classroom\":\"1034\",\"title\":\"title\",\"instructions\":\"instructions\",\"description\":\"description\"},\"questions\":[{\"itemId\":\"503c2e91e4b00f3f0a9a7a6a\",\"settings\":{\"highlightUserResponse\":true,\"highlightCorrectResponse\":false,\"showFeedback\":true,\"allowEmptyResponses\":false,\"submitCompleteMessage\":\"Ok! Your response was submitted.\",\"submitIncompleteMessage\":\"You may revise your work before you submit your final response.\",\"submitIncorrectMessage\":\"You may revise your work before you submit your final response.\",\"maxNumberOfAttempts\":1},\"title\":\"title\",\"standards\":[\"test\"]}],\"participants\":[{\"answers\":[{\"itemId\":\"itemId\",\"sessionId\":\"sessionId\",\"score\":1,\"lastResponse\":1380649346485,\"complete\":true}],\"externalUid\":\"externalUid\"}]}";
     ObjectMapper objectMapper = new ObjectMapper();
-    Quiz deserialized = objectMapper.readValue(json, Quiz.class);
+    Assessment deserialized = objectMapper.readValue(json, Assessment.class);
 
     assertEquals("000000000000000000000002", deserialized.getId());
     assertEquals("51114b307fc1eaa866444648", deserialized.getOrgId());
@@ -93,53 +93,53 @@ public class QuizTest {
   @Test
   public void testStartDateAfterEndDateThrowsException() {
     exception.expect(IllegalArgumentException.class);
-    new Quiz.Builder().start(tomorrow).end(today);
+    new Assessment.Builder().start(tomorrow).end(today);
   }
 
   @Test
   public void testEndDateBeforeStartDateThrowsException() {
     exception.expect(IllegalArgumentException.class);
-    new Quiz.Builder().end(today).start(tomorrow);
+    new Assessment.Builder().end(today).start(tomorrow);
   }
 
   @Test
   public void testEndDateWithoutStartDateThrowsException() {
     exception.expect(IllegalStateException.class);
-    new Quiz.Builder().end(tomorrow).build();
+    new Assessment.Builder().end(tomorrow).build();
   }
 
   @Test
   public void testStartDateWithoutEndDateThrowsException() {
     exception.expect(IllegalStateException.class);
-    new Quiz.Builder().start(today).build();
+    new Assessment.Builder().start(today).build();
   }
 
   @Test
   public void testIsActive() {
-    assertTrue(new Quiz.Builder().build().isActive(today));
-    assertTrue(new Quiz.Builder().start(yesterday).end(tomorrow).build().isActive(today));
-    assertFalse(new Quiz.Builder().start(today).end(tomorrow).build().isActive(yesterday));
-    assertFalse(new Quiz.Builder().start(yesterday).end(today).build().isActive(tomorrow));
+    assertTrue(new Assessment.Builder().build().isActive(today));
+    assertTrue(new Assessment.Builder().start(yesterday).end(tomorrow).build().isActive(today));
+    assertFalse(new Assessment.Builder().start(today).end(tomorrow).build().isActive(yesterday));
+    assertFalse(new Assessment.Builder().start(yesterday).end(today).build().isActive(tomorrow));
   }
 
   @Test
   public void testGetTitle() {
-    assertNull(new Quiz.Builder().build().getTitle());
+    assertNull(new Assessment.Builder().build().getTitle());
   }
 
   @Test
   public void testGetDescription() {
-    assertNull(new Quiz.Builder().build().getDescription());
+    assertNull(new Assessment.Builder().build().getDescription());
   }
 
   @Test
   public void testGetInstructions() {
-    assertNull(new Quiz.Builder().build().getInstructions());
+    assertNull(new Assessment.Builder().build().getInstructions());
   }
 
   @Test
   public void testGetMetadataValue() {
-    assertNull(new Quiz.Builder().build().getMetadataValue("random value"));
+    assertNull(new Assessment.Builder().build().getMetadataValue("random value"));
   }
 
   @Test
@@ -152,15 +152,15 @@ public class QuizTest {
     final Participant unfinishedParticipant = participant;
     final Participant finishedParticipant = new Participant(answers, "otherExternalUid", null);
 
-    Quiz quiz = new Quiz("000000000000000000000002", "51114b307fc1eaa866444648", today, tomorrow, metadata, questions, new ArrayList<Participant>(2) {
+    Assessment assessment = new Assessment("000000000000000000000002", "51114b307fc1eaa866444648", today, tomorrow, metadata, questions, new ArrayList<Participant>(2) {
       {
         add(unfinishedParticipant);
         add(finishedParticipant);
       }
     });
 
-    assertFalse(quiz.isFinished(unfinishedParticipant));
-    assertTrue(quiz.isFinished(finishedParticipant));
+    assertFalse(assessment.isFinished(unfinishedParticipant));
+    assertTrue(assessment.isFinished(finishedParticipant));
   }
 
 }

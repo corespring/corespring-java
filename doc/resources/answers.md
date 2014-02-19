@@ -5,12 +5,12 @@ At the minimum, an answer must contain an itemId value and a sessionId value.
 
 ### CorespringClient methods
 
-#### Add answer to quiz
+#### Add answer to assessment
 
-    Quiz quiz = new Quiz.Builder().title("My new quiz!").build();
+    Assessment assessment = new Assessment.Builder().title("My new assessment!").build();
 
-    quiz = client.create(quiz);
-    quiz = client.addParticipant(quiz, externalUid);
+    assessment = client.create(assessment);
+    assessment = client.addParticipant(assessment, externalUid);
 
     Answer answer = new Answer.Builder().itemId(itemId).sessionId(sessionId).build();
-    quiz = client.addAnswer(quiz, answer, externalUid);
+    assessment = client.addAnswer(assessment, answer, externalUid);

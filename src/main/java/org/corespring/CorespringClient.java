@@ -38,55 +38,55 @@ public class CorespringClient extends CorespringRestClient {
     return response.getAll(Organization.class);
   }
 
-  public Collection<Quiz> getQuizzes(Organization organization) throws CorespringRestException {
+  public Collection<Assessment> getAssessments(Organization organization) throws CorespringRestException {
     NameValuePair organizationId = new BasicNameValuePair("organization_id", organization.getId());
     List<NameValuePair> params = new ArrayList<NameValuePair>();
     params.add(organizationId);
 
-    CorespringRestResponse response = get(Quiz.getResourcesRoute(this), params);
-    return response.getAll(Quiz.class);
+    CorespringRestResponse response = get(Assessment.getResourcesRoute(this), params);
+    return response.getAll(Assessment.class);
   }
 
-  public Quiz getQuizById(String id) throws CorespringRestException {
-    CorespringRestResponse response = get(Quiz.getResourceRoute(this, id));
-    return response.get(Quiz.class);
+  public Assessment getAssessmentById(String id) throws CorespringRestException {
+    CorespringRestResponse response = get(Assessment.getResourceRoute(this, id));
+    return response.get(Assessment.class);
   }
 
-  public Quiz create(Quiz quiz) throws CorespringRestException {
-    CorespringRestResponse response = post(Quiz.getResourcesRoute(this), quiz);
-    return response.get(Quiz.class);
+  public Assessment create(Assessment assessment) throws CorespringRestException {
+    CorespringRestResponse response = post(Assessment.getResourcesRoute(this), assessment);
+    return response.get(Assessment.class);
   }
 
-  public Quiz addParticipant(Quiz quiz, String externalUid) throws CorespringRestException {
+  public Assessment addParticipant(Assessment assessment, String externalUid) throws CorespringRestException {
     Collection<String> externalUids = new ArrayList<String>();
     externalUids.add(externalUid);
-    return addParticipants(quiz, externalUids);
+    return addParticipants(assessment, externalUids);
   }
 
-  public Quiz addParticipants(Quiz quiz, Collection<String> externalUids) throws CorespringRestException {
+  public Assessment addParticipants(Assessment assessment, Collection<String> externalUids) throws CorespringRestException {
     Map<String, Collection<String>> wrappedExternalUids = new HashMap<String, Collection<String>>();
     wrappedExternalUids.put("ids", externalUids);
-    return put(quiz.getParticipantsRoute(this), wrappedExternalUids).get(Quiz.class);
+    return put(assessment.getParticipantsRoute(this), wrappedExternalUids).get(Assessment.class);
   }
 
-  public Collection<Quiz> getQuizzesByAuthor(String authorId) throws CorespringRestException {
-    return get(Quiz.getAuthorRoute(this, authorId)).getAll(Quiz.class);
+  public Collection<Assessment> getAssessmentsByAuthor(String authorId) throws CorespringRestException {
+    return get(Assessment.getAuthorRoute(this, authorId)).getAll(Assessment.class);
   }
 
   /**
-   * Adds an {@link Answer} to a {@link Quiz} for a provided external user id.
+   * Adds an {@link Answer} to a {@link org.corespring.resource.Assessment} for a provided external user id.
    */
-  public Quiz addAnswer(Quiz quiz, Answer answer, String externalUid) throws CorespringRestException {
-    return put(Answer.getAddAnswerRoute(this, quiz, externalUid), answer).get(Quiz.class);
+  public Assessment addAnswer(Assessment assessment, Answer answer, String externalUid) throws CorespringRestException {
+    return put(Answer.getAddAnswerRoute(this, assessment, externalUid), answer).get(Assessment.class);
   }
 
-  public Quiz update(Quiz quiz) throws CorespringRestException {
-    CorespringRestResponse response = put(Quiz.getResourceRoute(this, quiz.getId()), quiz);
-    return response.get(Quiz.class);
+  public Assessment update(Assessment assessment) throws CorespringRestException {
+    CorespringRestResponse response = put(Assessment.getResourceRoute(this, assessment.getId()), assessment);
+    return response.get(Assessment.class);
   }
 
-  public Quiz delete(Quiz quiz) throws CorespringRestException {
-    delete(Quiz.getResourceRoute(this, quiz.getId()));
+  public Assessment delete(Assessment assessment) throws CorespringRestException {
+    delete(Assessment.getResourceRoute(this, assessment.getId()));
     return null;
   }
 

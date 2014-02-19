@@ -54,9 +54,9 @@ register for the CoreSpring platform), and use its methods to interact with the 
     for (Organization organization : organization) {
       System.out.println(organization.getName());           // "Demo Organization"
 
-      Collection<Quiz> quizzes = client.getQuizzes(organization);
-      for (Quiz quiz : quizzes) {
-        System.out.println(quiz.getTitle());                // "Sample Quiz"
+      Collection<Assessment> assessments = client.getAssessments(organization);
+      for (Assessment assessment : assessments) {
+        System.out.println(assessment.getTitle());                // "Sample Assessment"
       }
     }
 
@@ -71,7 +71,7 @@ platform:
 * [ItemSessions](/doc/resources/itemsessions.md)
 * [Options](/doc/resources/options.md)
 * [Organizations](/doc/resources/organizations.md)
-* [Quizzes](/doc/resources/quizzes.md)
+* [Assessments](/doc/resources/assessments.md)
   * [Settings](/doc/resources/settings.md)
   * [Participants](/doc/resources/participants.md)
     * [Answers](/doc/resources/answers.md)
