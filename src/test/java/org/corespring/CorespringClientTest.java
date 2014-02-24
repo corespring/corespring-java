@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.corespring.resource.question.ItemType.*;
@@ -29,14 +30,23 @@ import static org.mockito.Mockito.*;
 
 public class CorespringClientTest {
 
-  private String clientId = "524c5cb5300401522ab21db1";
-  private String clientSecret = "325hm11xiz7ykeen2ibt";
+  private String clientId = "505c4eb7e4b04aa483da6e17";
+  private String clientSecret = "euo3cs4h5ychx15t7mfxvlfoh";
 
   private CorespringClient client = new CorespringClient(clientId, clientSecret);
 
   {
-    client.setEndpoint("http://localhost:8089");
+    client.setEndpoint("http://localhost:9000");
   }
+
+//  private String clientId = "524c5cb5300401522ab21db1";
+//  private String clientSecret = "325hm11xiz7ykeen2ibt";
+//
+//  private CorespringClient client = new CorespringClient(clientId, clientSecret);
+//
+//  {
+//    client.setEndpoint("http://localhost:8089");
+//  }
 
   private final Organization organization =
       new Organization("51114b307fc1eaa866444648", "Demo Organization", new ArrayList<String>(), false);
@@ -89,6 +99,29 @@ public class CorespringClientTest {
     }
   }
 
+
+  @Test
+  public void testGetAssessmentTemplates() throws CorespringRestException {
+    Collection<AssessmentTemplate> assessmentTemplates = client.getAssessmentTemplates();
+    for (AssessmentTemplate assessmentTemplate : assessmentTemplates) {
+      checkAssessmentTemplate(assessmentTemplate);
+    }
+  }
+
+  private void checkAssessmentTemplate(AssessmentTemplate assessmentTemplate) {
+    assertNotNull(assessmentTemplate.getId());
+    assertNotNull(assessmentTemplate.getCollectionId());
+    if (!assessmentTemplate.getQuestions().isEmpty()) {
+      Collection<Question> questions = assessmentTemplate.getQuestions();
+      for (Question question : questions) {
+        assertNotNull(question.getTitle());
+        assertNotNull(question.getItemId());
+        assertNotNull(question.getSettings());
+        assertNotNull(question.getStandards());
+      }
+    }
+  }
+
   @Test
   public void testCreateAssessment() throws CorespringRestException {
     Assessment assessment = new Assessment.Builder().title("My new assessment!").addMetadata("authorId", "fd707fc3c").build();
@@ -101,11 +134,20 @@ public class CorespringClientTest {
   }
 
   @Test
+  public void testCreateAssessmentTemplate() throws CorespringRestException {
+    AssessmentTemplate assessmentTemplate = new AssessmentTemplate.Builder().collectionId("51114b127fc1eaa866444647").addMetadata("authorId", "fd707fc3c").build();
+    AssessmentTemplate updatedAssessmentTemplate = client.create(assessmentTemplate);
+
+    assertNotNull(updatedAssessmentTemplate.getId());
+    assertNotNull(updatedAssessmentTemplate.getCollectionId());
+    assertEquals(updatedAssessmentTemplate.getMetadataValue("authorId"), "fd707fc3c");
+  }
+
+  @Test
   public void testAddParticipants() throws CorespringRestException, JsonProcessingException {
     Assessment assessment = new Assessment.Builder().title("My new assessment!").build();
     assessment = client.create(assessment);
     assessment = client.addParticipant(assessment, "ben1234");
-    ObjectMapper objectMapper = new ObjectMapper();
     assertNotNull(assessment.getParticipant("ben1234"));
   }
 

@@ -123,7 +123,7 @@ public class Assessment extends CorespringResource {
       this.end = assessment.end;
       this.metadata = new HashMap<String, Object>();
       this.metadata.putAll(assessment.metadata);
-      this.questions = assessment.questions;
+      this.questions.addAll(assessment.questions);
       this.participants = new HashMap<String, Participant>();
       for (Participant participant : assessment.participants) {
         this.participants.put(participant.getExternalUid(), participant);
