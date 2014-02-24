@@ -30,23 +30,14 @@ import static org.mockito.Mockito.*;
 
 public class CorespringClientTest {
 
-  private String clientId = "505c4eb7e4b04aa483da6e17";
-  private String clientSecret = "euo3cs4h5ychx15t7mfxvlfoh";
+  private String clientId = "524c5cb5300401522ab21db1";
+  private String clientSecret = "325hm11xiz7ykeen2ibt";
 
   private CorespringClient client = new CorespringClient(clientId, clientSecret);
 
   {
-    client.setEndpoint("http://localhost:9000");
+    client.setEndpoint("http://localhost:8089");
   }
-
-//  private String clientId = "524c5cb5300401522ab21db1";
-//  private String clientSecret = "325hm11xiz7ykeen2ibt";
-//
-//  private CorespringClient client = new CorespringClient(clientId, clientSecret);
-//
-//  {
-//    client.setEndpoint("http://localhost:8089");
-//  }
 
   private final Organization organization =
       new Organization("51114b307fc1eaa866444648", "Demo Organization", new ArrayList<String>(), false);
