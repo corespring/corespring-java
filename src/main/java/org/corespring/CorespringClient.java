@@ -47,6 +47,11 @@ public class CorespringClient extends CorespringRestClient {
     return response.getAll(Assessment.class);
   }
 
+  public Collection<AssessmentTemplate> getAssessmentTemplates() throws CorespringRestException {
+    CorespringRestResponse response = get(AssessmentTemplate.getResourcesRoute(this), new ArrayList<NameValuePair>());
+    return response.getAll(AssessmentTemplate.class);
+  }
+
   public Assessment getAssessmentById(String id) throws CorespringRestException {
     CorespringRestResponse response = get(Assessment.getResourceRoute(this, id));
     return response.get(Assessment.class);
@@ -55,6 +60,11 @@ public class CorespringClient extends CorespringRestClient {
   public Assessment create(Assessment assessment) throws CorespringRestException {
     CorespringRestResponse response = post(Assessment.getResourcesRoute(this), assessment);
     return response.get(Assessment.class);
+  }
+
+  public AssessmentTemplate create(AssessmentTemplate assessmentTemplate) throws CorespringRestException {
+    CorespringRestResponse response = post(AssessmentTemplate.getResourcesRoute(this), assessmentTemplate);
+    return response.get(AssessmentTemplate.class);
   }
 
   public Assessment addParticipant(Assessment assessment, String externalUid) throws CorespringRestException {

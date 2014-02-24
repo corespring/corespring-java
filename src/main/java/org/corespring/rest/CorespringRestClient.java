@@ -38,7 +38,7 @@ public abstract class CorespringRestClient {
   private static final int CONNECTION_TIMEOUT = 10000;
 
   /** The endpoint. */
-  private String endpoint = "http://www.corespring.org/";
+  private String endpoint = "http://localhost:9000/";
 
   private final String clientId;
   private final String clientSecret;

@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.corespring.resource.question.ItemType.*;
@@ -89,6 +90,29 @@ public class CorespringClientTest {
     }
   }
 
+
+  @Test
+  public void testGetAssessmentTemplates() throws CorespringRestException {
+    Collection<AssessmentTemplate> assessmentTemplates = client.getAssessmentTemplates();
+    for (AssessmentTemplate assessmentTemplate : assessmentTemplates) {
+      checkAssessmentTemplate(assessmentTemplate);
+    }
+  }
+
+  private void checkAssessmentTemplate(AssessmentTemplate assessmentTemplate) {
+    assertNotNull(assessmentTemplate.getId());
+    assertNotNull(assessmentTemplate.getCollectionId());
+    if (!assessmentTemplate.getQuestions().isEmpty()) {
+      Collection<Question> questions = assessmentTemplate.getQuestions();
+      for (Question question : questions) {
+        assertNotNull(question.getTitle());
+        assertNotNull(question.getItemId());
+        assertNotNull(question.getSettings());
+        assertNotNull(question.getStandards());
+      }
+    }
+  }
+
   @Test
   public void testCreateAssessment() throws CorespringRestException {
     Assessment assessment = new Assessment.Builder().title("My new assessment!").addMetadata("authorId", "fd707fc3c").build();
@@ -101,11 +125,20 @@ public class CorespringClientTest {
   }
 
   @Test
+  public void testCreateAssessmentTemplate() throws CorespringRestException {
+    AssessmentTemplate assessmentTemplate = new AssessmentTemplate.Builder().collectionId("51114b127fc1eaa866444647").addMetadata("authorId", "fd707fc3c").build();
+    AssessmentTemplate updatedAssessmentTemplate = client.create(assessmentTemplate);
+
+    assertNotNull(updatedAssessmentTemplate.getId());
+    assertNotNull(updatedAssessmentTemplate.getCollectionId());
+    assertEquals(updatedAssessmentTemplate.getMetadataValue("authorId"), "fd707fc3c");
+  }
+
+  @Test
   public void testAddParticipants() throws CorespringRestException, JsonProcessingException {
     Assessment assessment = new Assessment.Builder().title("My new assessment!").build();
     assessment = client.create(assessment);
     assessment = client.addParticipant(assessment, "ben1234");
-    ObjectMapper objectMapper = new ObjectMapper();
     assertNotNull(assessment.getParticipant("ben1234"));
   }
 

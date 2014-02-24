@@ -56,6 +56,20 @@ public class Settings {
     this.submitIncorrectMessage = submitIncorrectMessage;
   }
 
+  public Settings(Settings settings) {
+    this.maxNumberOfAttempts =
+      settings.maxNumberOfAttempts == null ? null : new Integer(settings.maxNumberOfAttempts);
+    this.highlightUserResponse =
+      settings.highlightUserResponse == null ? null : new Boolean(settings.highlightUserResponse);
+    this.highlightCorrectResponse =
+      settings.highlightCorrectResponse == null ? null : new Boolean(settings.highlightCorrectResponse);
+    this.showFeedback = settings.showFeedback == null ? null : new Boolean(settings.showFeedback);
+    this.allowEmptyResponses = settings.allowEmptyResponses == null ? null : settings.allowEmptyResponses;
+    this.submitCompleteMessage = settings.submitCompleteMessage;
+    this.submitIncompleteMessage = settings.submitIncompleteMessage;
+    this.submitIncorrectMessage = settings.submitIncorrectMessage;
+  }
+
   private Settings(Builder builder) {
     this.maxNumberOfAttempts = builder.maxNumberOfAttempts;
     this.highlightUserResponse = builder.highlightUserResponse;

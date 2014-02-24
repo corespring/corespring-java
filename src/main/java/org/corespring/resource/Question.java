@@ -29,6 +29,14 @@ public class Question {
     this.standards = standards;
   }
 
+  public Question(Question question) {
+    this.itemId = question.itemId;
+    this.title = question.title;
+    this.settings = new Settings(question.settings);
+    this.standards = new ArrayList<String>(question.standards.size());
+    this.standards.addAll(question.standards);
+  }
+
   private Question(Builder builder) {
     this.itemId = builder.itemId;
     this.title = builder.title;

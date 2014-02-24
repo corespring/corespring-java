@@ -75,6 +75,7 @@ platform:
   * [Settings](/doc/resources/settings.md)
   * [Participants](/doc/resources/participants.md)
     * [Answers](/doc/resources/answers.md)
+* [AssessmentTemplates](/doc/resources/assessment-templates.md)
 
 ## License
 

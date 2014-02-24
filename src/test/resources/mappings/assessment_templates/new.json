@@ -1,0 +1,13 @@
+{
+    "request": {
+        "method": "POST",
+        "url": "/api/v1/assessments/templates?access_token=demo_token"
+    },
+    "response": {
+        "status": 200,
+        "body": "{\"id\":\"530b91797d845ec21ac7195c\",\"collectionId\":\"51114b127fc1eaa866444647\",\"metadata\":{\"authorId\":\"fd707fc3c\"}}",
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
+}
