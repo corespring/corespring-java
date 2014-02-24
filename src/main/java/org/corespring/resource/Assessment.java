@@ -103,6 +103,10 @@ public class Assessment extends CorespringResource {
     this.participants = builder.participants == null ? new ArrayList<Participant>() : builder.participants.values();
   }
 
+  public static Assessment fromTemplate(AssessmentTemplate assessmentTemplate) {
+    return new Builder(assessmentTemplate).build();
+  }
+
   public static class Builder {
 
     private String id;
@@ -127,6 +131,15 @@ public class Assessment extends CorespringResource {
       this.participants = new HashMap<String, Participant>();
       for (Participant participant : assessment.participants) {
         this.participants.put(participant.getExternalUid(), participant);
+      }
+    }
+
+    public Builder(AssessmentTemplate assessmentTemplate) {
+      this.metadata = new HashMap<String, Object>();
+      this.metadata.putAll(assessmentTemplate.getMetadata());
+      this.questions = new ArrayList<Question>(assessmentTemplate.getQuestions().size());
+      for (Question question : assessmentTemplate.getQuestions()) {
+        this.questions.add(new Question(question));
       }
     }
 

@@ -12,6 +12,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * An {@link AssessmentTemplate} contains many of the same attributes as an {@link Assessment}, the key difference
+ * being that an {@link AssessmentTemplate} does not contain any of the details relevant to a single administration of
+ * an {@link Assessment}. For example, an {@link AssessmentTemplate} does not include the details about particular
+ * students' responses, when an {@link Assessment} starts, or when it ends. It is meant to be used, literally, as a
+ * template of the item content from which to build an {@link Assessment}.
+ */
 @JsonSerialize(include= JsonSerialize.Inclusion.NON_NULL)
 public class AssessmentTemplate extends CorespringResource {
 
