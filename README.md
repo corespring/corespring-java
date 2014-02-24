@@ -56,7 +56,7 @@ register for the CoreSpring platform), and use its methods to interact with the 
 
       Collection<Assessment> assessments = client.getAssessments(organization);
       for (Assessment assessment : assessments) {
-        System.out.println(assessment.getTitle());                // "Sample Assessment"
+        System.out.println(assessment.getTitle());          // "Sample Assessment"
       }
     }
 
