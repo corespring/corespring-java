@@ -1,4 +1,4 @@
-## Assessments
+## AssessmentTemplates
 
 An [AssessmentTemplate](/src/main/java/org/corespring/resource/AssessmentTemplate.java) contains many of the same
 attributes as an [Assessment](/doc/resources/assessments.md), the key difference being that an AssessmentTemplate does
