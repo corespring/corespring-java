@@ -32,7 +32,7 @@ public abstract class CorespringRestClient {
   public static final String API_VERSION = "api/v1";
 
   /** Version of corespring-java client */
-  public static final String VERSION = "0.3.28.3";
+  public static final String VERSION = "0.3.28.4";
 
   private static final int INF = 0;
 
