@@ -28,6 +28,7 @@ public class ItemQuery implements Serializable {
   static final String PRIMARY_SUBJECT_KEY = "primarySubject.category";
   static final String STANDARDS_KEY = "standards.dotNotation";
   static final String COLLECTIONS_KEY = "collectionId";
+  static final String PUBLISHED_KEY = "published";
 
   private final String searchString;
   private final Collection<String> bloomsTaxonomies;
@@ -39,6 +40,7 @@ public class ItemQuery implements Serializable {
   private final Collection<String> subjects;
   private final Collection<String> standards;
   private final Collection<String> collections;
+  private final Boolean published;
 
   private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -53,6 +55,7 @@ public class ItemQuery implements Serializable {
     this.subjects = builder.subjects;
     this.standards = builder.standards;
     this.collections = builder.collections;
+    this.published = builder.published;
   }
 
   @Override
@@ -69,6 +72,7 @@ public class ItemQuery implements Serializable {
       addIfNotEmpty(clauses, asInJson(PRIMARY_SUBJECT_KEY, this.subjects));
       addIfNotEmpty(clauses, asInJson(STANDARDS_KEY, this.standards));
       addIfNotEmpty(clauses, asInJson(COLLECTIONS_KEY, this.collections));
+      addIfNotEmpty(clauses, addIfNotNull(PUBLISHED_KEY, this.published));
 
       StringBuilder stringBuilder = new StringBuilder("{");
       for (int i = 0; i < clauses.size(); i++) {
@@ -120,6 +124,7 @@ public class ItemQuery implements Serializable {
     }
   }
 
+
   /**
    * Converts Strings to a JSON representation of that collection embedded in object keyed by "$in".
    *
@@ -160,6 +165,18 @@ public class ItemQuery implements Serializable {
     }
   }
 
+  private String addIfNotNull(String key, Object object) {
+    if (object != null) {
+      if (object instanceof Boolean || object instanceof Integer) {
+        return "\"" + key + "\":" + object.toString();
+      } else {
+        return "\"" + key + "\":\"" + object.toString() + "\"";
+      }
+    } else {
+      return null;
+    }
+  }
+
   public static class Builder {
 
     private String searchString;
@@ -172,6 +189,7 @@ public class ItemQuery implements Serializable {
     private Collection<String> subjects = new HashSet<String>();
     private Collection<String> standards = new HashSet<String>();
     private Collection<String> collections = new HashSet<String>();
+    private Boolean published;
 
     public void Builder() {
     }
@@ -232,6 +250,11 @@ public class ItemQuery implements Serializable {
 
     public Builder collection(ContentCollection collection) {
       this.collections.add(collection.getId());
+      return this;
+    }
+
+    public Builder published(Boolean published) {
+      this.published = published;
       return this;
     }
 
