@@ -20,6 +20,7 @@ public class ItemQueryTest {
   private static final String SUBJECT = "Mathematics";
   private static final String STANDARD = "RL.K.2";
   private static final String COLLECTION = "4ff2e4cae4b077b9e31689fd";
+  private static final Boolean PUBLISHED = true;
 
   @Rule
   public ExpectedException exception = ExpectedException.none();
@@ -47,44 +48,44 @@ public class ItemQueryTest {
   @Test
   public void testBloomsTaxonomy() {
     String query = new ItemQuery.Builder().bloomsTaxonomy(BLOOMS_TAXONOMY).build().toString();
-    assertEquals(withBrackets(queryForKey(BLOOMS_TAXONOMY_KEY, expectedInClause(BLOOMS_TAXONOMY))), query);
+    assertEquals(withBrackets(objectQueryForKey(BLOOMS_TAXONOMY_KEY, expectedInClause(BLOOMS_TAXONOMY))), query);
   }
 
   @Test
   public void testContributors() {
     String query = new ItemQuery.Builder().contributor(CONTRIBUTOR).build().toString();
-    assertEquals(withBrackets(queryForKey(CONTRIBUTORS_KEY, expectedInClause(CONTRIBUTOR))), query);
+    assertEquals(withBrackets(objectQueryForKey(CONTRIBUTORS_KEY, expectedInClause(CONTRIBUTOR))), query);
   }
 
   @Test
   public void testDemonstratedKnowledge() {
     String query = new ItemQuery.Builder().demonstratedKnowledge(DEMONSTRATED_KNOWLEDGE).build().toString();
-    assertEquals(withBrackets(queryForKey(DEMONSTRATED_KNOWLEDGE_KEY, expectedInClause(DEMONSTRATED_KNOWLEDGE))),
+    assertEquals(withBrackets(objectQueryForKey(DEMONSTRATED_KNOWLEDGE_KEY, expectedInClause(DEMONSTRATED_KNOWLEDGE))),
         query);
   }
 
   @Test
   public void testGradeLevels() {
     String query = new ItemQuery.Builder().gradeLevel(GRADE_LEVEL).build().toString();
-    assertEquals(withBrackets(queryForKey(GRADE_LEVEL_KEY, expectedInClause(GRADE_LEVEL))), query);
+    assertEquals(withBrackets(objectQueryForKey(GRADE_LEVEL_KEY, expectedInClause(GRADE_LEVEL))), query);
   }
 
   @Test
   public void testItemType() {
     String query = new ItemQuery.Builder().itemType(ITEM_TYPE).build().toString();
-    assertEquals(withBrackets(queryForKey(ITEM_TYPE_KEY, expectedInClause(ITEM_TYPE))), query);
+    assertEquals(withBrackets(objectQueryForKey(ITEM_TYPE_KEY, expectedInClause(ITEM_TYPE))), query);
   }
 
   @Test
   public void testKeySkills() {
     String query = new ItemQuery.Builder().keySkill(KEY_SKILL).build().toString();
-    assertEquals(withBrackets(queryForKey(KEY_SKILLS_KEY, expectedInClause(KEY_SKILL))), query);
+    assertEquals(withBrackets(objectQueryForKey(KEY_SKILLS_KEY, expectedInClause(KEY_SKILL))), query);
   }
 
   @Test
   public void testSubject() {
     String query = new ItemQuery.Builder().subject(SUBJECT).build().toString();
-    assertEquals(withBrackets(queryForKey(PRIMARY_SUBJECT_KEY, expectedInClause(SUBJECT))), query);
+    assertEquals(withBrackets(objectQueryForKey(PRIMARY_SUBJECT_KEY, expectedInClause(SUBJECT))), query);
   }
 
   @Test
@@ -96,34 +97,42 @@ public class ItemQueryTest {
   @Test
   public void testStandards() {
     String query = new ItemQuery.Builder().standard(STANDARD).build().toString();
-    assertEquals(withBrackets(queryForKey(STANDARDS_KEY, expectedInClause(STANDARD))), query);
+    assertEquals(withBrackets(objectQueryForKey(STANDARDS_KEY, expectedInClause(STANDARD))), query);
   }
 
   @Test
   public void testCollections() {
     String query = new ItemQuery.Builder().collection(COLLECTION).build().toString();
-    assertEquals(withBrackets(queryForKey(COLLECTIONS_KEY, expectedInClause(COLLECTION))), query);
+    assertEquals(withBrackets(objectQueryForKey(COLLECTIONS_KEY, expectedInClause(COLLECTION))), query);
+  }
+
+  @Test
+  public void testPublished() {
+    String query = new ItemQuery.Builder().published(PUBLISHED).build().toString();
+    assertEquals(withBrackets(primitiveQueryForKey(PUBLISHED_KEY, PUBLISHED.toString())), query);
   }
 
   @Test
   public void testAll() {
     String query = new ItemQuery.Builder().searchString(SEARCH_STRING).bloomsTaxonomy(BLOOMS_TAXONOMY)
         .contributor(CONTRIBUTOR).demonstratedKnowledge(DEMONSTRATED_KNOWLEDGE).gradeLevel(GRADE_LEVEL)
-        .itemType(ITEM_TYPE).keySkill(KEY_SKILL).subject(SUBJECT).standard(STANDARD).collection(COLLECTION).build()
+        .itemType(ITEM_TYPE).keySkill(KEY_SKILL).subject(SUBJECT).standard(STANDARD).collection(COLLECTION)
+        .published(PUBLISHED).build()
         .toString();
 
     StringBuilder stringBuilder = new StringBuilder("{");
-    stringBuilder = expectedSearchStringClause(SEARCH_STRING, stringBuilder).append(",");
-    stringBuilder.append(queryForKey(BLOOMS_TAXONOMY_KEY, expectedInClause(BLOOMS_TAXONOMY))).append(",");
-    stringBuilder.append(queryForKey(CONTRIBUTORS_KEY, expectedInClause(CONTRIBUTOR))).append(",");
-    stringBuilder.append(queryForKey(GRADE_LEVEL_KEY, expectedInClause(GRADE_LEVEL))).append(",");
-    stringBuilder.append(queryForKey(DEMONSTRATED_KNOWLEDGE_KEY, expectedInClause(DEMONSTRATED_KNOWLEDGE))).append(",");
-    stringBuilder.append(queryForKey(ITEM_TYPE_KEY, expectedInClause(ITEM_TYPE))).append(",");
-    stringBuilder.append(queryForKey(KEY_SKILLS_KEY, expectedInClause(KEY_SKILL))).append(",");
-    stringBuilder.append(queryForKey(PRIMARY_SUBJECT_KEY, expectedInClause(SUBJECT))).append(",");
-    stringBuilder.append(queryForKey(STANDARDS_KEY, expectedInClause(STANDARD))).append(",");
-    stringBuilder.append(queryForKey(COLLECTIONS_KEY, expectedInClause(COLLECTION)));
-    stringBuilder.append("}");
+    stringBuilder = expectedSearchStringClause(SEARCH_STRING, stringBuilder).append(",")
+      .append(objectQueryForKey(BLOOMS_TAXONOMY_KEY, expectedInClause(BLOOMS_TAXONOMY))).append(",")
+      .append(objectQueryForKey(CONTRIBUTORS_KEY, expectedInClause(CONTRIBUTOR))).append(",")
+      .append(objectQueryForKey(GRADE_LEVEL_KEY, expectedInClause(GRADE_LEVEL))).append(",")
+      .append(objectQueryForKey(DEMONSTRATED_KNOWLEDGE_KEY, expectedInClause(DEMONSTRATED_KNOWLEDGE))).append(",")
+      .append(objectQueryForKey(ITEM_TYPE_KEY, expectedInClause(ITEM_TYPE))).append(",")
+      .append(objectQueryForKey(KEY_SKILLS_KEY, expectedInClause(KEY_SKILL))).append(",")
+      .append(objectQueryForKey(PRIMARY_SUBJECT_KEY, expectedInClause(SUBJECT))).append(",")
+      .append(objectQueryForKey(STANDARDS_KEY, expectedInClause(STANDARD))).append(",")
+      .append(objectQueryForKey(COLLECTIONS_KEY, expectedInClause(COLLECTION))).append(",")
+      .append(primitiveQueryForKey(PUBLISHED_KEY, PUBLISHED.toString()))
+      .append("}");
 
     assertEquals(stringBuilder.toString(), query);
   }
@@ -136,8 +145,12 @@ public class ItemQueryTest {
     return new StringBuilder("\"$in\":[\"").append(value).append("\"]").toString();
   }
 
-  private String queryForKey(String key, String query) {
+  private String objectQueryForKey(String key, String query) {
     return new StringBuilder("\"").append(key).append("\":{").append(query).append("}").toString();
+  }
+
+  private String primitiveQueryForKey(String key, String primitive) {
+    return new StringBuilder("\"").append(key).append("\":").append(primitive).toString();
   }
 
   private String withBrackets(String string) {
