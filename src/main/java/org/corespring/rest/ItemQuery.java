@@ -194,6 +194,29 @@ public class ItemQuery implements Serializable {
     public void Builder() {
     }
 
+    public void Builder(ItemQuery itemQuery) {
+      this.searchString = itemQuery.searchString;
+      this.bloomsTaxonomies = new HashSet<String>(itemQuery.bloomsTaxonomies.size());
+      this.bloomsTaxonomies.addAll(itemQuery.bloomsTaxonomies);
+      this.contributors = new HashSet<String>(itemQuery.contributors.size());
+      this.contributors.addAll(itemQuery.contributors);
+      this.demonstratedKnowledge = new HashSet<String>(itemQuery.demonstratedKnowledge.size());
+      this.demonstratedKnowledge.addAll(itemQuery.demonstratedKnowledge);
+      this.gradeLevels = new HashSet<String>(itemQuery.gradeLevels.size());
+      this.gradeLevels.addAll(itemQuery.gradeLevels);
+      this.itemTypes = new HashSet<String>(itemQuery.itemTypes.size());
+      this.itemTypes.addAll(itemQuery.itemTypes);
+      this.keySkills = new HashSet<String>(itemQuery.keySkills.size());
+      this.keySkills.addAll(itemQuery.keySkills);
+      this.subjects = new HashSet<String>(itemQuery.subjects.size());
+      this.subjects.addAll(itemQuery.subjects);
+      this.standards = new HashSet<String>(itemQuery.standards.size());
+      this.standards.addAll(itemQuery.standards);
+      this.collections = new HashSet<String>(itemQuery.collections.size());
+      this.collections.addAll(itemQuery.collections);
+      this.published = itemQuery.published;
+    }
+
     public Builder searchString(String searchString) {
       this.searchString = searchString;
       return this;
