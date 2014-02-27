@@ -34,8 +34,10 @@ public abstract class CorespringRestClient {
   /** Version of corespring-java client */
   public static final String VERSION = "0.3.28";
 
+  private static final int INF = 0;
+
   /** Default timeout in milliseconds */
-  private static final int CONNECTION_TIMEOUT = 10000;
+  private static final int CONNECTION_TIMEOUT = INF;
 
   /** The endpoint. */
   private String endpoint = "http://www.corespring.org/";
