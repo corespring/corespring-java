@@ -191,10 +191,10 @@ public class ItemQuery implements Serializable {
     private Collection<String> collections = new HashSet<String>();
     private Boolean published;
 
-    public void Builder() {
+    public Builder() {
     }
 
-    public void Builder(ItemQuery itemQuery) {
+    public Builder(ItemQuery itemQuery) {
       this.searchString = itemQuery.searchString;
       this.bloomsTaxonomies = new HashSet<String>(itemQuery.bloomsTaxonomies.size());
       this.bloomsTaxonomies.addAll(itemQuery.bloomsTaxonomies);
