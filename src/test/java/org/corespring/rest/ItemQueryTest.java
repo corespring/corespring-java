@@ -138,7 +138,7 @@ public class ItemQueryTest {
   }
 
   private StringBuilder expectedSearchStringClause(String searchString, StringBuilder stringBuilder) {
-    return stringBuilder.append("\"$or\":[{\"title\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}},{\"standards.dotNotation\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}},{\"copyrightOwner\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}},{\"contributor\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}},{\"author\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}}]");
+    return stringBuilder.append("\"$or\":[{\"title\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}},{\"description\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}},{\"standards.dotNotation\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}},{\"copyrightOwner\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}},{\"contributor\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}},{\"author\":{\"$options\":\"i\",\"$regex\":\"\\\\b").append(searchString).append("\"}}]");
   }
 
   private String expectedInClause(String value) {
