@@ -92,7 +92,8 @@ public class ItemQuery implements Serializable {
     if (searchString != null) {
       List<Map<String, Map<String, String>>> or = new ArrayList<Map<String, Map<String, String>>>() {
         {
-          String[] fields = new String[]{"title", "standards.dotNotation", "copyrightOwner", "contributor", "author"};
+          String[] fields = new String[]
+            {"title", "description", "standards.dotNotation", "copyrightOwner", "contributor", "author"};
 
           for (final String field : fields) {
             this.add(new HashMap<String, Map<String, String>>() {
