@@ -130,6 +130,11 @@ public class CorespringClient extends CorespringRestClient {
     return this.getItemTypesByCollections(contentCollections);
   }
 
+  public FieldValues getFieldValues() throws CorespringRestException {
+    CorespringRestResponse response = get(FieldValues.getResourceRoute(this));
+    return response.get(FieldValues.class);
+  }
+
   /**
    * Returns a {@link List} of {@link ItemType}s, ordered by the frequency with which they appear in the provided
    * @{link ContentCollection}s.
@@ -201,21 +206,19 @@ public class CorespringClient extends CorespringRestClient {
     return contributors;
   }
 
-  public Map<String, Collection<String>> getFieldValuesByContributor(String contributor)
+  public FieldValues getFieldValuesByContributor(String contributor)
       throws CorespringRestException {
     String route = Contributor.getFieldValuesRoute(this, contributor);
-    Map<String, Collection<String>> map = get(route).get(Map.class);
-    return map;
+    return get(route).get(FieldValues.class);
   }
 
-  public Map<String, Collection<String>> getFieldValuesByCollection(String collectionId)
+  public FieldValues getFieldValuesByCollection(String collectionId)
       throws CorespringRestException {
     String route = ContentCollection.getFieldValuesRoute(this, collectionId);
-    Map<String, Collection<String>> map = get(route).get(Map.class);
-    return map;
+    return get(route).get(FieldValues.class);
   }
 
-  public Map<String, Collection<String>> getFieldValuesByCollection(ContentCollection collection)
+  public FieldValues getFieldValuesByCollection(ContentCollection collection)
       throws CorespringRestException {
     return getFieldValuesByCollection(collection.getId());
   }

@@ -66,16 +66,18 @@ register for the CoreSpring platform), and use its methods to interact with the 
 Below you will find additional documentation related to the individual resources in the domain model of the CoreSpring
 platform:
 
-* [ContentCollections](/doc/resources/contentcollections.md)
-* [Items](/doc/resources/items.md)
-* [ItemSessions](/doc/resources/itemsessions.md)
-* [Options](/doc/resources/options.md)
-* [Organizations](/doc/resources/organizations.md)
 * [Assessments](/doc/resources/assessments.md)
   * [Settings](/doc/resources/settings.md)
   * [Participants](/doc/resources/participants.md)
     * [Answers](/doc/resources/answers.md)
 * [AssessmentTemplates](/doc/resources/assessment-templates.md)
+* [ContentCollections](/doc/resources/contentcollections.md)
+* [FieldValues](/doc/resources/fieldvalues.md)
+* [Items](/doc/resources/items.md)
+* [ItemSessions](/doc/resources/itemsessions.md)
+* [Options](/doc/resources/options.md)
+* [Organizations](/doc/resources/organizations.md)
+
 
 ## License
 
