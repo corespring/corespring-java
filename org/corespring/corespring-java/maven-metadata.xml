@@ -3,7 +3,7 @@
   <groupId>org.corespring</groupId>
   <artifactId>corespring-java</artifactId>
   <versioning>
-    <release>0.3.28.5</release>
+    <release>0.3.28.6</release>
     <versions>
       <version>0.1</version>
       <version>0.2</version>
@@ -42,7 +42,8 @@
       <version>0.3.28.3</version>
       <version>0.3.28.4</version>
       <version>0.3.28.5</version>
+      <version>0.3.28.6</version>
     </versions>
-    <lastUpdated>20140304181635</lastUpdated>
+    <lastUpdated>20140321162630</lastUpdated>
   </versioning>
 </metadata>
