@@ -9,7 +9,7 @@ Corespring-java is a Java library designed for interfacing with the CoreSpring R
 
 ### Installing
 
-You can find the latest corespring-java jar [here](https://github.com/corespring/corespring-java/raw/releases/org/corespring/corespring-java/0.3.28.5/corespring-java-0.3.28.5.jar) and include it on your classpath.
+You can find the latest corespring-java jar [here](https://github.com/corespring/corespring-java/raw/releases/org/corespring/corespring-java/0.3.28.6/corespring-java-0.3.28.6.jar) and include it on your classpath.
 Alternatively, CoreSpring provides a public repository with access to different versions of the library.
 
 #### Maven Setup
@@ -31,7 +31,7 @@ You will also need to add the following dependency to your project:
     <dependency>
       <groupId>org.corespring</groupId>
       <artifactId>corespring-java</artifactId>
-      <version>0.3.28.5</version>
+      <version>0.3.28.6</version>
       <scope>compile</scope>
     </dependency>
 
@@ -66,15 +66,18 @@ register for the CoreSpring platform), and use its methods to interact with the 
 Below you will find additional documentation related to the individual resources in the domain model of the CoreSpring
 platform:
 
+* [Assessments](/doc/resources/assessments.md)
+  * [Settings](/doc/resources/settings.md)
+  * [Participants](/doc/resources/participants.md)
+    * [Answers](/doc/resources/answers.md)
+* [AssessmentTemplates](/doc/resources/assessment-templates.md)
 * [ContentCollections](/doc/resources/contentcollections.md)
+* [FieldValues](/doc/resources/fieldvalues.md)
 * [Items](/doc/resources/items.md)
 * [ItemSessions](/doc/resources/itemsessions.md)
 * [Options](/doc/resources/options.md)
 * [Organizations](/doc/resources/organizations.md)
-* [Quizzes](/doc/resources/quizzes.md)
-  * [Settings](/doc/resources/settings.md)
-  * [Participants](/doc/resources/participants.md)
-    * [Answers](/doc/resources/answers.md)
+
 
 ## License
 

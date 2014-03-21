@@ -63,6 +63,15 @@ public class CorespringRestResponse {
     }
   }
 
+  public boolean isResponseOfType(Class clazz) {
+    try {
+      objectMapper.readValue(responseText, clazz);
+      return true;
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
   public String getResponseText() {
     return responseText;
   }

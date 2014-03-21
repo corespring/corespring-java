@@ -243,27 +243,20 @@ public class CorespringClientTest {
 
   @Test
   public void testGetFieldValuesByCollection() throws CorespringRestException {
-    Map<String, Collection<String>> fieldValues = client.getFieldValuesByCollection("4ff5abe2e4b0e3bfeb9d2011");
+    FieldValues fieldValues = client.getFieldValuesByCollection("4ff5abe2e4b0e3bfeb9d2011");
 
     assertTrue(Iterables.elementsEqual(
-        fieldValues.keySet(),
-        new ArrayList<String>() {
-          { add("gradeLevel"); add("bloomsTaxonomy"); add("keySkill"); add("itemType"); add("demonstratedKnowledge"); }
-        }
-    ));
-
-    assertTrue(Iterables.elementsEqual(
-        fieldValues.get("gradeLevel"),
+        fieldValues.getGradeLevels(),
         new ArrayList<String>() { { add("04"); add("08"); add("10"); add("11"); add("AP"); } }
     ));
 
     assertTrue(Iterables.elementsEqual(
-        fieldValues.get("bloomsTaxonomy"),
+        fieldValues.getBloomsTaxonomy(),
         new ArrayList<String>() { { add("Analyzing"); add("Applying"); add("Remembering"); add("Understanding"); } }
     ));
 
     assertTrue(Iterables.elementsEqual(
-        fieldValues.get("keySkill"),
+        fieldValues.getKeySkills(),
         new ArrayList<String>() { { add("Analyze"); add("Choose"); add("Classify"); add("Compare"); add("Compute");
           add("Contrast"); add("Convert"); add("Define"); add("Describe"); add("Discuss"); add("Examine");
           add("Explain"); add("Express"); add("Give"); add("Identify"); add("Indicate"); add("Infer"); add("List");
@@ -273,35 +266,25 @@ public class CorespringClientTest {
     ));
 
     assertTrue(Iterables.elementsEqual(
-        fieldValues.get("itemType"),
-        new ArrayList<String>() { {
-          add("Constructed Response - Open Ended"); add("Constructed Response - Short Answer"); add("Multiple Choice");
-          add("Performance");
+        fieldValues.getItemTypes(),
+        new ArrayList<ItemType>() { {
+          add(OPEN_ENDED); add(SHORT_ANSWER); add(MULTI_CHOICE); add(COMPOSITE_PERFORMANCE);
         } }
     ));
 
     assertTrue(Iterables.elementsEqual(
-        fieldValues.get("demonstratedKnowledge"),
+        fieldValues.getDemonstratedKnowledge(),
         new ArrayList<String>() { { add("Conceptual"); add("Factual"); add("Procedural"); } }
     ));
   }
 
   @Test
   public void testGetValuesByContributor() throws CorespringRestException {
-    Map<String, Collection<String>> fieldValues =
+    FieldValues fieldValues =
         client.getFieldValuesByContributor("New York State Education Department");
 
     assertTrue(Iterables.elementsEqual(
-        fieldValues.keySet(),
-        new ArrayList<String>() {
-          { add("standard"); add("gradeLevel"); add("bloomsTaxonomy"); add("keySkill"); add("itemType");
-            add("demonstratedKnowledge");
-          }
-        }
-    ));
-
-    assertTrue(Iterables.elementsEqual(
-        fieldValues.get("standard"),
+        fieldValues.getStandards(),
         new ArrayList<String>() {
           {
             add("3.NF.A.1"); add("3.NF.A.2a"); add("3.NF.A.2b"); add("3.NF.A.3b"); add("3.OA.A.1"); add("3.OA.A.2");
@@ -329,18 +312,18 @@ public class CorespringClientTest {
     ));
 
     assertTrue(Iterables.elementsEqual(
-        fieldValues.get("gradeLevel"),
+        fieldValues.getGradeLevels(),
         new ArrayList<String>() { { add("03"); add("04"); add("05"); add("06"); add("07"); add("08"); } }
     ));
 
     assertTrue(Iterables.elementsEqual(
-        fieldValues.get("bloomsTaxonomy"),
+        fieldValues.getBloomsTaxonomy(),
         new ArrayList<String>() { { add("Analyzing"); add("Applying"); add("Evaluating"); add("Remembering");
           add("Understanding"); } }
     ));
 
     assertTrue(Iterables.elementsEqual(
-        fieldValues.get("keySkill"),
+        fieldValues.getKeySkills(),
         new ArrayList<String>() {
           {
             add("Analyze"); add("Apply"); add("Appraise"); add("Arrange"); add("Breakdown"); add("Calculate");
@@ -359,20 +342,32 @@ public class CorespringClientTest {
     ));
 
     assertTrue(Iterables.elementsEqual(
-        fieldValues.get("itemType"),
-        new ArrayList<String>() {
+        fieldValues.getItemTypes(),
+        new ArrayList<ItemType>() {
           {
-            add("Composite - Multiple MC"); add("Constructed Response - Open Ended");
-            add("Constructed Response - Short Answer"); add("Multiple Choice"); add("Passage With Questions");
-            add("Performance"); add("Visual Multi Choice");
+            add(COMPOSITE_MULTI_MULTI_CHOICE); add(OPEN_ENDED); add(SHORT_ANSWER); add(MULTI_CHOICE);
+            add(PASSAGE_WITH_QUESTIONS_EVIDENCE); add(COMPOSITE_PERFORMANCE); add(VISUAL_MULTI_CHOICE);
           }
         }
     ));
 
     assertTrue(Iterables.elementsEqual(
-       fieldValues.get("demonstratedKnowledge"),
+       fieldValues.getDemonstratedKnowledge(),
         new ArrayList<String>() { { add("Conceptual"); add("Factual"); add("Metacognitive"); add("Procedural"); } }
     ));
+  }
+
+  @Test
+  public void testGetFieldValues() throws CorespringRestException {
+    FieldValues fieldValues = client.getFieldValues();
+    assertTrue(Iterables.elementsEqual(fieldValues.getContributors(), FieldValuesTest.CONTRIBUTORS));
+    assertTrue(Iterables.elementsEqual(fieldValues.getSubjects(), FieldValuesTest.SUBJECTS));
+    assertTrue(Iterables.elementsEqual(fieldValues.getStandards(), FieldValuesTest.STANDARDS));
+    assertTrue(Iterables.elementsEqual(fieldValues.getGradeLevels(), FieldValuesTest.GRADE_LEVELS));
+    assertTrue(Iterables.elementsEqual(fieldValues.getBloomsTaxonomy(), FieldValuesTest.BLOOMS_TAXONOMY));
+    assertTrue(Iterables.elementsEqual(fieldValues.getKeySkills(), FieldValuesTest.KEY_SKILLS));
+    assertTrue(Iterables.elementsEqual(fieldValues.getItemTypes(), FieldValuesTest.ITEM_TYPES));
+    assertTrue(Iterables.elementsEqual(fieldValues.getDemonstratedKnowledge(), FieldValuesTest.DEMONSTRATED_KNOWLEDGE));
   }
 
   @Test
