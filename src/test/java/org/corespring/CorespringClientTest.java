@@ -206,11 +206,11 @@ public class CorespringClientTest {
             add(COMPOSITE_MULTI_MULTI_CHOICE);
             add(MULTI_MULTI_CHOICE);
             add(ORDERING);
-            add(DRAG_AND_DROP);
             add(INLINE_CHOICE);
             add(COMPOSITE_MULTI_CHOICE_AND_SHORT_ANSWER);
             add(COMPOSITE_MULTI_CHOICE_SHORT_ANSWER_AND_OPEN_ENDED);
             add(COMPOSITE_ACTIVITY);
+            add(DRAG_AND_DROP);
             add(TEXT_EVIDENCE);
             add(VISUAL_MULTI_CHOICE);
           }
