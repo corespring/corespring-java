@@ -25,7 +25,7 @@ public enum ItemType {
   VISUAL_MULTI_CHOICE("Visual Multi Choice"),
   INLINE_CHOICE("Inline Choice"),
   ORDERING("Ordering"),
-  DRAG_AND_DROP("Drag & Drop"),
+  DRAG_AND_DROP("Drag And Drop"),
   SHORT_ANSWER("Constructed Response - Short Answer"),
   OPEN_ENDED("Constructed Response - Open Ended"),
   TEXT_EVIDENCE("Select Evidence in Text"),
