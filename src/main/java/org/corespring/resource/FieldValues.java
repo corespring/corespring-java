@@ -24,7 +24,7 @@ public class FieldValues extends CorespringResource {
   private final Collection<String> bloomsTaxonomy;
   private final Collection<String> keySkills;
   private final Collection<ItemType> itemTypes;
-  private final Collection<String> demonstratedKnowledge;
+  private final Collection<String> depthOfKnowledge;
 
   @JsonCreator
   public FieldValues(@JsonProperty("contributor") Collection<String> contributors,
@@ -34,7 +34,7 @@ public class FieldValues extends CorespringResource {
                      @JsonProperty("bloomsTaxonomy") Collection<String> bloomsTaxonomy,
                      @JsonProperty("keySkill") Collection<String> keySkills,
                      @JsonProperty("itemType") Collection<String> itemTypes,
-                     @JsonProperty("demonstratedKnowledge") Collection<String> demonstratedKnowledge) {
+                     @JsonProperty("depthOfKnowledge") Collection<String> depthOfKnowledge) {
     this.contributors = contributors;
     this.subjects = subjects;
     this.standards = standards;
@@ -52,7 +52,7 @@ public class FieldValues extends CorespringResource {
     } else {
       this.itemTypes = new ArrayList<ItemType>();
     }
-    this.demonstratedKnowledge = demonstratedKnowledge;
+    this.depthOfKnowledge = depthOfKnowledge;
   }
 
   public Collection<String> getContributors() {
@@ -83,8 +83,8 @@ public class FieldValues extends CorespringResource {
     return itemTypes;
   }
 
-  public Collection<String> getDemonstratedKnowledge() {
-    return demonstratedKnowledge;
+  public Collection<String> getDepthOfKnowledge() {
+    return depthOfKnowledge;
   }
 
   public static String getResourceRoute(CorespringRestClient client) {
