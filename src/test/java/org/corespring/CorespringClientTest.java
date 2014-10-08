@@ -306,8 +306,8 @@ public class CorespringClientTest {
     ));
 
     assertTrue(Iterables.elementsEqual(
-        fieldValues.getDemonstratedKnowledge(),
-        new ArrayList<String>() { { add("Conceptual"); add("Factual"); add("Procedural"); } }
+        fieldValues.getDepthOfKnowledge(),
+        new ArrayList<String>() { { add("Strategic Thinking & Reasoning"); add("Recall & Reproduction"); add("Skills & Concepts"); } }
     ));
   }
 
@@ -385,8 +385,8 @@ public class CorespringClientTest {
     ));
 
     assertTrue(Iterables.elementsEqual(
-       fieldValues.getDemonstratedKnowledge(),
-        new ArrayList<String>() { { add("Conceptual"); add("Factual"); add("Metacognitive"); add("Procedural"); } }
+       fieldValues.getDepthOfKnowledge(),
+        new ArrayList<String>() { { add("Strategic Thinking & Reasoning"); add("Recall & Reproduction"); add("Extended Thinking"); add("Skills & Concepts"); } }
     ));
   }
 
@@ -400,7 +400,7 @@ public class CorespringClientTest {
     assertTrue(Iterables.elementsEqual(fieldValues.getBloomsTaxonomy(), FieldValuesTest.BLOOMS_TAXONOMY));
     assertTrue(Iterables.elementsEqual(fieldValues.getKeySkills(), FieldValuesTest.KEY_SKILLS));
     assertTrue(Iterables.elementsEqual(fieldValues.getItemTypes(), FieldValuesTest.ITEM_TYPES));
-    assertTrue(Iterables.elementsEqual(fieldValues.getDemonstratedKnowledge(), FieldValuesTest.DEMONSTRATED_KNOWLEDGE));
+    assertTrue(Iterables.elementsEqual(fieldValues.getDepthOfKnowledge(), FieldValuesTest.DEMONSTRATED_KNOWLEDGE));
   }
 
   @Test
