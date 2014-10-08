@@ -12,7 +12,7 @@ order to return a subset of available items. An ItemQuery can be built as follow
     ItemQuery itemQuery = new ItemQuery.Builder()
         .bloomsTaxonomy("Remembering")
         .contributor("Corespring Assessment Professionals")
-        .demonstratedKnowledge("Factual")
+        .depthOfKnowledge("Recall & Reproduction")
         .gradeLevel("04")
         .itemType("Multiple Choice")
         .keySkill("Categorize")

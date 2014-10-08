@@ -22,7 +22,7 @@ public class ItemQuery implements Serializable {
   static final String BLOOMS_TAXONOMY_KEY = "bloomsTaxonomy";
   static final String CONTRIBUTORS_KEY = "contributor";
   static final String GRADE_LEVEL_KEY = "gradeLevel";
-  static final String DEMONSTRATED_KNOWLEDGE_KEY = "demonstratedKnowledge";
+  static final String DEPTH_OF_KNOWLEDGE_KEY = "depthOfKnowledge";
   static final String ITEM_TYPE_KEY = "itemType";
   static final String KEY_SKILLS_KEY = "keySkills";
   static final String PRIMARY_SUBJECT_KEY = "primarySubject.category";
@@ -33,7 +33,7 @@ public class ItemQuery implements Serializable {
   private final String searchString;
   private final Collection<String> bloomsTaxonomies;
   private final Collection<String> contributors;
-  private final Collection<String> demonstratedKnowledge;
+  private final Collection<String> depthOfKnowledge;
   private final Collection<String> gradeLevels;
   private final Collection<String> itemTypes;
   private final Collection<String> keySkills;
@@ -48,7 +48,7 @@ public class ItemQuery implements Serializable {
     this.searchString = builder.searchString;
     this.bloomsTaxonomies = builder.bloomsTaxonomies;
     this.contributors = builder.contributors;
-    this.demonstratedKnowledge = builder.demonstratedKnowledge;
+    this.depthOfKnowledge = builder.depthOfKnowledge;
     this.gradeLevels = builder.gradeLevels;
     this.itemTypes = builder.itemTypes;
     this.keySkills = builder.keySkills;
@@ -66,7 +66,7 @@ public class ItemQuery implements Serializable {
       addIfNotEmpty(clauses, asInJson(BLOOMS_TAXONOMY_KEY, this.bloomsTaxonomies));
       addIfNotEmpty(clauses, asInJson(CONTRIBUTORS_KEY, this.contributors));
       addIfNotEmpty(clauses, asInJson(GRADE_LEVEL_KEY, this.gradeLevels));
-      addIfNotEmpty(clauses, asInJson(DEMONSTRATED_KNOWLEDGE_KEY, this.demonstratedKnowledge));
+      addIfNotEmpty(clauses, asInJson(DEPTH_OF_KNOWLEDGE_KEY, this.depthOfKnowledge));
       addIfNotEmpty(clauses, asInJson(ITEM_TYPE_KEY, this.itemTypes));
       addIfNotEmpty(clauses, asInJson(KEY_SKILLS_KEY, this.keySkills));
       addIfNotEmpty(clauses, asInJson(PRIMARY_SUBJECT_KEY, this.subjects));
@@ -183,7 +183,7 @@ public class ItemQuery implements Serializable {
     private String searchString;
     private Collection<String> bloomsTaxonomies = new HashSet<String>();
     private Collection<String> contributors = new HashSet<String>();
-    private Collection<String> demonstratedKnowledge = new HashSet<String>();
+    private Collection<String> depthOfKnowledge = new HashSet<String>();
     private Collection<String> gradeLevels = new HashSet<String>();
     private Collection<String> itemTypes = new HashSet<String>();
     private Collection<String> keySkills = new HashSet<String>();
@@ -201,8 +201,8 @@ public class ItemQuery implements Serializable {
       this.bloomsTaxonomies.addAll(itemQuery.bloomsTaxonomies);
       this.contributors = new HashSet<String>(itemQuery.contributors.size());
       this.contributors.addAll(itemQuery.contributors);
-      this.demonstratedKnowledge = new HashSet<String>(itemQuery.demonstratedKnowledge.size());
-      this.demonstratedKnowledge.addAll(itemQuery.demonstratedKnowledge);
+      this.depthOfKnowledge = new HashSet<String>(itemQuery.depthOfKnowledge.size());
+      this.depthOfKnowledge.addAll(itemQuery.depthOfKnowledge);
       this.gradeLevels = new HashSet<String>(itemQuery.gradeLevels.size());
       this.gradeLevels.addAll(itemQuery.gradeLevels);
       this.itemTypes = new HashSet<String>(itemQuery.itemTypes.size());
@@ -233,8 +233,8 @@ public class ItemQuery implements Serializable {
       return this;
     }
 
-    public Builder demonstratedKnowledge(String demonstratedKnowledge) {
-      this.demonstratedKnowledge.add(demonstratedKnowledge);
+    public Builder depthOfKnowledge(String depthOfKnowledge) {
+      this.depthOfKnowledge.add(depthOfKnowledge);
       return this;
     }
 

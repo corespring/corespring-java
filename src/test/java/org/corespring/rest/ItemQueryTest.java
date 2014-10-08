@@ -13,7 +13,7 @@ public class ItemQueryTest {
   private static final String SEARCH_STRING = "string";
   private static final String BLOOMS_TAXONOMY = "Remembering";
   private static final String CONTRIBUTOR = "Corespring Assessment Professionals";
-  private static final String DEMONSTRATED_KNOWLEDGE = "Factual";
+  private static final String DEPTH_OF_KNOWLEDGE = "Recall & Reproduction";
   private static final String GRADE_LEVEL = "04";
   private static final String ITEM_TYPE = "Multiple Choice";
   private static final String KEY_SKILL = "Categorize";
@@ -58,9 +58,9 @@ public class ItemQueryTest {
   }
 
   @Test
-  public void testDemonstratedKnowledge() {
-    String query = new ItemQuery.Builder().demonstratedKnowledge(DEMONSTRATED_KNOWLEDGE).build().toString();
-    assertEquals(withBrackets(objectQueryForKey(DEMONSTRATED_KNOWLEDGE_KEY, expectedInClause(DEMONSTRATED_KNOWLEDGE))),
+  public void testDepthOfKnowledge() {
+    String query = new ItemQuery.Builder().depthOfKnowledge(DEPTH_OF_KNOWLEDGE).build().toString();
+    assertEquals(withBrackets(objectQueryForKey(DEPTH_OF_KNOWLEDGE_KEY, expectedInClause(DEPTH_OF_KNOWLEDGE))),
         query);
   }
 
@@ -115,7 +115,7 @@ public class ItemQueryTest {
   @Test
   public void testAll() {
     String query = new ItemQuery.Builder().searchString(SEARCH_STRING).bloomsTaxonomy(BLOOMS_TAXONOMY)
-        .contributor(CONTRIBUTOR).demonstratedKnowledge(DEMONSTRATED_KNOWLEDGE).gradeLevel(GRADE_LEVEL)
+        .contributor(CONTRIBUTOR).depthOfKnowledge(DEPTH_OF_KNOWLEDGE).gradeLevel(GRADE_LEVEL)
         .itemType(ITEM_TYPE).keySkill(KEY_SKILL).subject(SUBJECT).standard(STANDARD).collection(COLLECTION)
         .published(PUBLISHED).build()
         .toString();
@@ -125,7 +125,7 @@ public class ItemQueryTest {
       .append(objectQueryForKey(BLOOMS_TAXONOMY_KEY, expectedInClause(BLOOMS_TAXONOMY))).append(",")
       .append(objectQueryForKey(CONTRIBUTORS_KEY, expectedInClause(CONTRIBUTOR))).append(",")
       .append(objectQueryForKey(GRADE_LEVEL_KEY, expectedInClause(GRADE_LEVEL))).append(",")
-      .append(objectQueryForKey(DEMONSTRATED_KNOWLEDGE_KEY, expectedInClause(DEMONSTRATED_KNOWLEDGE))).append(",")
+      .append(objectQueryForKey(DEPTH_OF_KNOWLEDGE_KEY, expectedInClause(DEPTH_OF_KNOWLEDGE))).append(",")
       .append(objectQueryForKey(ITEM_TYPE_KEY, expectedInClause(ITEM_TYPE))).append(",")
       .append(objectQueryForKey(KEY_SKILLS_KEY, expectedInClause(KEY_SKILL))).append(",")
       .append(objectQueryForKey(PRIMARY_SUBJECT_KEY, expectedInClause(SUBJECT))).append(",")
